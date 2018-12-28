@@ -1,6 +1,8 @@
 import os
 from time import time
 from subprocess import call
+import numpy as np
+from sklearn.preprocessing import OneHotEncoder
 
 import sys
 sys.path.append('./')
@@ -32,6 +34,10 @@ def binary_community_graph(N, k, maxk, mu):
     print('\tTime taken to generate random graph: %f sec' % (t2 - t1))
     try:
         graph = graph_util.loadGraphFromEdgeListTxt('gem/c_exe/network.dat')
+        node_labels = np.loadtxt('gem/c_exe/community.dat')
     except:
         graph = graph_util.loadGraphFromEdgeListTxt('network.dat')
-    return graph
+        node_labels = np.loadtxt('community.dat')
+    node_labels = node_labels[:, -1].reshape(-1, 1)
+    enc = OneHotEncoder()
+    return graph, enc.fit_transform(node_labels)
