@@ -3,6 +3,8 @@ from time import time
 from subprocess import call
 import numpy as np
 from sklearn.preprocessing import OneHotEncoder
+import networkx as nx
+import scipy
 
 import sys
 sys.path.append('./')
@@ -11,7 +13,31 @@ sys.path.append(os.path.realpath(__file__))
 from gem.utils import graph_util
 
 
+
+
+def barbell_graph(m1,m2):
+    graph = nx.barbell_graph(m1,m2)
+    ## for com_nc
+    node_labels_com = np.zeros(m1*2+m2).astype(int)
+    node_labels_com[m1:m1+m2] = 2
+    node_labels_com[m1+m2:] = 1
+
+    ## one hot
+    onehot_com = np.zeros((m1*2+m2,3))
+    onehot_com[np.arange(m1*2+m2), node_labels_com] = 1
+    
+    ## for role_nc
+
+    return graph, scipy.sparse.csr_matrix(onehot_com)
+    
+    
+
+
+
+
+
 def binary_community_graph(N, k, maxk, mu):
+    ## OS system is windows 
     if sys.platform[0] == "w":
         args = ["gem/c_exe/benchm.exe"]
         fcall = "gem/c_exe/benchm.exe"
