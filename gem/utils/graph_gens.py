@@ -19,9 +19,10 @@ def barbell_graph(m1,m2):
     graph = nx.barbell_graph(m1,m2)
     ## for com_nc, one hot 
     #onehot_com = np.array([[1,0,0]]*m1+[[0,1,0]]*m2+[[0,0,1]]*m1)  is slower when num of nodes > 2000
-    node_labels_com = np.array([[1,0,0]]*m1+[[0,1,0]]*m2+[[0,0,1]]*m1)
+    node_labels_com = np.zeros(m1*2+m2).astype(int)
     node_labels_com[m1:m1+m2] = 2
     node_labels_com[m1+m2:] = 1
+    ## one hot
     onehot_com = np.zeros((m1*2+m2,3)).astype(int)
     onehot_com[np.arange(m1*2+m2), node_labels_com] = 1
     
