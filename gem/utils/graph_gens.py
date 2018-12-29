@@ -17,18 +17,26 @@ from gem.utils import graph_util
 
 def barbell_graph(m1,m2):
     graph = nx.barbell_graph(m1,m2)
-    ## for com_nc
-    node_labels_com = np.zeros(m1*2+m2).astype(int)
+    ## for com_nc, one hot 
+    #onehot_com = np.array([[1,0,0]]*m1+[[0,1,0]]*m2+[[0,0,1]]*m1)  is slower when num of nodes > 2000
+    node_labels_com = np.array([[1,0,0]]*m1+[[0,1,0]]*m2+[[0,0,1]]*m1)
     node_labels_com[m1:m1+m2] = 2
     node_labels_com[m1+m2:] = 1
-
-    ## one hot
-    onehot_com = np.zeros((m1*2+m2,3))
+    onehot_com = np.zeros((m1*2+m2,3)).astype(int)
     onehot_com[np.arange(m1*2+m2), node_labels_com] = 1
     
-    ## for role_nc
+    ## for role_nc, one hot
+    node_labels_role = np.zeros(m1*2+m2).astype(int)
+    p,q = divmod(m2, 2) 
+    for i in range(p+1):
+        node_labels_role[[m1-1+i,m1+m2-i]] = i+1
+    if q:
+        node_labels_role[m1+p] = p+2
+    onehot_role = np.zeros((m1*2+m2,p+q+2)).astype(int)
+    onehot_role[np.arange(m1*2+m2), node_labels_role] = 1
 
-    return graph, scipy.sparse.csr_matrix(onehot_com)
+    return graph, scipy.sparse.csr_matrix(onehot_com), scipy.sparse.csr_matrix(onehot_role)
+
     
     
 
