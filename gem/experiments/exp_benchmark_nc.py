@@ -24,7 +24,8 @@ methClassMap = {"gf": "GraphFactorization",
                 "aa": "AdamicAdar",
                 "jc": "JaccardCoefficient"}
 
-custom_syn_graphs = ["binary_community_graph"]
+custom_syn_graphs = ["binary_community_graph","barbell_graph"]
+two_labels_graphs = ["barbell_graph"]
 
 if __name__ == "__main__":
     ''' Sample usage
@@ -50,11 +51,13 @@ if __name__ == "__main__":
         open('gem/experiments/config/params_benchmark.conf', 'r')
     )
     args = vars(parser.parse_args())
-    print args
+    #print args
+    print(args)
+
     syn_hyps = json.load(
         open('gem/experiments/config/syn_hypRange.conf', 'r')
     )
-    for k, v in args.iteritems():
+    for k, v in args.items():
         if v is not None:
             params[k] = v
     params["rounds"] = int(params["rounds"])
@@ -72,7 +75,8 @@ if __name__ == "__main__":
     samp_scheme = params["samp_scheme"]
     for syn_data in params["data_sets"]:
         syn_hyp_range = syn_hyps[syn_data]
-        hyp_keys = syn_hyp_range.keys()
+        #hyp_keys = syn_hyp_range.keys()
+        hyp_keys = list(syn_hyp_range.keys())
         # Wrap every nx class in graph_gens with node labels
         graphClass = getattr(graph_gens, syn_data)
         ev_cols = ["GR MAP", "LP MAP", "LP P@100", "NC F1 score"]
@@ -87,41 +91,66 @@ if __name__ == "__main__":
                     for hyp in itertools.product(*syn_hyp_range.values()):
                         hyp_dict = dict(zip(hyp_keys, hyp))
                         hyp_str = '_'.join(
-                            "%s=%r" % (key, val) for (key, val) in hyp_dict.iteritems()
+                            "%s=%r" % (key, val) for (key, val) in hyp_dict.items()
                         )
                         syn_data_folder = 'benchmark_%s_%s' % (syn_data, hyp_str)
                         hyp_df_row = dict(zip(hyp_keys, hyp))
                         for r_id in range(params["rounds"]):
-                            G, node_labels = graphClass(**hyp_dict)
-                            if not os.path.exists("gem/data/%s" % syn_data_folder):
-                                os.makedirs("gem/data/%s" % syn_data_folder)
-                            nx.write_gpickle(
-                                G, 'gem/data/%s/graph.gpickle' % syn_data_folder
+
+                            ## for graphs which have one type of labels
+                            if syn_data not in two_labels_graphs:
+                                G, node_labels = graphClass(**hyp_dict)	
+
+                                if not os.path.exists("gem/data/%s" % syn_data_folder):
+                                    os.makedirs("gem/data/%s" % syn_data_folder)
+                                nx.write_gpickle(
+                                  G, 'gem/data/%s/graph.gpickle' % syn_data_folder
                             )
-                            pickle.dump(
+                                pickle.dump(
                                 node_labels,
                                 'gem/data/%s/node_labels.pickle' % syn_data_folder
                             )
+                            ## for graphs which have two types of labels
+                            else:
+                                G, node_labels_com, node_labels_role = graphClass(**hyp_dict)
+                                if not os.path.exists("gem/data/%s" % syn_data_folder):
+                                    os.makedirs("gem/data/%s" % syn_data_folder)
+                                nx.write_gpickle(
+                                  G, 'gem/data/%s/graph.gpickle' % syn_data_folder
+                             )
+                                with open('gem/data/%s/node_labels_com.pickle' % syn_data_folder, 'wb') as pickle_file:
+                                    pickle.dump(node_labels_com,pickle_file)
+                                with open('gem/data/%s/node_labels_role.pickle' % syn_data_folder, 'wb') as pickle_file:
+                                    pickle.dump(node_labels_role,pickle_file)
+
+
+
+
                             os.system(
-                                "python gem/experiments/exp.py -data %s -meth %s -dim %d -rounds 1 -s_sch %s -exp nc -node_labels 1" % (syn_data_folder, meth, dim, samp_scheme)
+                                "python3 gem/experiments/exp.py -data %s -meth %s -dim %d -rounds 1 -s_sch %s -exp nc -node_labels 1" % (syn_data_folder, meth, dim, samp_scheme)
                             )
-                            MAP, prec, n_samps = pickle.load(
-                                open('gem/results/%s_%s_%d_%s.lp' % (syn_data_folder, meth, dim, samp_scheme), 'rb')
-                            )        
-                            hyp_df.loc[hyp_r_idx, hyp_keys] = \
-                                pd.Series(hyp_df_row)
-                            prec_100 = prec[int(n_samps[0])][0][100]
-                            hyp_df.loc[hyp_r_idx, ev_cols + ["Round Id"]] = \
-                                [0, MAP[int(n_samps[0])][0], prec_100, 0, r_id]
-                            hyp_r_idx += 1
-                    hyp_df.to_hdf(
-                        "gem/intermediate/%s_%s_lp_%s_dim_%d_data_hyp.h5" % (syn_data, meth, samp_scheme, dim),
-                        "df"
-                    )
-            if params["plot_hyp_data"]:
-                from gem.utils import plot_util
-                plot_util.plot_hyp_data2(
-                    hyp_keys, ["lp"], params["methods"], syn_data, samp_scheme, dim
-                )
-    print('Total time taken: %f sec' % (time() - t1))
+                            if not os.path.exists("gem/results"):
+                                os.makedirs("gem/results")
+                            ## for nc problem
+                            #[test_ratio_arr, micro, macro]
+                            test_ration, micro, macro = pickle.load(
+                                #open('gem/results/%s_%s_%d_%s.lp' % (syn_data_folder, meth, dim, samp_scheme), 'rb')
+                                open('gem/results/%s_%s_%d.nc' % (syn_data_folder, meth, dim), 'rb')
+                             )        
+                            #hyp_df.loc[hyp_r_idx, hyp_keys] = \
+                                #pd.Series(hyp_df_row)
+                            #prec_100 = prec[int(n_samps[0])][0][100]
+                            #hyp_df.loc[hyp_r_idx, ev_cols + ["Round Id"]] = \
+                                #[0, MAP[int(n_samps[0])][0], prec_100, 0, r_id]
+                            #hyp_r_idx += 1
+                    #hyp_df.to_hdf(
+                        #"gem/intermediate/%s_%s_lp_%s_dim_%d_data_hyp.h5" % (syn_data, meth, samp_scheme, dim),
+                        #"df"
+                    #)
+            #if params["plot_hyp_data"]:
+                #from gem.utils import plot_util
+                #plot_util.plot_hyp_data2(
+                    #hyp_keys, ["lp"], params["methods"], syn_data, samp_scheme, dim
+                #)
+    #print('Total time taken: %f sec' % (time() - t1))
 
