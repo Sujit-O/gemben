@@ -35,7 +35,7 @@ if __name__ == "__main__":
     parser.add_argument('-graph', '--graphs',
                         help='graph name (default: all)')
     parser.add_argument('-meth', '--methods',
-                        help='method list (default: all methods)')
+                        help='method list (default: all)')
     parser.add_argument('-plot_hyp_data', '--plot_hyp_data',
                         help='plot the hyperparameter results (default: False)')
     parser.add_argument('-rounds', '--rounds',
@@ -66,7 +66,7 @@ if __name__ == "__main__":
     params["rounds"] = int(params["rounds"])
     params["domain_name"] = params["domain_name"].split(',')
     if params["graphs"] == "all":
-        params["graphs"] = domain_graph_map[params["domain_name"]]
+        params["graphs"] = domain_graph_map[params["domain_name"][0]]
     else:
         params["graphs"] = params["graphs"].split(',')
     params["lexp"] = bool(int(params["lexp"]))
