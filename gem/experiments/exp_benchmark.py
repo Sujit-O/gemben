@@ -45,12 +45,12 @@ if __name__ == "__main__":
     parser.add_argument('-lexp', '--lexp',
                         help='load experiment (default: False)')
     params = json.load(
-        open('gem/experiments/config/params_benchmark.conf', 'r')
+        open('config/params_benchmark.conf', 'r')
     )
     args = vars(parser.parse_args())
-    print args
+    print(args)
     syn_hyps = json.load(
-        open('gem/experiments/config/syn_hypRange.conf', 'r')
+        open('config/syn_hypRange.conf', 'r')
     )
     for k, v in args.iteritems():
         if v is not None:
@@ -98,9 +98,9 @@ if __name__ == "__main__":
                             nx.write_gpickle(
                                 G, 'gem/data/%s/graph.gpickle' % syn_data_folder
                             )
-                            os.system(
-                                "python gem/experiments/exp.py -data %s -meth %s -dim %d -rounds 1 -s_sch %s -exp lp" % (syn_data_folder, meth, dim, samp_scheme)
-                            )
+
+                            os.system("python exp.py -data %s -meth %s -dim %d -rounds 1 -s_sch %s -exp lp" % (syn_data_folder, meth, dim, samp_scheme))
+
                             MAP, prec, n_samps = pickle.load(
                                 open('gem/results/%s_%s_%d_%s.lp' % (syn_data_folder, meth, dim, samp_scheme), 'rb')
                             )        

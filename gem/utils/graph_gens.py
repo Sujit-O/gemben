@@ -13,7 +13,14 @@ sys.path.append(os.path.realpath(__file__))
 from gem.utils import graph_util
 
 
+###################################################################
+def plot_hist(title,data):
+    import matplotlib.pyplot as plt
+    plt.figure()
+    plt.hist(x=data)
+    plt.savefig(title+'.png')
 
+########################################################################
 
 def barbell_graph(m1,m2):
     graph = nx.barbell_graph(m1,m2)
@@ -38,12 +45,7 @@ def barbell_graph(m1,m2):
 
     return graph, scipy.sparse.csr_matrix(onehot_com), scipy.sparse.csr_matrix(onehot_role)
 
-    
-    
-
-
-
-
+##########################################################################
 
 def binary_community_graph(N, k, maxk, mu):
     ## OS system is windows 
@@ -76,3 +78,63 @@ def binary_community_graph(N, k, maxk, mu):
     node_labels = node_labels[:, -1].reshape(-1, 1)
     enc = OneHotEncoder()
     return graph, enc.fit_transform(node_labels)
+
+########################################################################
+def lancichinetti_fortunato_radicchi(N,avg_deg, diam):
+    if sys.platform[0] == "w":
+        args = ["binary_networks/c_exe/benchmark.exe"]
+        fcall = "gem/c_exe/benchm.exe"
+    else:
+        args = ["binary_networks/c_exe/benchmark"]
+        fcall = "binary_networks/c_exe/benchmark"
+
+    mu = 0.1
+    minc = 0.1
+    maxk = 50
+    maxc = 50
+    args.append("-N %d" % N)
+    args.append("-k %d" % avg_deg)
+    args.append("-maxk %d" % maxk)
+    args.append("-mu %f" % mu)
+    args.append("-minc %f" % minc)
+    args.append("-maxc %f" % maxc)
+
+    t1 = time()
+    try:
+        os.chdir('/home/ankita/studies/usc_research/GEM-benchmark/')
+        print os.getcwd()
+        # print ("%s -N %d -k %d -maxk %d -mu %f -minc %d -maxc %d" % (fcall, N, avg_deg, maxk, mu, minc, maxc))
+        os.system("%s -N %d -k %d -maxk %d -mu %f -minc %d -maxc %d" % (fcall, N, avg_deg, maxk, mu, minc, maxc))
+        # call(args)
+    except Exception as e:
+        print('ERROR: %s' % str(e))
+        print('binary_networks/c_exe/benchmark not found. Please compile gf, place benchmark in the path and grant executable permission')
+    print(args)
+    t2 = time()
+
+    print 'time_taken: ', t2-t1, ' secs'
+
+
+#####################################################################
+if __name__=='__main__':
+
+    print os.getcwd()
+    file_name = os.path.abspath(os.path.join(os.getcwd(), os.pardir))+"/experiments/config/synthetic/lfr_avgDeg.txt"
+    plot_file = os.path.abspath(os.path.join(os.getcwd(), os.pardir)) + "/plots/lfr_hist"
+    print file_name
+    if os.path.isfile(file_name):
+        os.remove(file_name)
+
+    for i in range(1000):
+        lancichinetti_fortunato_radicchi(1024,8,4)
+
+    with open(file_name, "r") as fp:
+        degrees = fp.readlines()
+    avg_deg = []
+    for deg in degrees:
+        avg_deg.append(round(float(deg.strip('\n')), 2))
+
+    print avg_deg
+
+    print plot_file
+    plot_hist(plot_file,avg_deg)

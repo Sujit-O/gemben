@@ -148,7 +148,7 @@ def plot_hyp_data2(hyp_keys, exp_param,
                 )
                 n_meths += 1
             except:
-                print '%s_%s_%s_%s_dim_%d_data_hyp.h5 not found. Ignoring data set' % (data, meth, exp, s_sch, dim)
+                print('%s_%s_%s_%s_dim_%d_data_hyp.h5 not found. Ignoring data set' % (data, meth, exp, s_sch, dim))
                 continue
             # Check if experiment is in the dataframe
             if expMap[exp] not in df:
@@ -188,7 +188,7 @@ def plot_hyp_data2(hyp_keys, exp_param,
                     df_temp = df_temp[df_temp[rem_hyp_keys[hyp_idx]] == hyp_val]
                 if len(df_temp[hyp_key].unique()) < 3:
                     continue
-                print 'Plotting %s: %s' % (exp, hyp_key)
+                print('Plotting %s: %s' % (exp, hyp_key))
                 try:
                     ax = seaborn.tsplot(time=hyp_key, value=expMap[exp],
                                         unit="Round Id", condition="Method",
@@ -292,7 +292,7 @@ def plot_hyp_data(hyp_keys, exp_param,
                     "df"
                 )
             except:
-                print '%s_%s_%s_%s_dim_%d_data_hyp.h5 not found. Ignoring data set' % (data, meth, exp, s_sch, dim)
+                print('%s_%s_%s_%s_dim_%d_data_hyp.h5 not found. Ignoring data set' % (data, meth, exp, s_sch, dim))
                 continue
             # Check if experiment is in the dataframe
             if expMap[exp] not in df:
@@ -324,7 +324,7 @@ def plot_hyp_data(hyp_keys, exp_param,
                     df_temp = df_temp[df_temp[rem_hyp_keys[hyp_idx]] == hyp_val]
                 if len(df_temp[hyp_key].unique()) < 3:
                     continue
-                print 'Plotting %s: %s' % (exp, hyp_key)
+                print('Plotting %s: %s' % (exp, hyp_key))
                 ax = seaborn.tsplot(time=hyp_key, value=expMap[exp],
                                     unit="Round Id", condition="Method",
                                     data=df_temp)
@@ -393,7 +393,7 @@ def plot_hyp(hyp_keys, exp_param, meth, data,
             if len(df_grouped[hyp_key_ren].unique()) < 3:
                 continue
             try:
-                print 'Plotting %s: %s' % (exp, hyp_key)
+                print('Plotting %s: %s' % (exp, hyp_key))
                 ax = seaborn.tsplot(time=hyp_key_ren, value=expMap[exp],
                                     unit="Round Id", data=df_grouped)
                 hyp_values = df_grouped[hyp_key_ren].unique()
@@ -411,7 +411,7 @@ def plot_hyp(hyp_keys, exp_param, meth, data,
             except ValueError:
                 ax = seaborn.barplot(x=hyp_key_ren, y=expMap[exp], data=df_grouped)
             except ZeroDivisionError:
-                print 'Only 2 points provided to plot hyperparameters'
+                print('Only 2 points provided to plot hyperparameters')
                 continue
             plt.savefig(
                 'gem/plots/hyp/%s_%s_%s_%s_%s.pdf' % (data, meth, exp, s_sch, hyp_key),
@@ -431,7 +431,7 @@ def plot_hyp_all(hyp_keys, exp_param, meth, data_sets,
                     "df"
                 )
             except:
-                print '%s_%s_%s_%s_hyp.h5 not found. Ignoring data set' % (data, meth, exp, s_sch)
+                print('%s_%s_%s_%s_hyp.h5 not found. Ignoring data set' % (data, meth, exp, s_sch))
                 continue
             # Check if experiment is in the dataframe
             if expMap[exp] not in df:
@@ -462,7 +462,7 @@ def plot_hyp_all(hyp_keys, exp_param, meth, data_sets,
             if len(df_grouped[df_grouped['Data'] == data_sets[0]][hyp_key_ren].unique()) < 3:
                 continue
             try:
-                print 'Plotting %s: %s' % (exp, hyp_key)
+                print('Plotting %s: %s' % (exp, hyp_key))
                 if hyp_key_ren == 'inout\ p':
                     hyp_key_ren = 'q'
                 elif hyp_key_ren == 'ret\ p':
@@ -495,7 +495,7 @@ def plot_hyp_all(hyp_keys, exp_param, meth, data_sets,
                 ax = seaborn.barplot(x="Data", y=m_name_l[meth],
                                      hue=hyp_key_ren, data=df_grouped)
             except ZeroDivisionError:
-                print 'Only 2 points provided to plot hyperparameters'
+                print('Only 2 points provided to plot hyperparameters')
                 continue
             except:
                 pdb.set_trace()
@@ -678,8 +678,8 @@ def plot_F1(res_pre, res_suffix, exp_type,
                                1, 'Round id'] = round_id
                         df_idx += n_xlabels
             except IOError:
-                print 'File %s_%s_%d%s not found. Ignoring it for NC plot' \
-                    % (res_pre, method, d, res_suffix)
+                print('File %s_%s_%d%s not found. Ignoring it for NC plot' \
+                    % (res_pre, method, d, res_suffix))
                 continue
         if d == 128:
             df = df[:df_idx]
@@ -737,19 +737,23 @@ def plotExpRes(res_pre, methods, exp,
     m_names = [m_name_l[meth] for meth in methods]
     map_gr = None
     map_lp = None
+
     if "gr" in exp:
+        print('GR')
         map_gr = plot_p_at_k(res_pre, '.gr', 'gr',
                              methods, m_names, d_arr,
                              n_rounds, '%s_gr' % save_fig_pre,
                              K=K, plot_d=plot_d,
                              s_sch=samp_scheme)
     if "lp" in exp:
+        print('LP')
         map_lp = plot_p_at_k(res_pre, '.lp',
                              'lp', methods, m_names, d_arr,
                              n_rounds, '%s_lp' % save_fig_pre,
                              K=K, plot_d=plot_d,
                              s_sch=samp_scheme)
     if "nc" in exp:
+        print('NC')
         plot_F1(res_pre, '.nc', 'nc', methods, m_names,
                 d_arr, n_rounds, '%s_nc' % save_fig_pre,
                 K=K, plot_d=plot_d)
