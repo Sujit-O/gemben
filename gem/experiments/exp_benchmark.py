@@ -45,14 +45,14 @@ if __name__ == "__main__":
     parser.add_argument('-lexp', '--lexp',
                         help='load experiment (default: False)')
     params = json.load(
-        open('config/params_benchmark.conf', 'r')
+        open('gem/experiments/config/params_benchmark.conf', 'r')
     )
     args = vars(parser.parse_args())
-    print(args)
+    print (args)
     syn_hyps = json.load(
-        open('config/syn_hypRange.conf', 'r')
+        open('gem/experiments/config/syn_hypRange.conf', 'r')
     )
-    for k, v in args.iteritems():
+    for k, v in args.items():
         if v is not None:
             params[k] = v
     params["rounds"] = int(params["rounds"])
@@ -70,7 +70,7 @@ if __name__ == "__main__":
     samp_scheme = params["samp_scheme"]
     for syn_data in params["data_sets"]:
         syn_hyp_range = syn_hyps[syn_data]
-        hyp_keys = syn_hyp_range.keys()
+        hyp_keys = list(syn_hyp_range.keys())
         if syn_data == "binary_community_graph":
             graphClass = getattr(graph_gens, syn_data)
         else:
@@ -87,7 +87,7 @@ if __name__ == "__main__":
                     for hyp in itertools.product(*syn_hyp_range.values()):
                         hyp_dict = dict(zip(hyp_keys, hyp))
                         hyp_str = '_'.join(
-                            "%s=%r" % (key, val) for (key, val) in hyp_dict.iteritems()
+                            "%s=%r" % (key, val) for (key, val) in hyp_dict.items()
                         )
                         syn_data_folder = 'benchmark_%s_%s' % (syn_data, hyp_str)
                         hyp_df_row = dict(zip(hyp_keys, hyp))
@@ -98,9 +98,9 @@ if __name__ == "__main__":
                             nx.write_gpickle(
                                 G, 'gem/data/%s/graph.gpickle' % syn_data_folder
                             )
-
-                            os.system("python exp.py -data %s -meth %s -dim %d -rounds 1 -s_sch %s -exp lp" % (syn_data_folder, meth, dim, samp_scheme))
-
+                            os.system(
+                                "python gem/experiments/exp.py -data %s -meth %s -dim %d -rounds 1 -s_sch %s -exp lp" % (syn_data_folder, meth, dim, samp_scheme)
+                            )
                             MAP, prec, n_samps = pickle.load(
                                 open('gem/results/%s_%s_%d_%s.lp' % (syn_data_folder, meth, dim, samp_scheme), 'rb')
                             )        
