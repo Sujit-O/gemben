@@ -1,5 +1,4 @@
-{
-    "barabasi_albert_graph": {
+"barabasi_albert_graph": {
             "n": 1024,
             "m": 4
         },
@@ -17,9 +16,3 @@
             "n": 1024,
             "p": 0.5
      },
-     "waxman_graph":{
-            "n": 1024,
-            "alpha": 0.099,
-            "beta": 0.1
-     }
-}

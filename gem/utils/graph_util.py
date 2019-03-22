@@ -8,6 +8,7 @@ from time import time
 import pdb
 
 
+
 def transform_DiGraph_to_adj(di_graph):
     n = di_graph.number_of_nodes()
     adj = np.zeros((n, n))

@@ -37,7 +37,7 @@ def evaluateNodeClassification(X, Y, test_ratio):
         classif2.fit(X_train, Y_train)
         prediction = classif2.predict(X_test, top_k_list)
     except:
-        print 'Could not fit node classification model'
+        print('Could not fit node classification model')
         prediction = np.zeros(Y_test.shape)
     micro = f1_score(Y_test, prediction, average='micro')
     macro = f1_score(Y_test, prediction, average='macro')

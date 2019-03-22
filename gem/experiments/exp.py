@@ -4,7 +4,7 @@ from time import time
 from argparse import ArgumentParser
 import importlib
 import json
-import cPickle
+# import cPickle
 import networkx as nx
 import itertools
 import pdb
@@ -39,12 +39,12 @@ def learn_emb(MethObj, di_graph, params, res_pre, m_summ):
     if params["experiments"] == ["lp"]:
         X = None
     else:
-        print 'Learning Embedding: %s' % m_summ
+        print('Learning Embedding: %s' % m_summ)
         if not bool(int(params["load_emb"])):
             X, learn_t = MethObj.learn_embedding(graph=di_graph,
                                                  edge_f=None,
                                                  no_python=True)
-            print '\tTime to learn embedding: %f sec' % learn_t
+            print('\tTime to learn embedding: %f sec' % learn_t)
             pickle.dump(X, open('%s_%s.emb' % (res_pre, m_summ), 'wb'))
             pickle.dump(learn_t,
                         open('%s_%s.learnT' % (res_pre, m_summ), 'wb'))
@@ -54,9 +54,9 @@ def learn_emb(MethObj, di_graph, params, res_pre, m_summ):
             try:
                 learn_t = pickle.load(open('%s_%s.learnT' % (res_pre, m_summ),
                                            'rb'))
-                print '\tTime to learn emb.: %f sec' % learn_t
+                print('\tTime to learn emb.: %f sec' % learn_t)
             except IOError:
-                print '\tTime info not found'
+                print('\tTime info not found')
     return X
 
 
@@ -138,7 +138,7 @@ def choose_best_hyp(data_set, di_graph, node_labels, params):
         for hyp in itertools.product(*meth_hyp_range.values()):
             hyp_d = {"d": dim}
             hyp_d.update(dict(zip(meth_hyp_range.keys(), hyp)))
-            print hyp_d
+            print(hyp_d)
             if meth == "sdne":
                 hyp_d.update({
                     "modelfile": [
@@ -231,7 +231,7 @@ def call_plot_hyp_all(data_sets, params):
 
 
 def call_exps(params, data_set):
-
+    print('###############################')
     # Load Dataset
     print('Dataset: %s' % data_set)
     di_graph = nx.read_gpickle('gem/data/%s/graph.gpickle' % data_set)
@@ -270,7 +270,7 @@ def call_exps(params, data_set):
             importlib.import_module("gem.embedding.%s" % meth),
             methClassMap[meth]
         )
-        opt_hyp_f_pre = 'gem/experiments/config/%s_%s_%s' % (
+        opt_hyp_f_pre = 'config/synthetic/%s_%s_%s' % (
             data_set,
             meth,
             params["samp_scheme"]
@@ -282,6 +282,7 @@ def call_exps(params, data_set):
                         open('%s_lp.conf' % opt_hyp_f_pre, 'r')
                     )
                 else:
+                    # print('!!!!!!!!!!!!!!!!!!!!!! ',opt_hyp_f_pre)
                     model_hyp = json.load(
                         open('%s_%s.conf' % (opt_hyp_f_pre, exp), 'r')
                     )
@@ -294,7 +295,7 @@ def call_exps(params, data_set):
         except IOError:
             print('Default hyperparameter of the method chosen')
             model_hyp = json.load(
-                open('gem/experiments/config/%s.conf' % meth, 'r')
+                open('config/%s.conf' % meth, 'r')
             )
         hyp = {}
         hyp.update(model_hyp[meth])
@@ -320,6 +321,7 @@ if __name__ == '__main__':
     ''' Sample usage
     python experiments/exp.py -data sbm -dim 128 -meth sdne -exp gr,lp
     '''
+    print('@@@@@@@@@@@@@@@@@@@@@@')
     t1 = time()
     parser = ArgumentParser(description='Graph Embedding Experiments')
     parser.add_argument('-data', '--data_sets',
@@ -357,12 +359,14 @@ if __name__ == '__main__':
     parser.add_argument('-s_sch', '--samp_scheme',
                         help='sampling scheme (default: u_rand)')
 
-    params = json.load(open('gem/experiments/config/params.conf', 'r'))
+    params = json.load(open('config/params.conf', 'r'))
+
     args = vars(parser.parse_args())
-    print args
-    for k, v in args.iteritems():
+
+    for k, v in args.items():
         if v is not None:
             params[k] = v
+
     params["experiments"] = params["experiments"].split(',')
     params["data_sets"] = params["data_sets"].split(',')
     params["rounds"] = int(params["rounds"])
@@ -382,12 +386,13 @@ if __name__ == '__main__':
         params["nc_test_ratio_arr"] = params["nc_test_ratio_arr"].split(',')
         params["nc_test_ratio_arr"] = \
             [float(ratio) for ratio in params["nc_test_ratio_arr"]]
-    print params
+
     for data_set in params["data_sets"]:
         if not int(params["load_exp"]):
             call_exps(params, data_set)
         if int(params["plot"]):
             res_pre = "gem/results/%s" % data_set
+            print('%%%%%%%%%%%%%%%%%%%%%%%%%%')
             plot_util.plotExpRes(res_pre, params["methods"],
                                  params["experiments"], params["dimensions"],
                                  'gem/plots/%s_%s' % (data_set, params["samp_scheme"]),
