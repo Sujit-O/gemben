@@ -99,9 +99,9 @@ def barabasi_albert_graph(num_nodes, avg_deg, diam, emb_dim):
 
 
     end_time = time()
-    print 'Graph_Name: barabase_albert_graph'
-    print 'Num_Nodes: ', nx.number_of_nodes(best_G), ' Avg_Deg : ', best_avg_deg, ' Diameter: ', best_diam
-    print 'TIME: ' , end_time - strt_time, ' secs'
+    print ('Graph_Name: barabase_albert_graph')
+    print ('Num_Nodes: ', nx.number_of_nodes(best_G), ' Avg_Deg : ', best_avg_deg, ' Diameter: ', best_diam)
+    print ('TIME: ' , end_time - strt_time, ' secs')
     return best_G
 
 
