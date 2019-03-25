@@ -95,14 +95,243 @@ def barabasi_albert_graph(num_nodes, avg_deg, diam, emb_dim):
     best_G = nx.barabasi_albert_graph(n=num_nodes, m=m)
 
     best_diam = nx.algorithms.diameter(best_G)
-    best_avg_deg = np.mean(dict(best_G.degree).values())
+    best_avg_deg = np.mean(list(dict(nx.degree(best_G)).values()))
 
 
     end_time = time()
-    print ('Graph_Name: barabase_albert_graph')
-    print ('Num_Nodes: ', nx.number_of_nodes(best_G), ' Avg_Deg : ', best_avg_deg, ' Diameter: ', best_diam)
-    print ('TIME: ' , end_time - strt_time, ' secs')
+
+    print('Graph_Name: barabase_albert_graph')
+    print('Num_Nodes: ', nx.number_of_nodes(best_G), ' Avg_Deg : ', best_avg_deg, ' Diameter: ', best_diam)
+    print('TIME: ' , end_time - strt_time, ' secs')
+
     return best_G
+
+########################################################################################################################
+
+def random_geometric_graph(num_nodes, avg_deg, diam, emb_dim):
+    '''
+    Parameters of the graph:
+    n (int or iterable) – Number of nodes or iterable of nodes
+
+    radius (float) – Distance threshold value
+
+    Average Degree is given by formula: Avg_Deg = (pi*(r^2)*num_nodes)/(l^2)
+    Formula for r: avg_deg * l
+    where l can be considered a constant where its square can be approximated to 1.04 [ength of square] Empirically Found
+    :return: Graph Object
+    '''
+    strt_time = time()
+
+    l = 1.04
+
+    count = 0
+    tolerance = 0.3
+    curr_deg_error = float('inf')
+
+    while tolerance < curr_deg_error:
+        r = np.round(np.sqrt((avg_deg * l ) / (3.14 * num_nodes)), 3)
+
+        G = nx.random_geometric_graph(n=num_nodes, radius=r)
+
+        curr_avg_deg = np.mean(list(dict(nx.degree(G)).values()))
+
+        lcc = graph_util.get_lcc(G.to_directed())[0]
+
+        curr_diam = nx.algorithms.diameter(lcc)
+
+        curr_deg_error = curr_avg_deg - avg_deg
+        count += 1
+
+        if count == 1000:
+
+            break
+
+    best_G = G
+    best_diam = curr_diam
+    best_avg_deg = curr_avg_deg
+
+    end_time = time()
+
+    print('Graph_Name: Random_Geometric_Graph')
+    print('Num_Nodes: ', nx.number_of_nodes(best_G), ' Avg_Deg : ', best_avg_deg, ' Diameter: ', best_diam)
+    print('TIME: ', end_time - strt_time)
+    return best_G, best_avg_deg, best_diam
+
+########################################################################################################################
+
+def waxman_graph(num_nodes, avg_deg, diam, emb_dim):
+    '''
+    Parameters of the graph:
+    n (int or iterable) – Number of nodes or iterable of nodes
+
+    beta (float) – Model parameter
+
+    alpha (float) – Model parameter
+
+
+    Average Degree is given by formula: Avg_Deg = (n-1) * P
+    where P = beta * exp(-d/alpha*L)
+    So we fix the parameter beta = 0.1, and we know the default value of d/L is in range: 0.25 to 0.3 (Empiricially calculated)
+    so we only tweak alpha to get the required avg deg.
+
+    :return: Graph Object
+    '''
+    strt_time = time()
+
+    bands = 5
+    lower_lim = 0.25
+    upper_lim = 0.3
+    tolerance = 0.3
+
+    d_by_L_space = np.linspace(lower_lim, upper_lim, bands)
+    beta = 0.1
+    avg_deg_error_list = []
+
+    for d_by_L in d_by_L_space:
+        d_by_L = truncate(d_by_L,4)
+
+        alpha = truncate((-1*d_by_L)/np.log(avg_deg/((num_nodes-1)*beta)),2)
+
+        G = nx.waxman_graph(n=num_nodes, alpha=alpha, beta=beta)
+
+        lcc = graph_util.get_lcc(G.to_directed())[0]
+
+        curr_avg_deg = np.mean(list(dict(nx.degree(G)).values()))
+
+
+        curr_diam = nx.algorithms.diameter(lcc)
+
+        avg_deg_error_list.append((G, abs(curr_avg_deg - avg_deg), curr_avg_deg, curr_diam))
+
+
+    sorted_avg_deg_err = sorted(avg_deg_error_list, key=lambda x: x[1])
+
+    best_G = sorted_avg_deg_err[0][0]
+
+    best_avg_deg= sorted_avg_deg_err[0][2]
+
+    best_diam = sorted_avg_deg_err[0][3]
+
+    end_time = time()
+
+    print('Graph_Name: waxman_graph')
+    print('Num_Nodes: ', nx.number_of_nodes(best_G), ' Avg_Deg : ', best_avg_deg, ' Diameter: ', best_diam)
+    print('TIME: ', end_time - strt_time)
+    return best_G, best_avg_deg, best_diam
+
+########################################################################
+def watts_strogatz_graph(num_nodes, avg_deg, diam, emb_dim):
+    '''
+    Parameters of the graph:
+    n (int) – The number of nodes
+    k (int) – Each node is joined with its k nearest neighbors in a ring topology.
+    p (float) – The probability of rewiring each edge
+
+    Average Degree is solely decided by k
+    Diameter depends on the value of p
+    :return: Graph Object
+    '''
+    strt_time = time()
+
+    p = 0.2
+
+    best_G = nx.watts_strogatz_graph(n=num_nodes,k=avg_deg,p=p)
+    best_diam = nx.algorithms.diameter(best_G)
+    best_avg_deg = np.mean(list(dict(nx.degree(best_G)).values()))
+    end_time = time()
+
+    print('Graph_Name: Watts_Strogatz_Graph')
+    print('Num_Nodes: ', nx.number_of_nodes(best_G), ' Avg_Deg : ', best_avg_deg, ' Diameter: ', best_diam)
+    print('TIME: ', end_time - strt_time)
+    return best_G, best_avg_deg, best_diam
+
+########################################################################
+def duplication_divergence_graph(num_nodes, avg_deg, diam, emb_dim):
+    '''
+    Parameters of the graph:
+    n (int) – The desired number of nodes in the graph.
+    p (float) – The probability for retaining the edge of the replicated node.
+    :return: Graph Object
+    '''
+    strt_time = time()
+
+    tolerance = 0.3
+    lower_lim = 0.001
+    upper_lim = 1
+    bands = 10
+
+
+    curr_avg_deg_error = float('inf')
+
+    while curr_avg_deg_error > tolerance:
+        p_space = np.linspace(lower_lim, upper_lim, bands)
+        avg_deg_err_list = []
+
+        p_gap = p_space[1] - p_space[0]
+        for p_val in p_space:
+            G = nx.duplication_divergence_graph(n=num_nodes, p=p_val)
+
+            curr_avg_deg = np.mean(list(dict(nx.degree(G)).values()))
+
+            curr_avg_deg_error = abs(avg_deg - curr_avg_deg)
+
+            avg_deg_err_list.append((G, curr_avg_deg_error, p_val))
+
+        sorted_avg_err = sorted(avg_deg_err_list, key=lambda x: x[1])
+
+        curr_avg_deg_error = sorted_avg_err[0][1]
+        if sorted_avg_err[0][1] <= tolerance:
+
+            best_G = sorted_avg_err[0][0]
+            break
+        else:
+            lower_lim = sorted_avg_err[0][2] - p_gap
+            upper_lim = sorted_avg_err[0][2] + p_gap
+
+    # best_G = nx.duplication_divergence_graph(n=num_nodes, p=best_p)
+
+    best_diam = nx.algorithms.diameter(best_G)
+    best_avg_deg = np.mean(list(dict(nx.degree(best_G)).values()))
+
+    end_time = time()
+    print('Graph_Name: powerlaw_cluster_graph')
+    print('Num_Nodes: ', nx.number_of_nodes(best_G), ' Avg_Deg : ', best_avg_deg, ' Diameter: ', best_diam)
+    print('TIME: ', end_time - strt_time)
+    return best_G, best_avg_deg, best_diam
+
+########################################################################
+def powerlaw_cluster_graph(num_nodes, avg_deg, diam, emb_dim):
+    '''
+    Parameters of the graph:
+    n (int) – the number of nodes
+    m (int) – the number of random edges to add for each new node
+    p (float,) – Probability of adding a triangle after adding a random edge
+    Formula for m:  (m^2)- (Nm)/2 + avg_deg * (N/2) = 0  =>  From this equation we need to find m :
+    p : Does not vary the average degree or diameter so much. : Higher value of p may cause average degree to overshoot intended average_deg
+    so we give the control of average degree to parameter m: by setting a lower value of p: 0.1
+    :return: Graph Object
+    '''
+
+    ## Calculating thof nodes: 10\nNumber of edges: 16\nAverage degree:   3.2000'
+    strt_time = time()
+
+    m = int(round((num_nodes - np.sqrt(num_nodes ** 2 - 4 * avg_deg * num_nodes)) / 4))
+    p = 0.2
+
+    ## G at center:
+    best_G = nx.powerlaw_cluster_graph(n=num_nodes, m=m, p=p)
+    best_diam = nx.algorithms.diameter(best_G)
+    best_avg_deg = np.mean(list(dict(nx.degree(best_G)).values()))
+
+
+    end_time = time()
+    print('Graph_Name: powerlaw_cluster_graph')
+    print('Num_Nodes: ', nx.number_of_nodes(best_G), ' Avg_Deg : ', best_avg_deg, ' Diameter: ', best_diam)
+    print('TIME: ', end_time - strt_time)
+    return best_G, best_avg_deg, best_diam
+
+
+
 
 
 
