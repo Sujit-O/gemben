@@ -13,7 +13,10 @@ sys.path.append('./')
 sys.path.append(os.path.realpath(__file__))
 
 from gem.utils import graph_util
+import math
 
+def truncate(f, n):
+    return math.floor(f * 10 ** n) / 10 ** n
 ########################################################################
 
 def barbell_graph(m1,m2):
@@ -86,7 +89,8 @@ def barabasi_albert_graph(N, deg, dia, dim):
 
     ## Calculating thof nodes: 10\nNumber of edges: 16\nAverage degree:   3.2000'
 
-    if dia > 0:
+
+    if dia is not None:
         return None
     strt_time = time()
 
@@ -108,7 +112,7 @@ def barabasi_albert_graph(N, deg, dia, dim):
 
 ########################################################################################################################
 
-def random_geometric_graph(num_nodes, avg_deg, diam, emb_dim):
+def random_geometric_graph(N, deg, dia, dim):
     '''
     Parameters of the graph:
     n (int or iterable) – Number of nodes or iterable of nodes
@@ -129,9 +133,9 @@ def random_geometric_graph(num_nodes, avg_deg, diam, emb_dim):
     curr_deg_error = float('inf')
 
     while tolerance < curr_deg_error:
-        r = np.round(np.sqrt((avg_deg * l ) / (3.14 * num_nodes)), 3)
+        r = np.round(np.sqrt((deg * l ) / (3.14 * N)), 3)
 
-        G = nx.random_geometric_graph(n=num_nodes, radius=r)
+        G = nx.random_geometric_graph(n=N, radius=r)
 
         curr_avg_deg = np.mean(list(dict(nx.degree(G)).values()))
 
@@ -139,7 +143,7 @@ def random_geometric_graph(num_nodes, avg_deg, diam, emb_dim):
 
         curr_diam = nx.algorithms.diameter(lcc)
 
-        curr_deg_error = curr_avg_deg - avg_deg
+        curr_deg_error = curr_avg_deg - deg
         count += 1
 
         if count == 1000:
@@ -159,7 +163,7 @@ def random_geometric_graph(num_nodes, avg_deg, diam, emb_dim):
 
 ########################################################################################################################
 
-def waxman_graph(num_nodes, avg_deg, diam, emb_dim):
+def waxman_graph(N, deg, dia, dim):
     '''
     Parameters of the graph:
     n (int or iterable) – Number of nodes or iterable of nodes
@@ -190,9 +194,9 @@ def waxman_graph(num_nodes, avg_deg, diam, emb_dim):
     for d_by_L in d_by_L_space:
         d_by_L = truncate(d_by_L,4)
 
-        alpha = truncate((-1*d_by_L)/np.log(avg_deg/((num_nodes-1)*beta)),2)
+        alpha = truncate((-1*d_by_L) / np.log(deg / ((N - 1) * beta)), 2)
 
-        G = nx.waxman_graph(n=num_nodes, alpha=alpha, beta=beta)
+        G = nx.waxman_graph(n=N, alpha=alpha, beta=beta)
 
         lcc = graph_util.get_lcc(G.to_directed())[0]
 
@@ -201,7 +205,7 @@ def waxman_graph(num_nodes, avg_deg, diam, emb_dim):
 
         curr_diam = nx.algorithms.diameter(lcc)
 
-        avg_deg_error_list.append((G, abs(curr_avg_deg - avg_deg), curr_avg_deg, curr_diam))
+        avg_deg_error_list.append((G, abs(curr_avg_deg - deg), curr_avg_deg, curr_diam))
 
 
     sorted_avg_deg_err = sorted(avg_deg_error_list, key=lambda x: x[1])
@@ -220,7 +224,7 @@ def waxman_graph(num_nodes, avg_deg, diam, emb_dim):
     return best_G, best_avg_deg, best_diam
 
 ########################################################################
-def watts_strogatz_graph(num_nodes, avg_deg, diam, emb_dim):
+def watts_strogatz_graph(N, deg, dia, dim):
     '''
     Parameters of the graph:
     n (int) – The number of nodes
@@ -235,7 +239,7 @@ def watts_strogatz_graph(num_nodes, avg_deg, diam, emb_dim):
 
     p = 0.2
 
-    best_G = nx.watts_strogatz_graph(n=num_nodes,k=avg_deg,p=p)
+    best_G = nx.watts_strogatz_graph(n=N, k=deg, p=p)
     best_diam = nx.algorithms.diameter(best_G)
     best_avg_deg = np.mean(list(dict(nx.degree(best_G)).values()))
     end_time = time()
@@ -246,7 +250,7 @@ def watts_strogatz_graph(num_nodes, avg_deg, diam, emb_dim):
     return best_G, best_avg_deg, best_diam
 
 ########################################################################
-def duplication_divergence_graph(num_nodes, avg_deg, diam, emb_dim):
+def duplication_divergence_graph(N, deg, dia, dim):
     '''
     Parameters of the graph:
     n (int) – The desired number of nodes in the graph.
@@ -269,11 +273,11 @@ def duplication_divergence_graph(num_nodes, avg_deg, diam, emb_dim):
 
         p_gap = p_space[1] - p_space[0]
         for p_val in p_space:
-            G = nx.duplication_divergence_graph(n=num_nodes, p=p_val)
+            G = nx.duplication_divergence_graph(n=N, p=p_val)
 
             curr_avg_deg = np.mean(list(dict(nx.degree(G)).values()))
 
-            curr_avg_deg_error = abs(avg_deg - curr_avg_deg)
+            curr_avg_deg_error = abs(deg - curr_avg_deg)
 
             avg_deg_err_list.append((G, curr_avg_deg_error, p_val))
 
@@ -300,7 +304,7 @@ def duplication_divergence_graph(num_nodes, avg_deg, diam, emb_dim):
     return best_G, best_avg_deg, best_diam
 
 ########################################################################
-def powerlaw_cluster_graph(num_nodes, avg_deg, diam, emb_dim):
+def powerlaw_cluster_graph(N, deg, dia, dim):
     '''
     Parameters of the graph:
     n (int) – the number of nodes
@@ -315,11 +319,11 @@ def powerlaw_cluster_graph(num_nodes, avg_deg, diam, emb_dim):
     ## Calculating thof nodes: 10\nNumber of edges: 16\nAverage degree:   3.2000'
     strt_time = time()
 
-    m = int(round((num_nodes - np.sqrt(num_nodes ** 2 - 4 * avg_deg * num_nodes)) / 4))
+    m = int(round((N - np.sqrt(N ** 2 - 4 * deg * N)) / 4))
     p = 0.2
 
     ## G at center:
-    best_G = nx.powerlaw_cluster_graph(n=num_nodes, m=m, p=p)
+    best_G = nx.powerlaw_cluster_graph(n=N, m=m, p=p)
     best_diam = nx.algorithms.diameter(best_G)
     best_avg_deg = np.mean(list(dict(nx.degree(best_G)).values()))
 
