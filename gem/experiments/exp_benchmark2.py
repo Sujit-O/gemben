@@ -64,9 +64,9 @@ if __name__ == "__main__":
         if v is not None:
             params[k] = v
     params["rounds"] = int(params["rounds"])
-    params["domain_name"] = params["domain_name"].split(',')
+    #params["domain_name"] = params["domain_name"].split(',')
     if params["graphs"] == "all":
-        params["graphs"] = domain_graph_map[params["domain_name"][0]]
+        params["graphs"] = domain_graph_map[params["domain_name"]]
     else:
         params["graphs"] = params["graphs"].split(',')
     params["lexp"] = bool(int(params["lexp"]))
