@@ -75,7 +75,7 @@ def binary_community_graph(N, k, maxk, mu):
 
 
 ########################################################################
-def barabasi_albert_graph(num_nodes, avg_deg, diam, emb_dim):
+def barabasi_albert_graph(N, deg, dia, dim):
     '''
     Parameters of the graph:
     n: Number of Nodes
@@ -86,13 +86,13 @@ def barabasi_albert_graph(num_nodes, avg_deg, diam, emb_dim):
 
     ## Calculating thof nodes: 10\nNumber of edges: 16\nAverage degree:   3.2000'
 
-    if diam is not None:
+    if dia > 0:
         return None
     strt_time = time()
 
-    m = int(round((num_nodes - np.sqrt(num_nodes**2 - 4*avg_deg*num_nodes))/4))
+    m = int(round((N - np.sqrt(N**2 - 4*deg*N))/4))
 
-    best_G = nx.barabasi_albert_graph(n=num_nodes, m=m)
+    best_G = nx.barabasi_albert_graph(n=N, m=m)
 
     best_diam = nx.algorithms.diameter(best_G)
     best_avg_deg = np.mean(list(dict(nx.degree(best_G)).values()))
