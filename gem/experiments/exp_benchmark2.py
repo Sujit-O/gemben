@@ -114,7 +114,7 @@ if __name__ == "__main__":
                         syn_data_folder, meth, 
                         curr_hyps["dim"], samp_scheme), 'rb')
                 )        
-                hyp_df.loc[hyp_r_idx, hyp_keys] = \
+                hyp_df.loc[hyp_r_idx, graph_hyp_keys] = \
                     pd.Series(curr_hyps)
                 prec_100 = prec[int(n_samps[0])][0][100]
                 hyp_df.loc[hyp_r_idx, ev_cols + ["Round Id"]] = \
