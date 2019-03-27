@@ -77,6 +77,18 @@ if __name__ == "__main__":
         params["methods"] = params["methods"].split(',')
     samp_scheme = params["samp_scheme"]
 
+
+
+
+
+
+
+
+    if not os.path.exists("gem/intermediate"):
+        os.makedirs("gem/intermediate")
+    if not os.path.exists("gem/results"):
+        os.makedirs("gem/results")
+
     graph_hyp_keys = list(graph_hyp_range.keys())
     ev_cols = ["LP MAP", "LP P@100"]
     for meth , graph in itertools.product(*[params["methods"],params["graphs"]]):
@@ -90,7 +102,7 @@ if __name__ == "__main__":
                 *[graph_hyp_range[hyp_key], range(params["rounds"])]
             ):
  
-                curr_hyps = def_graph_hyps
+                curr_hyps = def_graph_hyps.copy()
             
                 curr_hyps[hyp_key] = curr_hyp_key_range
                 hyp_str = '_'.join(
@@ -99,7 +111,7 @@ if __name__ == "__main__":
                 syn_data_folder = 'benchmark_%s_%s' % (graph, hyp_str)
                 graphClass = getattr(graph_gens, graph)
                 G = graphClass(**curr_hyps)
-                
+                 
                 if G:
                 
                     if not os.path.exists("gem/data/%s" % syn_data_folder):
