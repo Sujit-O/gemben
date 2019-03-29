@@ -1,0 +1,80 @@
+---------- Begin SLURM Prolog ----------
+Job ID:        3001766
+Username:      palashgo
+Accountname:   lc_ef
+Name:          exp_16core_benchmark.slurm
+Partition:     quick
+Nodelist:      hpc1120
+TasksPerNode:  16
+CPUsPerTask:   Default[1]
+TMPDIR:        /tmp/3001766.quick
+SCRATCHDIR:    /staging/scratch/3001766
+Cluster:       uschpc
+HSDA Account:  false
+---------- 2019-03-28 23:35:03 ---------
+Dataset: benchmark_random_geometric_graph_dim=16_N=1024_dia=0_deg=8
+# of nodes: 1018, # of edges: 8250
+Default hyperparameter of the method chosen
+	Link Prediction
+Link Prediction train graph n_nodes: 1003, n_edges: 6508
+SVD error (low rank): 0.783766
+Time taken to learn the embedding: 0.858124 sec
+		Random walk sampling. # nodes to sample: 1024
+		Sampled graph: n-1003, m-6508, time taken: 0.001516 sec
+MAP computation time: 0.948641 sec, prec: 1.384299 sec
+Link prediction evaluation complete. Time: 9.243559 sec
+Dataset: benchmark_random_geometric_graph_dim=16_N=1024_dia=0_deg=8
+# of nodes: 1022, # of edges: 8218
+Default hyperparameter of the method chosen
+	Link Prediction
+Link Prediction train graph n_nodes: 987, n_edges: 6390
+SVD error (low rank): 0.775034
+Time taken to learn the embedding: 0.489876 sec
+		Random walk sampling. # nodes to sample: 1024
+		Sampled graph: n-987, m-6390, time taken: 0.001559 sec
+MAP computation time: 0.833147 sec, prec: 1.194067 sec
+Link prediction evaluation complete. Time: 8.153570 sec
+Dataset: benchmark_random_geometric_graph_dim=16_N=1024_dia=0_deg=8
+# of nodes: 1024, # of edges: 8184
+Default hyperparameter of the method chosen
+	Link Prediction
+Link Prediction train graph n_nodes: 1023, n_edges: 6610
+SVD error (low rank): 0.790882
+Time taken to learn the embedding: 0.483745 sec
+		Random walk sampling. # nodes to sample: 1024
+		Sampled graph: n-1023, m-6610, time taken: 0.001586 sec
+MAP computation time: 0.940196 sec, prec: 1.438665 sec
+Link prediction evaluation complete. Time: 9.040945 sec
+Dataset: benchmark_random_geometric_graph_dim=16_N=1024_dia=0_deg=8
+# of nodes: 1015, # of edges: 8214
+Default hyperparameter of the method chosen
+	Link Prediction
+Link Prediction train graph n_nodes: 1012, n_edges: 6582
+SVD error (low rank): 0.787405
+Time taken to learn the embedding: 0.342683 sec
+		Random walk sampling. # nodes to sample: 1024
+		Sampled graph: n-1012, m-6582, time taken: 0.001611 sec
+MAP computation time: 1.080354 sec, prec: 1.630332 sec
+Link prediction evaluation complete. Time: 9.298085 sec
+Dataset: benchmark_random_geometric_graph_dim=16_N=1024_dia=0_deg=8
+# of nodes: 1022, # of edges: 8208
+Default hyperparameter of the method chosen
+	Link Prediction
+Link Prediction train graph n_nodes: 1021, n_edges: 6592
+SVD error (low rank): 0.789541
+Time taken to learn the embedding: 0.817365 sec
+		Random walk sampling. # nodes to sample: 1024
+		Sampled graph: n-1021, m-6592, time taken: 0.001584 sec
+MAP computation time: 0.993002 sec, prec: 1.499322 sec
+Link prediction evaluation complete. Time: 9.424866 sec
+Dataset: benchmark_random_geometric_graph_dim=32_N=1024_dia=0_deg=8
+# of nodes: 1022, # of edges: 8462
+Default hyperparameter of the method chosen
+	Link Prediction
+Link Prediction train graph n_nodes: 1021, n_edges: 6830
+SVD error (low rank): 0.755791
+Time taken to learn the embedding: 0.400766 sec
+		Random walk sampling. # nodes to sample: 1024
+		Sampled graph: n-1021, m-6830, time taken: 0.001598 sec
+MAP computation time: 0.925543 sec, prec: 1.388493 sec
+Link prediction evaluation complete. Time: 8.779147 sec

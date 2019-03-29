@@ -144,9 +144,3 @@ if __name__ == "__main__":
                 params["domain_name"], graph, meth, samp_scheme),
             "df"
         )
-
-
-
-
-
-  

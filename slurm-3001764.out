@@ -1,0 +1,24 @@
+---------- Begin SLURM Prolog ----------
+Job ID:        3001764
+Username:      palashgo
+Accountname:   lc_ef
+Name:          exp_16core_benchmark.slurm
+Partition:     quick
+Nodelist:      hpc1118
+TasksPerNode:  16
+CPUsPerTask:   Default[1]
+TMPDIR:        /tmp/3001764.quick
+SCRATCHDIR:    /staging/scratch/3001764
+Cluster:       uschpc
+HSDA Account:  false
+---------- 2019-03-28 23:35:02 ---------
+Dataset: benchmark_random_geometric_graph_dim=16_N=1024_dia=0_deg=8
+# of nodes: 1018, # of edges: 8250
+Default hyperparameter of the method chosen
+	Link Prediction
+Link Prediction train graph n_nodes: 1014, n_edges: 6630
+Time taken to learn the embedding: 0.098666 sec
+		Random walk sampling. # nodes to sample: 1024
+		Sampled graph: n-1014, m-6630, time taken: 0.001455 sec
+MAP computation time: 0.034289 sec, prec: 0.017986 sec
+Link prediction evaluation complete. Time: 28.923824 sec
