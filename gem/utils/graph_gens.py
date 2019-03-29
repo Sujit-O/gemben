@@ -298,7 +298,7 @@ def duplication_divergence_graph(N, deg, dia, dim):
     best_avg_deg = np.mean(list(dict(nx.degree(best_G)).values()))
 
     end_time = time()
-    print('Graph_Name: powerlaw_cluster_graph')
+    print('Graph_Name: duplication_divergence_graph')
     print('Num_Nodes: ', nx.number_of_nodes(best_G), ' Avg_Deg : ', best_avg_deg, ' Diameter: ', best_diam)
     print('TIME: ', end_time - strt_time)
     return best_G
