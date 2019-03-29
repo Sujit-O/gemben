@@ -8,6 +8,8 @@ ES_EVENT_LOG_v11.*
 py2test/
 py3test/
 
+slurm*.out
+
 # THIS FILE IS GENERATED FROM GEM SETUP.PY
 gem/version.py
 
