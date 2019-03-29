@@ -163,67 +163,6 @@ def random_geometric_graph(N, deg, dia, dim):
 
 ########################################################################################################################
 
-def waxman_graph(N, deg, dia, dim):
-    '''
-    Parameters of the graph:
-    n (int or iterable) – Number of nodes or iterable of nodes
-
-    beta (float) – Model parameter
-
-    alpha (float) – Model parameter
-
-
-    Average Degree is given by formula: Avg_Deg = (n-1) * P
-    where P = beta * exp(-d/alpha*L)
-    So we fix the parameter beta = 0.1, and we know the default value of d/L is in range: 0.25 to 0.3 (Empiricially calculated)
-    so we only tweak alpha to get the required avg deg.
-
-    :return: Graph Object
-    '''
-    strt_time = time()
-
-    bands = 5
-    lower_lim = 0.25
-    upper_lim = 0.3
-    tolerance = 0.3
-
-    d_by_L_space = np.linspace(lower_lim, upper_lim, bands)
-    beta = 0.1
-    avg_deg_error_list = []
-
-    for d_by_L in d_by_L_space:
-        d_by_L = truncate(d_by_L,4)
-
-        alpha = truncate((-1*d_by_L) / np.log(deg / ((N - 1) * beta)), 2)
-
-        G = nx.waxman_graph(n=N, alpha=alpha, beta=beta)
-
-        lcc = graph_util.get_lcc(G.to_directed())[0]
-
-        curr_avg_deg = np.mean(list(dict(nx.degree(G)).values()))
-
-
-        curr_diam = nx.algorithms.diameter(lcc)
-
-        avg_deg_error_list.append((G, abs(curr_avg_deg - deg), curr_avg_deg, curr_diam))
-
-
-    sorted_avg_deg_err = sorted(avg_deg_error_list, key=lambda x: x[1])
-
-    best_G = sorted_avg_deg_err[0][0]
-
-    best_avg_deg= sorted_avg_deg_err[0][2]
-
-    best_diam = sorted_avg_deg_err[0][3]
-
-    end_time = time()
-
-    print('Graph_Name: waxman_graph')
-    print('Num_Nodes: ', nx.number_of_nodes(best_G), ' Avg_Deg : ', best_avg_deg, ' Diameter: ', best_diam)
-    print('TIME: ', end_time - strt_time)
-    return best_G
-
-########################################################################
 def watts_strogatz_graph(N, deg, dia, dim):
     '''
     Parameters of the graph:
