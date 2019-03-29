@@ -159,7 +159,7 @@ def random_geometric_graph(N, deg, dia, dim):
     print('Graph_Name: Random_Geometric_Graph')
     print('Num_Nodes: ', nx.number_of_nodes(best_G), ' Avg_Deg : ', best_avg_deg, ' Diameter: ', best_diam)
     print('TIME: ', end_time - strt_time)
-    return best_G, best_avg_deg, best_diam
+    return best_G
 
 ########################################################################################################################
 
@@ -221,7 +221,7 @@ def waxman_graph(N, deg, dia, dim):
     print('Graph_Name: waxman_graph')
     print('Num_Nodes: ', nx.number_of_nodes(best_G), ' Avg_Deg : ', best_avg_deg, ' Diameter: ', best_diam)
     print('TIME: ', end_time - strt_time)
-    return best_G, best_avg_deg, best_diam
+    return best_G
 
 ########################################################################
 def watts_strogatz_graph(N, deg, dia, dim):
@@ -247,7 +247,7 @@ def watts_strogatz_graph(N, deg, dia, dim):
     print('Graph_Name: Watts_Strogatz_Graph')
     print('Num_Nodes: ', nx.number_of_nodes(best_G), ' Avg_Deg : ', best_avg_deg, ' Diameter: ', best_diam)
     print('TIME: ', end_time - strt_time)
-    return best_G, best_avg_deg, best_diam
+    return best_G
 
 ########################################################################
 def duplication_divergence_graph(N, deg, dia, dim):
@@ -301,7 +301,7 @@ def duplication_divergence_graph(N, deg, dia, dim):
     print('Graph_Name: powerlaw_cluster_graph')
     print('Num_Nodes: ', nx.number_of_nodes(best_G), ' Avg_Deg : ', best_avg_deg, ' Diameter: ', best_diam)
     print('TIME: ', end_time - strt_time)
-    return best_G, best_avg_deg, best_diam
+    return best_G
 
 ########################################################################
 def powerlaw_cluster_graph(N, deg, dia, dim):
@@ -332,7 +332,7 @@ def powerlaw_cluster_graph(N, deg, dia, dim):
     print('Graph_Name: powerlaw_cluster_graph')
     print('Num_Nodes: ', nx.number_of_nodes(best_G), ' Avg_Deg : ', best_avg_deg, ' Diameter: ', best_diam)
     print('TIME: ', end_time - strt_time)
-    return best_G, best_avg_deg, best_diam
+    return best_G
 
 
 
