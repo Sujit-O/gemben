@@ -90,6 +90,7 @@ def barabasi_albert_graph(N, deg, dia, dim):
 
     ## Calculating thof nodes: 10\nNumber of edges: 16\nAverage degree:   3.2000'
 
+
     if dia is not None:
         return None
     strt_time = time()
