@@ -38,6 +38,20 @@ def get_lcc(di_graph):
     return di_graph, nodeListMap
 
 
+def get_lcc_undirected(G):
+    G2 = max(nx.connected_component_subgraphs(G), key=len)
+    tdl_nodes = G2.nodes()
+    nodeListMap = dict(zip(tdl_nodes, range(len(tdl_nodes))))
+    nx.relabel_nodes(G2, nodeListMap, copy=False)
+    return G2, nodeListMap
+
+def get_nk_lcc_undirected(G):
+    G2 = max(nx.connected_component_subgraphs(G), key=len)
+    tdl_nodes = G2.nodes()
+    nodeListMap = dict(zip(tdl_nodes, range(len(tdl_nodes))))
+    nx.relabel_nodes(G2, nodeListMap, copy=True)
+    return G2, nodeListMap
+
 def print_graph_stats(G):
     print('# of nodes: %d, # of edges: %d' % (G.number_of_nodes(),
                                               G.number_of_edges()))
@@ -220,10 +234,17 @@ def saveGraphToEdgeListTxt(graph, file_name):
             f.write('%d %d %f\n' % (i, j, w))
 
 
+
+def convertNkToNx(G_nk):
+    G_nx = nx.Graph()
+    for i, j in G_nk.edges():
+        G_nx.add_edge(i,j)
+    return G_nx
+
 def saveGraphToEdgeListTxtn2v(graph, file_name):
     with open(file_name, 'w') as f:
         for i, j, w in graph.edges(data='weight', default=1):
-            f.write('%d %d %f\n' % (i, j, w))
+            f.write('%d %d %f\n' % (i, j, 1))
 
 
 def loadGraphFromEdgeListTxt(file_name, directed=True):
