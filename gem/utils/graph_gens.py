@@ -91,7 +91,7 @@ def barabasi_albert_graph(N, deg, dia, dim):
     ## Calculating thof nodes: 10\nNumber of edges: 16\nAverage degree:   3.2000'
 
 
-    if dia is not None:
+    if dia > 0:
         return None
     strt_time = time()
 
@@ -105,7 +105,7 @@ def barabasi_albert_graph(N, deg, dia, dim):
 
     end_time = time()
 
-    print('Graph_Name: barabase_albert_graph')
+    print('Graph_Name: barabasi_albert_graph')
     print('Num_Nodes: ', nx.number_of_nodes(best_G), ' Avg_Deg : ', best_avg_deg, ' Diameter: ', best_diam)
     print('TIME: ' , end_time - strt_time, ' secs')
 
@@ -164,25 +164,19 @@ def random_geometric_graph(N, deg, dia, dim):
     print('Graph_Name: Random_Geometric_Graph')
     print('Num_Nodes: ', nx.number_of_nodes(best_G), ' Avg_Deg : ', best_avg_deg, ' Diameter: ', best_diam)
     print('TIME: ', end_time - strt_time)
-    return best_G, best_avg_deg, best_diam
+    return best_G
 
 ########################################################################################################################
-
 def waxman_graph(N, deg, dia, dim):
     '''
     Parameters of the graph:
     n (int or iterable) – Number of nodes or iterable of nodes
-
     beta (float) – Model parameter
-
     alpha (float) – Model parameter
-
-
     Average Degree is given by formula: Avg_Deg = (n-1) * P
     where P = beta * exp(-d/alpha*L)
     So we fix the parameter beta = 0.1, and we know the default value of d/L is in range: 0.25 to 0.3 (Empiricially calculated)
     so we only tweak alpha to get the required avg deg.
-
     :return: Graph Object
     '''
     strt_time = time()
@@ -226,9 +220,11 @@ def waxman_graph(N, deg, dia, dim):
     print('Graph_Name: waxman_graph')
     print('Num_Nodes: ', nx.number_of_nodes(best_G), ' Avg_Deg : ', best_avg_deg, ' Diameter: ', best_diam)
     print('TIME: ', end_time - strt_time)
-    return best_G, best_avg_deg, best_diam
+    return best_G
 
-########################################################################
+
+########################################################################################################################
+
 def watts_strogatz_graph(N, deg, dia, dim):
     '''
     Parameters of the graph:
@@ -252,7 +248,7 @@ def watts_strogatz_graph(N, deg, dia, dim):
     print('Graph_Name: Watts_Strogatz_Graph')
     print('Num_Nodes: ', nx.number_of_nodes(best_G), ' Avg_Deg : ', best_avg_deg, ' Diameter: ', best_diam)
     print('TIME: ', end_time - strt_time)
-    return best_G, best_avg_deg, best_diam
+    return best_G
 
 ########################################################################
 def duplication_divergence_graph(N, deg, dia, dim):
@@ -303,10 +299,11 @@ def duplication_divergence_graph(N, deg, dia, dim):
     best_avg_deg = np.mean(list(dict(nx.degree(best_G)).values()))
 
     end_time = time()
-    print('Graph_Name: duplication divergence graph')
+
+    print('Graph_Name: duplication_divergence_graph')
     print('Num_Nodes: ', nx.number_of_nodes(best_G), ' Avg_Deg : ', best_avg_deg, ' Diameter: ', best_diam)
     print('TIME: ', end_time - strt_time)
-    return best_G, best_avg_deg, best_diam
+    return best_G
 
 ########################################################################
 def powerlaw_cluster_graph(N, deg, dia, dim):
@@ -337,7 +334,7 @@ def powerlaw_cluster_graph(N, deg, dia, dim):
     print('Graph_Name: powerlaw_cluster_graph')
     print('Num_Nodes: ', nx.number_of_nodes(best_G), ' Avg_Deg : ', best_avg_deg, ' Diameter: ', best_diam)
     print('TIME: ', end_time - strt_time)
-    return best_G, best_avg_deg, best_diam
+    return best_G
 
 #####################################################################
 def stochastic_block_model(N, deg, dia, dim):

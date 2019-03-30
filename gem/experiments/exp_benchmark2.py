@@ -64,9 +64,9 @@ if __name__ == "__main__":
         if v is not None:
             params[k] = v
     params["rounds"] = int(params["rounds"])
-    params["domain_name"] = params["domain_name"].split(',')
+    #params["domain_name"] = params["domain_name"].split(',')
     if params["graphs"] == "all":
-        params["graphs"] = domain_graph_map[params["domain_name"][0]]
+        params["graphs"] = domain_graph_map[params["domain_name"]]
     else:
         params["graphs"] = params["graphs"].split(',')
     params["lexp"] = bool(int(params["lexp"]))
@@ -77,6 +77,18 @@ if __name__ == "__main__":
         params["methods"] = params["methods"].split(',')
     samp_scheme = params["samp_scheme"]
 
+
+
+
+
+
+
+
+    if not os.path.exists("gem/intermediate"):
+        os.makedirs("gem/intermediate")
+    if not os.path.exists("gem/results"):
+        os.makedirs("gem/results")
+
     graph_hyp_keys = list(graph_hyp_range.keys())
     ev_cols = ["LP MAP", "LP P@100"]
     for meth , graph in itertools.product(*[params["methods"],params["graphs"]]):
@@ -85,10 +97,13 @@ if __name__ == "__main__":
             )
         hyp_r_idx = 0
         for hyp_key in graph_hyp_keys:
-            curr_hyps = def_graph_hyps
+           
             for curr_hyp_key_range, r_id in itertools.product(
                 *[graph_hyp_range[hyp_key], range(params["rounds"])]
             ):
+ 
+                curr_hyps = def_graph_hyps.copy()
+            
                 curr_hyps[hyp_key] = curr_hyp_key_range
                 hyp_str = '_'.join(
                             "%s=%r" % (key, val) for (key, val) in curr_hyps.items()
@@ -96,12 +111,15 @@ if __name__ == "__main__":
                 syn_data_folder = 'benchmark_%s_%s' % (graph, hyp_str)
                 graphClass = getattr(graph_gens, graph)
                 G = graphClass(**curr_hyps)
-                if not os.path.exists("gem/data/%s" % syn_data_folder):
-                    os.makedirs("gem/data/%s" % syn_data_folder)
-                nx.write_gpickle(
+                 
+                if G:
+                
+                    if not os.path.exists("gem/data/%s" % syn_data_folder):
+                        os.makedirs("gem/data/%s" % syn_data_folder)
+                    nx.write_gpickle(
                             G, 'gem/data/%s/graph.gpickle' % syn_data_folder
                 )
-                os.system(
+                    os.system(
                     "python gem/experiments/exp.py -data %s -meth %s -dim %d -rounds 1 -s_sch %s -exp lp" % (
                         syn_data_folder,
                         meth,
@@ -109,26 +127,20 @@ if __name__ == "__main__":
                         samp_scheme
                     )
                 )
-                MAP, prec, n_samps = pickle.load(
+                    MAP, prec, n_samps = pickle.load(
                     open('gem/results/%s_%s_%d_%s.lp' % (
                         syn_data_folder, meth, 
                         curr_hyps["dim"], samp_scheme), 'rb')
                 )        
-                hyp_df.loc[hyp_r_idx, hyp_keys] = \
+                    hyp_df.loc[hyp_r_idx, graph_hyp_keys] = \
                     pd.Series(curr_hyps)
-                prec_100 = prec[int(n_samps[0])][0][100]
-                hyp_df.loc[hyp_r_idx, ev_cols + ["Round Id"]] = \
+                    prec_100 = prec[int(n_samps[0])][0][100]
+                    hyp_df.loc[hyp_r_idx, ev_cols + ["Round Id"]] = \
                     [MAP[int(n_samps[0])][0], prec_100, r_id]
-                hyp_r_idx += 1
+                    hyp_r_idx += 1
 
         hyp_df.to_hdf(
             "gem/intermediate/%s_%s_%s_lp_%s_data_hyp.h5" % (
                 params["domain_name"], graph, meth, samp_scheme),
             "df"
         )
-
-
-
-
-
-  

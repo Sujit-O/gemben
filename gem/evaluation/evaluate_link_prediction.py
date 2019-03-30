@@ -174,4 +174,4 @@ def expLP(digraph, graph_embedding,
                      'wb'))
     print('Link prediction evaluation complete. Time: %f sec' % (time() - t1))
     # prec_curv2 = [p[4096] for p in prec_curv[prec_curv.keys()[0]]]
-    return MAP[MAP.keys()[0]]  # prec_curv2
+    return MAP[list(MAP.keys())[0]]  # prec_curv2

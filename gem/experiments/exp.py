@@ -231,7 +231,6 @@ def call_plot_hyp_all(data_sets, params):
 
 
 def call_exps(params, data_set):
-    print('###############################')
     # Load Dataset
     print('Dataset: %s' % data_set)
     di_graph = nx.read_gpickle('gem/data/%s/graph.gpickle' % data_set)
@@ -270,7 +269,7 @@ def call_exps(params, data_set):
             importlib.import_module("gem.embedding.%s" % meth),
             methClassMap[meth]
         )
-        opt_hyp_f_pre = 'config/synthetic/%s_%s_%s' % (
+        opt_hyp_f_pre = 'gem/experiments/config/synthetic/%s_%s_%s' % (
             data_set,
             meth,
             params["samp_scheme"]
@@ -282,7 +281,6 @@ def call_exps(params, data_set):
                         open('%s_lp.conf' % opt_hyp_f_pre, 'r')
                     )
                 else:
-                    # print('!!!!!!!!!!!!!!!!!!!!!! ',opt_hyp_f_pre)
                     model_hyp = json.load(
                         open('%s_%s.conf' % (opt_hyp_f_pre, exp), 'r')
                     )
@@ -295,7 +293,7 @@ def call_exps(params, data_set):
         except IOError:
             print('Default hyperparameter of the method chosen')
             model_hyp = json.load(
-                open('config/%s.conf' % meth, 'r')
+                open('gem/experiments/config/%s.conf' % meth, 'r')
             )
         hyp = {}
         hyp.update(model_hyp[meth])
@@ -321,7 +319,6 @@ if __name__ == '__main__':
     ''' Sample usage
     python experiments/exp.py -data sbm -dim 128 -meth sdne -exp gr,lp
     '''
-    print('@@@@@@@@@@@@@@@@@@@@@@')
     t1 = time()
     parser = ArgumentParser(description='Graph Embedding Experiments')
     parser.add_argument('-data', '--data_sets',
@@ -359,7 +356,7 @@ if __name__ == '__main__':
     parser.add_argument('-s_sch', '--samp_scheme',
                         help='sampling scheme (default: u_rand)')
 
-    params = json.load(open('config/params.conf', 'r'))
+    params = json.load(open('gem/experiments/config/params.conf', 'r'))
 
     args = vars(parser.parse_args())
 
@@ -392,7 +389,6 @@ if __name__ == '__main__':
             call_exps(params, data_set)
         if int(params["plot"]):
             res_pre = "gem/results/%s" % data_set
-            print('%%%%%%%%%%%%%%%%%%%%%%%%%%')
             plot_util.plotExpRes(res_pre, params["methods"],
                                  params["experiments"], params["dimensions"],
                                  'gem/plots/%s_%s' % (data_set, params["samp_scheme"]),
