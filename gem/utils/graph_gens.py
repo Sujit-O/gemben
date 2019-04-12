@@ -7,7 +7,7 @@ import numpy as np
 from sklearn.preprocessing import OneHotEncoder
 import networkx as nx
 import scipy
-import networkit as nk
+
 
 import sys
 sys.path.append('./')
@@ -403,7 +403,7 @@ def stochastic_block_model(N, deg, dia, dim):
 
 #####################################################################
 def r_mat_graph(N, deg, dia, dim):
-
+    import networkit as nk
     tolerance = 0.3
     curr_deg_error = float('inf')
     count = 0
@@ -450,6 +450,7 @@ def hyperbolic_graph(N, deg, dia, dim):
         gamma = Target exponent in Power Law Distribution
         :return: Graph Object
         '''
+    import networkit as nk
 
     tolerance = 0.3
     curr_deg_error = float('inf')
