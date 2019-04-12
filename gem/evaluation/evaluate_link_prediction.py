@@ -87,43 +87,43 @@ def expLP(digraph, graph_embedding,
     print('\tLink Prediction')
     MAP = {}
     prec_curv = {}
-
-    # Randomly hide (1-train_ratio)*100% of links
-    node_num = digraph.number_of_nodes()
-    train_digraph, test_digraph = evaluation_util.splitDiGraphToTrainTest(
-        digraph,
-        train_ratio=train_ratio,
-        is_undirected=is_undirected
-    )
-
-    # Ensure the resulting train subgraph is connected
-    if not nx.is_connected(train_digraph.to_undirected()):
-        train_digraph = max(
-            nx.weakly_connected_component_subgraphs(train_digraph),
-            key=len
-        )
-        tdl_nodes = train_digraph.nodes()
-        nodeListMap = dict(zip(tdl_nodes, range(len(tdl_nodes))))
-        nx.relabel_nodes(train_digraph, nodeListMap, copy=False)
-        test_digraph = test_digraph.subgraph(tdl_nodes)
-        nx.relabel_nodes(test_digraph, nodeListMap, copy=False)
-
-    t1 = time()
-    # learn graph embedding on train subgraph
-    print(
-        'Link Prediction train graph n_nodes: %d, n_edges: %d' % (
-            train_digraph.number_of_nodes(),
-            train_digraph.number_of_edges())
-    )
     X = None
     n_r_temp = 0
     while X is None or X.shape[0] != train_digraph.number_of_nodes():
+        # Randomly hide (1-train_ratio)*100% of links
+        node_num = digraph.number_of_nodes()
+        train_digraph, test_digraph = evaluation_util.splitDiGraphToTrainTest(
+            digraph,
+            train_ratio=train_ratio,
+            is_undirected=is_undirected
+        )
+
+        # Ensure the resulting train subgraph is connected
+        if not nx.is_connected(train_digraph.to_undirected()):
+            train_digraph = max(
+                nx.weakly_connected_component_subgraphs(train_digraph),
+                key=len
+            )
+            tdl_nodes = train_digraph.nodes()
+            nodeListMap = dict(zip(tdl_nodes, range(len(tdl_nodes))))
+            nx.relabel_nodes(train_digraph, nodeListMap, copy=False)
+            test_digraph = test_digraph.subgraph(tdl_nodes)
+            nx.relabel_nodes(test_digraph, nodeListMap, copy=False)
+
+        t1 = time()
+        # learn graph embedding on train subgraph
+        print(
+            'Link Prediction train graph n_nodes: %d, n_edges: %d' % (
+                train_digraph.number_of_nodes(),
+                train_digraph.number_of_edges())
+        )
+   
         n_r_temp += 1
         print('Method training %d' % n_r_temp)
         X, _ = graph_embedding.learn_embedding(
           graph=train_digraph,
           no_python=no_python
-      )
+        )
         print('Time taken to learn the embedding: %f sec' % (time() - t1))
         print(X.shape[0])
         print(train_digraph.number_of_nodes())
