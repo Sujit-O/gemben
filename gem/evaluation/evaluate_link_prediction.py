@@ -118,13 +118,16 @@ def expLP(digraph, graph_embedding,
     X = None
     n_r_temp = 0
     while X is None or X.shape[0] != train_digraph.number_of_nodes():
-      n_r_temp += 1
-      print('Method training %d' % n_r_temp)
-      X, _ = graph_embedding.learn_embedding(
+        n_r_temp += 1
+        print('Method training %d' % n_r_temp)
+        X, _ = graph_embedding.learn_embedding(
           graph=train_digraph,
           no_python=no_python
       )
-      print('Time taken to learn the embedding: %f sec' % (time() - t1))
+        print('Time taken to learn the embedding: %f sec' % (time() - t1))
+        print(X.shape[0])
+        print(train_digraph.number_of_nodes())
+        
 
     # sample test graph for evaluation and store results
     node_l = None
