@@ -115,6 +115,7 @@ def expLP(digraph, graph_embedding,
             train_digraph.number_of_nodes(),
             train_digraph.number_of_edges())
     )
+<<<<<<< HEAD
     X, _ = graph_embedding.learn_embedding(
         graph=train_digraph,
         no_python=no_python
@@ -122,6 +123,18 @@ def expLP(digraph, graph_embedding,
     if X is not None and X.shape[0] != train_digraph.number_of_nodes():
         pdb.set_trace()
     print('Time taken to learn the embedding: %f sec' % (time() - t1))
+=======
+    X = None
+    n_r_temp = 0
+    while X is None or X.shape[0] != train_digraph.number_of_nodes():
+      n_r_temp += 1
+      print('Method training %d' % n_r_temp)
+      X, _ = graph_embedding.learn_embedding(
+          graph=train_digraph,
+          no_python=no_python
+      )
+      print('Time taken to learn the embedding: %f sec' % (time() - t1))
+>>>>>>> parent of 361eea1... Update evaluate_link_prediction.py
 
     # sample test graph for evaluation and store results
     node_l = None
