@@ -13,7 +13,7 @@ import scipy.io as sio
 import scipy.sparse as sp
 import scipy.sparse.linalg as lg
 from time import time
-
+import six
 import sys
 sys.path.append('./')
 sys.path.append(os.path.realpath(__file__))
@@ -58,7 +58,7 @@ class AdamicAdar(StaticGraphEmbedding):
 
     def get_edge_weight(self, i, j):
         aa_index = nx.adamic_adar_index(self._G, [(i, j)])
-        return aa_index.next()[2]
+        return six.next(aa_index)[2]
 
     def get_reconstructed_adj(self, X=None, node_l=None):
         if X is not None:

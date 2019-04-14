@@ -66,7 +66,7 @@ class HOPE(StaticGraphEmbedding):
         try:
             S = np.dot(np.linalg.inv(M_g), M_l)
         except:
-            print 'Singularity Matrix. Assigning random emebdding'
+            print ('Singularity Matrix. Assigning random emebdding')
             X1 = np.random.randn(A.shape[0], self._d // 2)
             X2 = np.random.randn(A.shape[0], self._d // 2)
             t2 = time()
