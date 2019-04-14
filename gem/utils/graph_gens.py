@@ -102,14 +102,15 @@ def barabasi_albert_graph(N, deg, dia, dim):
 
     m = int(round((N - np.sqrt(N**2 - 4*deg*N))/4))
 
-    best_G = nx.barabasi_albert_graph(n=N, m=m)
+    G = nx.barabasi_albert_graph(n=N, m=m)
 
-    lcc, _ = graph_util.get_nk_lcc_undirected(G)
+    lcc, _ = graph_util.get_lcc_undirected(G)
 
     best_diam = nx.algorithms.diameter(lcc)
 
     best_avg_deg = np.mean(list(dict(nx.degree(G)).values()))
 
+    best_G = lcc
 
     end_time = time()
 
@@ -614,7 +615,7 @@ if __name__=='__main__':
     # N= [256, 512, 1024, 2048, 4096]
     # Deg = [4, 6, 8, 10, 12]
 
-    G, _, _ = hyperbolic_graph(1024, 8, None, 128)
+    G, _, _ = barabasi_albert_graph(1024, 8, 0, 128)
 
     # G,something = graph_util.get_lcc(G.to_directed())
     # print(type(G))
