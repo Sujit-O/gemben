@@ -106,7 +106,12 @@ def expLP(digraph, graph_embedding,
         nodeListMap = dict(zip(tdl_nodes, range(len(tdl_nodes))))
         nx.relabel_nodes(train_digraph, nodeListMap, copy=False)
         test_digraph = test_digraph.subgraph(tdl_nodes)
-        nx.relabel_nodes(test_digraph, nodeListMap, copy=False)
+        ### unfroze the graph
+        test_digraph = nx.Graph(test_digraph)
+        ####nx.relabel_nodes(test_digraph, nodeListMap, copy=False)
+        test_digraph = nx.relabel_nodes(test_digraph, nodeListMap, copy=True)
+        
+
 
     t1 = time()
     # learn graph embedding on train subgraph
