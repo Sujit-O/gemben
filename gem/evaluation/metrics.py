@@ -1,4 +1,5 @@
 import numpy as np
+import networkx as nx
 
 precision_pos = [2, 10, 100, 200, 300, 500, 1000]
 
@@ -25,6 +26,8 @@ def computePrecisionCurve(predicted_edge_list, true_digraph, max_k=-1):
 
 
 def computeMAP(predicted_edge_list, true_digraph, max_k=-1):
+    true_digraph = true_digraph.to_directed()
+   
     node_num = true_digraph.number_of_nodes()
     node_edges = []
     for i in range(node_num):
@@ -33,6 +36,11 @@ def computeMAP(predicted_edge_list, true_digraph, max_k=-1):
         node_edges[st].append((st, ed, w))
     node_AP = [0.0] * node_num
     count = 0
+    ###debug
+    ### change undirected into direct when needed
+    
+    print(nx.info(true_digraph))
+    
     for i in range(node_num):
         if true_digraph.out_degree(i) == 0:
             continue

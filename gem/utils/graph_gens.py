@@ -7,9 +7,7 @@ import numpy as np
 from sklearn.preprocessing import OneHotEncoder
 import networkx as nx
 import scipy
-import networkit as nk
-from scipy import special
-from numpy import pi
+
 
 import sys
 sys.path.append('./')
@@ -18,10 +16,8 @@ sys.path.append(os.path.realpath(__file__))
 from gem.utils import graph_util,kronecker_generator,kronecker_init_matrix
 import math
 
-########################################################################
 def truncate(f, n):
     return math.floor(f * 10 ** n) / 10 ** n
-
 ########################################################################
 
 def barbell_graph(m1,m2):
@@ -97,28 +93,24 @@ def barabasi_albert_graph(N, deg, dia, dim):
 
     if dia > 0:
         return None
-
     strt_time = time()
 
     m = int(round((N - np.sqrt(N**2 - 4*deg*N))/4))
 
     G = nx.barabasi_albert_graph(n=N, m=m)
-
     lcc, _ = graph_util.get_lcc_undirected(G)
-
     best_diam = nx.algorithms.diameter(lcc)
-
     best_avg_deg = np.mean(list(dict(nx.degree(G)).values()))
+    best_G = lcc   
 
-    best_G = lcc
 
     end_time = time()
 
-    print('Graph_Name: barabase_albert_graph')
+    print('Graph_Name: barabasi_albert_graph')
     print('Num_Nodes: ', nx.number_of_nodes(best_G), ' Avg_Deg : ', best_avg_deg, ' Diameter: ', best_diam)
     print('TIME: ' , end_time - strt_time, ' secs')
 
-    return lcc, best_avg_deg, best_diam
+    return best_G
 
 ########################################################################################################################
 
@@ -164,7 +156,7 @@ def random_geometric_graph(N, deg, dia, dim):
 
             break
 
-    best_G = lcc
+    best_G = G
     best_diam = curr_diam
     best_avg_deg = curr_avg_deg
 
@@ -173,104 +165,67 @@ def random_geometric_graph(N, deg, dia, dim):
     print('Graph_Name: Random_Geometric_Graph')
     print('Num_Nodes: ', nx.number_of_nodes(best_G), ' Avg_Deg : ', best_avg_deg, ' Diameter: ', best_diam)
     print('TIME: ', end_time - strt_time)
-    return best_G, best_avg_deg, best_diam
+    return best_G
 
 ########################################################################################################################
-
 def waxman_graph(N, deg, dia, dim):
     '''
     Parameters of the graph:
     n (int or iterable) – Number of nodes or iterable of nodes
-
     beta (float) – Model parameter
-
     alpha (float) – Model parameter
-
-
-    Average Degree is given by formula: k
+    Average Degree is given by formula: Avg_Deg = (n-1) * P
     where P = beta * exp(-d/alpha*L)
-    alpha = (gamma((k/2)+1) * (beta^k))/((n-1)*(pi^(k/2))*gamma(k))
-    where beta is chosen randomly to satisfy the average degree criterion
     So we fix the parameter beta = 0.1, and we know the default value of d/L is in range: 0.25 to 0.3 (Empiricially calculated)
     so we only tweak alpha to get the required avg deg.
-
     :return: Graph Object
     '''
     strt_time = time()
 
-    bands = 10
-    lower_lim = 2.5
-    upper_lim = 3.5
-    tolerance = 0.4
+    bands = 5
+    lower_lim = 0.25
+    upper_lim = 0.3
+    tolerance = 0.3
+
+    d_by_L_space = np.linspace(lower_lim, upper_lim, bands)
+    beta = 0.1
+    avg_deg_error_list = []
+
+    for d_by_L in d_by_L_space:
+        d_by_L = truncate(d_by_L,4)
+
+        alpha = truncate((-1*d_by_L) / np.log(deg / ((N - 1) * beta)), 2)
+
+        G = nx.waxman_graph(n=N, alpha=alpha, beta=beta)
+
+        lcc = graph_util.get_lcc_undirected(G)[0]
+
+        curr_avg_deg = np.mean(list(dict(nx.degree(G)).values()))
 
 
-    k = 2
+        curr_diam = nx.algorithms.diameter(lcc)
 
-    curr_avg_deg_error = float('inf')
-    flag = False
+        avg_deg_error_list.append((G, abs(curr_avg_deg - deg), curr_avg_deg, curr_diam))
 
-    while curr_avg_deg_error > tolerance:
 
-        s_space = np.linspace(lower_lim, upper_lim, bands)
+    sorted_avg_deg_err = sorted(avg_deg_error_list, key=lambda x: x[1])
 
-        avg_deg_error_list = []
+    best_G = sorted_avg_deg_err[0][0]
 
-        s_gap = s_space[1] - s_space[0]
+    best_avg_deg= sorted_avg_deg_err[0][2]
 
-        for s in s_space:
-
-            g_s = (k * (pi ** (k / 2)) * special.gamma(k)) / (special.gamma((k / 2) + 1) * (s ** k))
-
-            q = deg/((N-1)*g_s)
-
-            G = nx.waxman_graph(n=N, alpha=s, beta=q)
-
-            lcc = graph_util.get_lcc_undirected(G)[0]
-
-            curr_avg_deg = np.mean(list(dict(nx.degree(G)).values()))
-
-            curr_diam = nx.algorithms.diameter(lcc)
-
-            avg_deg_err = np.round(abs(curr_avg_deg - deg),1)
-
-            if avg_deg_err <= tolerance:
-
-                best_G = G
-                best_avg_deg = curr_avg_deg
-                best_diam = curr_diam
-                flag = True
-                break
-
-            avg_deg_error_list.append((lcc,avg_deg_err , curr_avg_deg, curr_diam))
-
-        if flag == True:
-            break
-
-        sorted_avg_err = sorted(avg_deg_error_list, key=lambda x: x[1])
-
-        curr_avg_deg_error = sorted_avg_err[0][1]
-
-        if sorted_avg_err[0][1] <= tolerance:
-
-            best_G = sorted_avg_err[0][0]
-
-            best_avg_deg = sorted_avg_err[0][2]
-
-            best_diam = sorted_avg_err[0][3]
-
-            break
-        else:
-            lower_lim = sorted_avg_err[0][2] - s_gap
-            upper_lim = sorted_avg_err[0][2] + s_gap
+    best_diam = sorted_avg_deg_err[0][3]
 
     end_time = time()
 
     print('Graph_Name: waxman_graph')
     print('Num_Nodes: ', nx.number_of_nodes(best_G), ' Avg_Deg : ', best_avg_deg, ' Diameter: ', best_diam)
     print('TIME: ', end_time - strt_time)
-    return best_G, best_avg_deg, best_diam
+    return best_G
 
-########################################################################
+
+########################################################################################################################
+
 def watts_strogatz_graph(N, deg, dia, dim):
     '''
     Parameters of the graph:
@@ -286,23 +241,15 @@ def watts_strogatz_graph(N, deg, dia, dim):
 
     p = 0.2
 
-    G = nx.watts_strogatz_graph(n=N, k=deg, p=p)
-
-    lcc, _ = graph_util.get_nk_lcc_undirected(G)
-
-    best_G = lcc
-
-    best_diam = nx.algorithms.diameter(lcc)
-
-    best_avg_deg = np.mean(list(dict(nx.degree(G)).values()))
-
+    best_G = nx.watts_strogatz_graph(n=N, k=deg, p=p)
+    best_diam = nx.algorithms.diameter(best_G)
+    best_avg_deg = np.mean(list(dict(nx.degree(best_G)).values()))
     end_time = time()
 
     print('Graph_Name: Watts_Strogatz_Graph')
     print('Num_Nodes: ', nx.number_of_nodes(best_G), ' Avg_Deg : ', best_avg_deg, ' Diameter: ', best_diam)
     print('TIME: ', end_time - strt_time)
-
-    return best_G, best_avg_deg, best_diam
+    return best_G
 
 ########################################################################
 def duplication_divergence_graph(N, deg, dia, dim):
@@ -330,15 +277,11 @@ def duplication_divergence_graph(N, deg, dia, dim):
         for p_val in p_space:
             G = nx.duplication_divergence_graph(n=N, p=p_val)
 
-            lcc, _ = graph_util.get_nk_lcc_undirected(G)
-
-            curr_diam = nx.algorithms.diameter(lcc)
-
             curr_avg_deg = np.mean(list(dict(nx.degree(G)).values()))
 
             curr_avg_deg_error = abs(deg - curr_avg_deg)
 
-            avg_deg_err_list.append((lcc, curr_avg_deg_error, p_val, curr_avg_deg, curr_diam))
+            avg_deg_err_list.append((G, curr_avg_deg_error, p_val))
 
         sorted_avg_err = sorted(avg_deg_err_list, key=lambda x: x[1])
 
@@ -346,8 +289,6 @@ def duplication_divergence_graph(N, deg, dia, dim):
         if sorted_avg_err[0][1] <= tolerance:
 
             best_G = sorted_avg_err[0][0]
-            best_avg_deg = sorted_avg_err[0][3]
-            best_diam = sorted_avg_err[0][4]
             break
         else:
             lower_lim = sorted_avg_err[0][2] - p_gap
@@ -355,11 +296,15 @@ def duplication_divergence_graph(N, deg, dia, dim):
 
     # best_G = nx.duplication_divergence_graph(n=num_nodes, p=best_p)
 
+    best_diam = nx.algorithms.diameter(best_G)
+    best_avg_deg = np.mean(list(dict(nx.degree(best_G)).values()))
+
     end_time = time()
-    print('Graph_Name: duplication divergence graph')
+
+    print('Graph_Name: duplication_divergence_graph')
     print('Num_Nodes: ', nx.number_of_nodes(best_G), ' Avg_Deg : ', best_avg_deg, ' Diameter: ', best_diam)
     print('TIME: ', end_time - strt_time)
-    return best_G, best_avg_deg, best_diam
+    return best_G
 
 ########################################################################
 def powerlaw_cluster_graph(N, deg, dia, dim):
@@ -381,22 +326,16 @@ def powerlaw_cluster_graph(N, deg, dia, dim):
     p = 0.2
 
     ## G at center:
-    G = nx.powerlaw_cluster_graph(n=N, m=m, p=p)
-
-    lcc, _ = graph_util.get_nk_lcc_undirected(G)
-
-    best_G = lcc
-
-    best_diam = nx.algorithms.diameter(lcc)
-
-    best_avg_deg = np.mean(list(dict(nx.degree(G)).values()))
+    best_G = nx.powerlaw_cluster_graph(n=N, m=m, p=p)
+    best_diam = nx.algorithms.diameter(best_G)
+    best_avg_deg = np.mean(list(dict(nx.degree(best_G)).values()))
 
 
     end_time = time()
     print('Graph_Name: powerlaw_cluster_graph')
     print('Num_Nodes: ', nx.number_of_nodes(best_G), ' Avg_Deg : ', best_avg_deg, ' Diameter: ', best_diam)
     print('TIME: ', end_time - strt_time)
-    return best_G, best_avg_deg, best_diam
+    return best_G
 
 #####################################################################
 def stochastic_block_model(N, deg, dia, dim):
@@ -453,7 +392,7 @@ def stochastic_block_model(N, deg, dia, dim):
 
             break
 
-    best_G = lcc
+    best_G = G
 
     end_time = time()
 
@@ -465,7 +404,7 @@ def stochastic_block_model(N, deg, dia, dim):
 
 #####################################################################
 def r_mat_graph(N, deg, dia, dim):
-
+    import networkit as nk
     tolerance = 0.3
     curr_deg_error = float('inf')
     count = 0
@@ -493,11 +432,7 @@ def r_mat_graph(N, deg, dia, dim):
 
             break
 
-
-    if count == 1000:
-        raise("MAX TRIES EXCEEDED, TRY AGAIN")
-
-    best_G = lcc
+    best_G = G
 
     end_time = time()
 
@@ -543,7 +478,7 @@ def hyperbolic_graph(N, deg, dia, dim):
 
             break
 
-    best_G = lcc
+    best_G = G
 
     end_time = time()
 
@@ -564,46 +499,56 @@ def stochastic_kronecker_graph(N, deg, dia, dim):
 
     nodes = 2
 
+    alpha = 0.28
+    beta = 0.2
+
     init = kronecker_init_matrix.InitMatrix(nodes)
     init.make()
 
     # Alpha Beta Method of Testing
     init.addEdge(0, 1)
     init.addSelfEdges()
+    init.makeStochasticAB(alpha, beta)
 
-    tolerance = 0.5
+    # init.makeStochasticAB(0.28, 0.2)
 
-    ## Write Custom Params
-    avg_deg_error = float('inf')
+    # Custom Method of Testing
+    # p = 15
+    # c = 6
+    # probArr = np.array([1, c*p, p/c, 0, 0, c*p, 1, p/c, 0, 0, p/c, p/c, 1, p/c, p/c, 0, 0, p/c, 1, c*p, 0, 0, p/c, c*p, 1])
+    # init.makeStochasticCustom(probArr)
 
-    max_tries = 1000
+    # Networkx Graph Gen as Seed, Alpha Beta after Testing
+    # G = nx.watts_strogatz_graph(5, 2, 0.1)
+    # nx.draw(G)
+    # plt.show() # if you want to visualize your seed graph first
+    # init = InitMatrix(nodes)
+    # init = init.makeStochasticABFromNetworkxGraph(G, 0.75, 0.5)
 
-    count =0
+    # Networkx Graph Gen as Seed Testing, not Stochastic after
+    # G = nx.watts_strogatz_graph(5, 3, 0.1)
+    # G = nx.hypercube_graph(3)
+    # nx.draw(G)
+    # plt.show() # if you want to visualize your seed graph first
+    # init = InitMatrix(nodes)
+    # init = init.makeFromNetworkxGraph(G)
+    # init.addSelfEdges() # if you want to ensure self edges for Kronecker
 
-    while count < max_tries:
-        init.makeStochasticCustom(np.asarray([0.981, 0.633, 0.633, 0.048]))
+    k = np.log2(N)
 
-        k = round(np.log2(N))
 
-        best_G = kronecker_generator.generateStochasticKron(init, k)
+    best_G = kronecker_generator.generateStochasticKron(init, k, True)
 
-        lcc = graph_util.get_lcc_undirected(best_G)[0]
+    lcc = graph_util.get_lcc_undirected(best_G)[0]
 
-        curr_avg_deg = np.mean(list(dict(nx.degree(best_G)).values()))
+    curr_avg_deg = np.mean(list(dict(nx.degree(best_G)).values()))
 
-        curr_diam = nx.algorithms.diameter(lcc)
-
-        avg_deg_error = abs(curr_avg_deg-deg)
-
-        if avg_deg_error < tolerance:
-            break
-
-        count += 1
+    curr_diam = nx.algorithms.diameter(lcc)
 
 
     end_time = time()
 
-    print('Graph_Name: Stochastic Kronecker Graph')
+    print('Graph_Name: Stockastic Kronecker Graph')
     print('Num_Nodes: ', nx.number_of_nodes(lcc), ' Avg_Deg : ', curr_avg_deg, ' Diameter: ', curr_diam)
     print('TIME: ', end_time - strt_time)
     return lcc, curr_avg_deg, curr_diam
@@ -612,18 +557,6 @@ def stochastic_kronecker_graph(N, deg, dia, dim):
 
 #####################################################################
 if __name__=='__main__':
-    # N= [256, 512, 1024, 2048, 4096]
-    # Deg = [4, 6, 8, 10, 12]
 
-    G, _, _ = barabasi_albert_graph(1024, 8, 0, 128)
-
-    # G,something = graph_util.get_lcc(G.to_directed())
-    # print(type(G))
-    # print(G)
-
-    # for n in N:
-    #     G, _, _= stochastic_kronecker_graph(n, 8, None, 128)
-    #
-    # for d in Deg:
-    #     G, _, _ = stochastic_kronecker_graph(1024, d, None, 128)
+    G, _, _= waxman_graph(1024, 8, None, 128)
 

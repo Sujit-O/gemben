@@ -117,7 +117,7 @@ def sample_graph_rw(di_graph, n_sampled_nodes=None,
             pdb.set_trace()
         sampled_graph = nx.DiGraph()
         sampled_graph.add_nodes_from(range(s_node_idx))
-        for st, ed, w in di_graph.edges_iter(data='weight', default=1):
+        for st, ed, w in di_graph.edges.data('weight', default=1):
             try:
                 v_i = node_l_inv[st]
                 v_j = node_l_inv[ed]
