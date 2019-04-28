@@ -34,7 +34,7 @@ def get_lcc(di_graph):
     di_graph = max(nx.weakly_connected_component_subgraphs(di_graph), key=len)
     tdl_nodes = di_graph.nodes()
     nodeListMap = dict(zip(tdl_nodes, range(len(tdl_nodes))))
-    nx.relabel_nodes(di_graph, nodeListMap, copy=False)
+    nx.relabel_nodes(di_graph, nodeListMap, copy=True)
     return di_graph, nodeListMap
 
 
