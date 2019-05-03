@@ -17,11 +17,19 @@ sys.path.append(os.path.realpath(__file__))
 
 from gem.utils import graph_util,kronecker_generator,kronecker_init_matrix
 import math
+import multiprocessing
 
 ########################################################################
 def truncate(f, n):
     return math.floor(f * 10 ** n) / 10 ** n
 
+########################################################################
+def plot_hist(title, data):
+    import matplotlib.pyplot as plt
+    plt.figure()
+    plt.title(title)
+    plt.hist(x=data)
+    plt.savefig(title + '.png')
 ########################################################################
 
 def barbell_graph(m1,m2):
@@ -94,7 +102,7 @@ def barabasi_albert_graph(N, deg, dia, dim):
 
     ## Calculating thof nodes: 10\nNumber of edges: 16\nAverage degree:   3.2000'
 
-
+    ## As does not have for Diameter Variance
     if dia > 0:
         return None
 
@@ -106,19 +114,21 @@ def barabasi_albert_graph(N, deg, dia, dim):
 
     lcc, _ = graph_util.get_lcc_undirected(G)
 
-    best_diam = nx.algorithms.diameter(lcc)
-
-    best_avg_deg = np.mean(list(dict(nx.degree(G)).values()))
-
     best_G = lcc
+
+    best_diam = nx.algorithms.diameter(best_G)
+
+    best_avg_deg = np.mean(list(dict(nx.degree(best_G)).values()))
+
+
 
     end_time = time()
 
-    print('Graph_Name: barabase_albert_graph')
-    print('Num_Nodes: ', nx.number_of_nodes(best_G), ' Avg_Deg : ', best_avg_deg, ' Diameter: ', best_diam)
+    # print('Graph_Name: Barabasi Albert Graph')
+    # print('Num_Nodes: ', nx.number_of_nodes(best_G), ' Avg_Deg : ', best_avg_deg, ' Diameter: ', best_diam)
     print('TIME: ' , end_time - strt_time, ' secs')
 
-    return lcc, best_avg_deg, best_diam
+    return best_G, best_avg_deg, best_diam
 
 ########################################################################################################################
 
@@ -139,7 +149,7 @@ def random_geometric_graph(N, deg, dia, dim):
     l = 1.04
 
     count = 0
-    tolerance = 0.3
+    tolerance = 0.5
     curr_deg_error = float('inf')
 
     while tolerance < curr_deg_error:
@@ -152,9 +162,7 @@ def random_geometric_graph(N, deg, dia, dim):
 
         lcc = graph_util.get_lcc_undirected(G)[0]
 
-        curr_diam = nx.algorithms.diameter(lcc)
-
-        curr_deg_error = curr_avg_deg - deg
+        curr_deg_error = abs(curr_avg_deg - deg)
 
 
 
@@ -165,7 +173,7 @@ def random_geometric_graph(N, deg, dia, dim):
             break
 
     best_G = lcc
-    best_diam = curr_diam
+    best_diam = nx.algorithms.diameter(best_G)
     best_avg_deg = curr_avg_deg
 
     end_time = time()
@@ -201,7 +209,7 @@ def waxman_graph(N, deg, dia, dim):
     bands = 10
     lower_lim = 2.5
     upper_lim = 3.5
-    tolerance = 0.4
+    tolerance = 0.5
 
 
     k = 2
@@ -209,7 +217,8 @@ def waxman_graph(N, deg, dia, dim):
     curr_avg_deg_error = float('inf')
     flag = False
 
-    while curr_avg_deg_error > tolerance:
+
+    while curr_avg_deg_error >= tolerance:
 
         s_space = np.linspace(lower_lim, upper_lim, bands)
 
@@ -227,21 +236,19 @@ def waxman_graph(N, deg, dia, dim):
 
             lcc = graph_util.get_lcc_undirected(G)[0]
 
-            curr_avg_deg = np.mean(list(dict(nx.degree(G)).values()))
+            curr_avg_deg = np.mean(list(dict(nx.degree(lcc)).values()))
 
-            curr_diam = nx.algorithms.diameter(lcc)
-
-            avg_deg_err = np.round(abs(curr_avg_deg - deg),1)
+            avg_deg_err = abs(curr_avg_deg - deg)
 
             if avg_deg_err <= tolerance:
 
                 best_G = G
                 best_avg_deg = curr_avg_deg
-                best_diam = curr_diam
+                best_diam = nx.algorithms.diameter(lcc)
                 flag = True
                 break
 
-            avg_deg_error_list.append((lcc,avg_deg_err , curr_avg_deg, curr_diam))
+            avg_deg_error_list.append((lcc,avg_deg_err , curr_avg_deg, s))
 
         if flag == True:
             break
@@ -256,12 +263,15 @@ def waxman_graph(N, deg, dia, dim):
 
             best_avg_deg = sorted_avg_err[0][2]
 
-            best_diam = sorted_avg_err[0][3]
+            best_diam = nx.algorithms.diameter(best_G)
 
             break
+
         else:
-            lower_lim = sorted_avg_err[0][2] - s_gap
-            upper_lim = sorted_avg_err[0][2] + s_gap
+
+            lower_lim = sorted_avg_err[0][3] - s_gap
+            upper_lim = sorted_avg_err[0][3] + s_gap
+
 
     end_time = time()
 
@@ -292,9 +302,9 @@ def watts_strogatz_graph(N, deg, dia, dim):
 
     best_G = lcc
 
-    best_diam = nx.algorithms.diameter(lcc)
+    best_diam = nx.algorithms.diameter(best_G)
 
-    best_avg_deg = np.mean(list(dict(nx.degree(G)).values()))
+    best_avg_deg = np.mean(list(dict(nx.degree(best_G)).values()))
 
     end_time = time()
 
@@ -314,46 +324,85 @@ def duplication_divergence_graph(N, deg, dia, dim):
     '''
     strt_time = time()
 
-    tolerance = 0.3
-    lower_lim = 0.001
-    upper_lim = 1
-    bands = 10
+    tolerance = 0.5
+
+    if deg == 4:
+        lower_lim = 0.3
+        upper_lim = 0.4
+        bands = 10
+
+    elif deg == 6:
+        lower_lim = 0.4
+        upper_lim = 0.6
+        bands = 15
+
+    elif deg == 8:
+        lower_lim = 0.46
+        upper_lim = 0.60
+        bands = 15
+    elif deg == 10:
+        lower_lim = 0.50
+        upper_lim = 0.65
+        bands = 15
+    elif deg == 12:
+        lower_lim = 0.55
+        upper_lim = 0.68
+        bands = 15
 
 
+    flag = False
     curr_avg_deg_error = float('inf')
 
     while curr_avg_deg_error > tolerance:
         p_space = np.linspace(lower_lim, upper_lim, bands)
         avg_deg_err_list = []
 
+
         p_gap = p_space[1] - p_space[0]
         for p_val in p_space:
+
             G = nx.duplication_divergence_graph(n=N, p=p_val)
 
             lcc, _ = graph_util.get_nk_lcc_undirected(G)
 
-            curr_diam = nx.algorithms.diameter(lcc)
-
-            curr_avg_deg = np.mean(list(dict(nx.degree(G)).values()))
+            curr_avg_deg = np.mean(list(dict(nx.degree(lcc)).values()))
 
             curr_avg_deg_error = abs(deg - curr_avg_deg)
 
-            avg_deg_err_list.append((lcc, curr_avg_deg_error, p_val, curr_avg_deg, curr_diam))
+            avg_deg_err_list.append((lcc, curr_avg_deg_error, p_val, curr_avg_deg))
+
+            if deg - curr_avg_deg < 0:
+                break
+            if curr_avg_deg_error <= tolerance:
+
+                best_G = lcc
+
+                best_avg_deg = curr_avg_deg
+
+                best_diam = nx.algorithms.diameter(best_G)
+
+                flag = True
+
+                break
+
+
+        if flag == True:
+            break
 
         sorted_avg_err = sorted(avg_deg_err_list, key=lambda x: x[1])
 
         curr_avg_deg_error = sorted_avg_err[0][1]
+
         if sorted_avg_err[0][1] <= tolerance:
 
             best_G = sorted_avg_err[0][0]
             best_avg_deg = sorted_avg_err[0][3]
-            best_diam = sorted_avg_err[0][4]
+            best_diam = nx.algorithms.diameter(best_G)
             break
         else:
+
             lower_lim = sorted_avg_err[0][2] - p_gap
             upper_lim = sorted_avg_err[0][2] + p_gap
-
-    # best_G = nx.duplication_divergence_graph(n=num_nodes, p=best_p)
 
     end_time = time()
     print('Graph_Name: duplication divergence graph')
@@ -387,9 +436,9 @@ def powerlaw_cluster_graph(N, deg, dia, dim):
 
     best_G = lcc
 
-    best_diam = nx.algorithms.diameter(lcc)
+    best_diam = nx.algorithms.diameter(best_G)
 
-    best_avg_deg = np.mean(list(dict(nx.degree(G)).values()))
+    best_avg_deg = np.mean(list(dict(nx.degree(best_G)).values()))
 
 
     end_time = time()
@@ -414,7 +463,7 @@ def stochastic_block_model(N, deg, dia, dim):
     For each
     :return:
     '''
-    tolerance = 0.3
+    tolerance = 0.5
 
     curr_deg_error = float('inf')
 
@@ -441,8 +490,6 @@ def stochastic_block_model(N, deg, dia, dim):
 
         lcc,_ = graph_util.get_nk_lcc_undirected(G)
 
-        curr_diam = nx.algorithms.diameter(lcc)
-
         curr_avg_deg = np.mean(list(dict(nx.degree(G)).values()))
 
         curr_deg_error = abs(curr_avg_deg - deg)
@@ -454,19 +501,21 @@ def stochastic_block_model(N, deg, dia, dim):
             break
 
     best_G = lcc
+    best_avg_deg = curr_avg_deg
+    best_diam = nx.algorithms.diameter(lcc)
 
     end_time = time()
 
     print('Graph_Name: Stochastic Block Model')
-    print('Num_Nodes: ', nx.number_of_nodes(best_G), ' Avg_Deg : ', curr_avg_deg, ' Diameter: ', curr_diam)
+    print('Num_Nodes: ', nx.number_of_nodes(best_G), ' Avg_Deg : ', best_avg_deg, ' Diameter: ', best_diam)
     print('TIME: ', end_time - strt_time)
 
-    return best_G, curr_avg_deg, curr_diam
+    return best_G, best_avg_deg, best_diam
 
 #####################################################################
 def r_mat_graph(N, deg, dia, dim):
 
-    tolerance = 0.3
+    tolerance = 0.5
     curr_deg_error = float('inf')
     count = 0
     strt_time = time()
@@ -481,9 +530,7 @@ def r_mat_graph(N, deg, dia, dim):
 
         lcc,_ = graph_util.get_nk_lcc_undirected(G)
 
-        curr_diam = nx.algorithms.diameter(lcc)
-
-        curr_avg_deg = np.mean(list(dict(nx.degree(G)).values()))
+        curr_avg_deg = np.mean(list(dict(nx.degree(lcc)).values()))
 
         curr_deg_error = abs(curr_avg_deg - deg)
 
@@ -498,14 +545,16 @@ def r_mat_graph(N, deg, dia, dim):
         raise("MAX TRIES EXCEEDED, TRY AGAIN")
 
     best_G = lcc
+    best_avg_deg = curr_avg_deg
+    best_diam = nx.algorithms.diameter(lcc)
 
     end_time = time()
 
     print('Graph_Name: RMAT')
-    print('Num_Nodes: ', nx.number_of_nodes(best_G), ' Avg_Deg : ', curr_avg_deg, ' Diameter: ', curr_diam)
+    print('Num_Nodes: ', nx.number_of_nodes(best_G), ' Avg_Deg : ', best_avg_deg, ' Diameter: ', best_diam)
     print('TIME: ', end_time - strt_time)
 
-    return best_G, curr_avg_deg, curr_diam
+    return best_G, best_avg_deg, best_diam
 
 #####################################################################
 def hyperbolic_graph(N, deg, dia, dim):
@@ -518,22 +567,20 @@ def hyperbolic_graph(N, deg, dia, dim):
         '''
     import networkit as nk
 
-    tolerance = 0.3
+    tolerance = 0.5
     curr_deg_error = float('inf')
     count = 0
     strt_time = time()
 
     while curr_deg_error > tolerance:
 
-        G_Nk = nk.generators.HyperbolicGenerator(n = N,k = deg,gamma = 3).generate()
+        G_Nk = nk.generators.HyperbolicGenerator(n = N,k = deg,gamma = 3.5).generate()
 
         G = graph_util.convertNkToNx(G_Nk)
 
         lcc,_ = graph_util.get_nk_lcc_undirected(G)
 
-        curr_diam = nx.algorithms.diameter(lcc)
-
-        curr_avg_deg = np.mean(list(dict(nx.degree(G)).values()))
+        curr_avg_deg = np.mean(list(dict(nx.degree(lcc)).values()))
 
         curr_deg_error = abs(curr_avg_deg - deg)
 
@@ -544,14 +591,16 @@ def hyperbolic_graph(N, deg, dia, dim):
             break
 
     best_G = lcc
+    best_avg_deg = curr_avg_deg
+    best_diam = nx.algorithms.diameter(lcc)
 
     end_time = time()
 
-    print('Graph_Name: powerlaw_cluster_graph')
-    print('Num_Nodes: ', nx.number_of_nodes(best_G), ' Avg_Deg : ', curr_avg_deg, ' Diameter: ', curr_diam)
+    print('Graph_Name: Hyperbolic Graph')
+    print('Num_Nodes: ', nx.number_of_nodes(best_G), ' Avg_Deg : ', best_avg_deg, ' Diameter: ', best_diam)
     print('TIME: ', end_time - strt_time)
 
-    return best_G, curr_avg_deg, curr_diam
+    return best_G, best_avg_deg, best_diam
 
 ########################################################################
 def stochastic_kronecker_graph(N, deg, dia, dim):
@@ -589,9 +638,7 @@ def stochastic_kronecker_graph(N, deg, dia, dim):
 
         lcc = graph_util.get_lcc_undirected(best_G)[0]
 
-        curr_avg_deg = np.mean(list(dict(nx.degree(best_G)).values()))
-
-        curr_diam = nx.algorithms.diameter(lcc)
+        curr_avg_deg = np.mean(list(dict(nx.degree(lcc)).values()))
 
         avg_deg_error = abs(curr_avg_deg-deg)
 
@@ -600,30 +647,173 @@ def stochastic_kronecker_graph(N, deg, dia, dim):
 
         count += 1
 
+    best_G = lcc
+    best_avg_deg = curr_avg_deg
+    best_diam = nx.algorithms.diameter(lcc)
 
     end_time = time()
 
     print('Graph_Name: Stochastic Kronecker Graph')
-    print('Num_Nodes: ', nx.number_of_nodes(lcc), ' Avg_Deg : ', curr_avg_deg, ' Diameter: ', curr_diam)
+    print('Num_Nodes: ', nx.number_of_nodes(best_G), ' Avg_Deg : ', best_avg_deg, ' Diameter: ', best_diam)
     print('TIME: ', end_time - strt_time)
-    return lcc, curr_avg_deg, curr_diam
+    return lcc, best_avg_deg, best_diam
+########################################################################################################################
+
+def lfr_benchmark_graph(N, deg, dia, dim):
+    '''
+    Parameters of the graph:
+    n (int) – Number of nodes in the created graph.
+    tau1 (float) – Power law exponent for the degree distribution of the created graph. This value must be strictly greater than one.
+    tau2 (float) – Power law exponent for the community size distribution in the created graph. This value must be strictly greater than one.
+    mu (float) – Fraction of intra-community edges incident to each node. This value must be in the interval [0, 1].
+    average_degree (float) – Desired average degree of nodes in the created graph. This value must be in the interval [0, n]. Exactly one of this and min_degree must be specified, otherwise a NetworkXError is raised.
+    :return: Graph Object
+    '''
+    strt_time = time()
+
+    tau1 = [1.5, 2, 2.5, 3]
+    tau2 = [1.5, 2, 2.5, 3]
+    mu = [0.1,0.5]
+    min_community = [20, 40, 60, 80, 100]
+    import itertools
+
+    params = list(itertools.product(*[tau1, tau2, mu, min_community]))
+
+    avg_deg_for_plot = []
+
+    max_tries = 2000
+    count = 0
+    tolerance = 0.5
+    flag = False
+
+    def lfr_call(G, N, tau1, tau2, mu, deg, min_comm):
+        try:
+            # print('CALLED')
+            G['graph'] = nx.community.community_generators.LFR_benchmark_graph(n=N, tau1=tau1, tau2=tau2, mu=mu,
+                                                                  average_degree=deg, min_community=min_comm)
+        except:
+
+            G = None
+            pass
+
+    manager = multiprocessing.Manager()
+
+    while count < max_tries:
+
+        for tup in params:
+
+            try:
+
+                G1 = manager.dict()
+
+                lfr_process = multiprocessing.Process(target=lfr_call, name="LFR", args=(G1, N, tup[0],tup[1], tup[2], deg, tup[3]))
+
+
+                lfr_process.start()
+
+                lfr_process.join(10)
+
+
+
+                if lfr_process.is_alive():
+                    lfr_process.terminate()
+                    lfr_process.join()
+                    continue
+
+                if not G1:
+                    continue
+                G1 = G1['graph']
+
+                lcc = graph_util.get_lcc_undirected(G1)[0]
+
+                curr_avg_deg = np.mean(list(dict(nx.degree(lcc)).values()))
+
+                avg_deg_for_plot.append(curr_avg_deg)
+
+
+                # print(deg, ' : CURR_AVG_DEG : ', curr_avg_deg)
+                curr_deg_error = abs(curr_avg_deg - deg)
+
+                if curr_deg_error < tolerance:
+                    best_G = G1
+                    best_avg_deg = curr_avg_deg
+                    best_diam = nx.algorithms.diameter(lcc)
+                    flag = True
+                    break
+            except:
+                continue
+        if flag == True:
+            break
+        count += 1
+
+
+    # plot_hist('LFR_PLOT_DEG',avg_deg_for_plot)
+
+    if count >= max_tries:
+        raise('MAX_NUM_ITERATIONS Reached. Retry')
+
+    end_time = time()
+
+    print('Graph_Name: powerlaw_cluster_graph')
+    print('Num_Nodes: ', nx.number_of_nodes(best_G), ' Avg_Deg : ', best_avg_deg, ' Diameter: ', best_diam)
+    print('TIME: ', end_time - strt_time)
+    return best_G, best_avg_deg, best_diam
+
 
 
 
 #####################################################################
 if __name__=='__main__':
-    # N= [256, 512, 1024, 2048, 4096]
-    # Deg = [4, 6, 8, 10, 12]
+    N= [256, 512, 1024, 2048, 4096]
+    Deg = [4, 6, 8, 10, 12]
 
-    G, _, _ = barabasi_albert_graph(1024, 8, 0, 128)
+    default_dia = 0
+    default_dim = 128
+
+    # G, _, _ = barabasi_albert_graph(1024, 8, 0, 128)
 
     # G,something = graph_util.get_lcc(G.to_directed())
     # print(type(G))
     # print(G)
 
-    # for n in N:
-    #     G, _, _= stochastic_kronecker_graph(n, 8, None, 128)
-    #
-    # for d in Deg:
-    #     G, _, _ = stochastic_kronecker_graph(1024, d, None, 128)
+    import itertools
+    all_combos = list(itertools.product(*[N, Deg]))
+    # all_graphs = [watts_strogatz_graph, duplication_divergence_graph, powerlaw_cluster_graph, stochastic_block_model, r_mat_graph, hyperbolic_graph, stochastic_block_model]
+    # all_graph_names = ["watts_strogatz_graph",
+    #               "duplication_divergence_graph", "powerlaw_cluster_graph", "stochastic_block_model", "r_mat_graph",
+    #               "hyperbolic_graph", "stochastic_block_model"]
 
+
+    G,_,_ = lfr_benchmark_graph(1024,8,0,128)
+    print(type(G))
+
+    # all_graphs = [lfr_benchmark_graph]
+    # all_graph_names = ["lfr_benchmark_graph"]
+    #
+    # for ind, active_graph in enumerate(all_graphs):
+    #     print('********************************** ',all_graph_names[ind])
+    #     for combi in all_combos:
+    #         best_graph, best_avg_deg, best_dia = active_graph(combi[0], combi[1], default_dia, default_dim)
+    #         print('N : '+str(combi[0]) + ' Deg : ' + str(combi[1]) +' CURR_AVG_DEG : ',str(best_avg_deg), ' BEST_DIA : ', str(best_dia))
+    #         print('_____________________________________________________________________________________')
+
+
+
+    # diam_list = []
+    # avg_deg_list = []
+    #
+    # graph_name = 'Barabasi Albert Graph'
+    # max_iters = 1000
+    # graph_name_diam = '../diam_plots/'+graph_name+'_diam_'+str(max_iters)
+    # graph_name_deg = '../diam_plots/' + graph_name + '_deg'+str(max_iters)
+    #
+    # while(len(diam_list))<max_iters:
+    #     print('_____________________ ITER:',len(diam_list))
+    #     G, avg_deg,diam = hyperbolic_graph(N=1024, deg=8,dia=0,dim=128)
+    #     if np.round(abs(avg_deg - 8),1) <= 0.3:
+    #
+    #         diam_list.append(diam)
+    #         avg_deg_list.append(avg_deg)
+
+    # plot_hist(graph_name_diam, diam_list)
+    # plot_hist(graph_name_deg, avg_deg_list)

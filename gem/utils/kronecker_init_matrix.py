@@ -39,10 +39,11 @@ class InitMatrix():
         length = n * n
         if (probArr.shape[0] != length):
             raise IOError("Your array must be the length of postitions in your initMatrix")
-        for i in range(n):
-            for j in range(n):
-                for k in range(length):
-                    self.setValue(probArr[k], i, j)
+        self.W = probArr.reshape((n,n))
+        # for i in range(n):
+        #     for j in range(n):
+        #         for k in range(length):
+        #             self.setValue(probArr[k], i, j)
 
     def makeStochasticAB(self, alpha, beta, selfloops=True):
         # parm check

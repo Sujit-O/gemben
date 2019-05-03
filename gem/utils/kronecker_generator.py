@@ -81,6 +81,7 @@ def generateStochasticKron(initMat, k, deleteSelfLoopsForStats=False, directed=F
         else:
             collisions += 1
     # delete self loops if needed for stats
+
     if (deleteSelfLoopsForStats):
         finalGraph = deleteSelfLoops(finalGraph, nNodes)
     finalGraph = convert(finalGraph)
