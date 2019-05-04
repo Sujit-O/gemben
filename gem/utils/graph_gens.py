@@ -91,7 +91,7 @@ def binary_community_graph(N, k, maxk, mu):
 
 
 ########################################################################
-def barabasi_albert_graph(N, deg, dia, dim):
+def barabasi_albert_graph(N, deg, dia, dim, domain):
     '''
     Parameters of the graph:
     n: Number of Nodes
@@ -132,7 +132,7 @@ def barabasi_albert_graph(N, deg, dia, dim):
 
 ########################################################################################################################
 
-def random_geometric_graph(N, deg, dia, dim):
+def random_geometric_graph(N, deg, dia, dim, domain):
     '''
     Parameters of the graph:
     n (int or iterable) – Number of nodes or iterable of nodes
@@ -185,7 +185,7 @@ def random_geometric_graph(N, deg, dia, dim):
 
 ########################################################################################################################
 
-def waxman_graph(N, deg, dia, dim):
+def waxman_graph(N, deg, dia, dim, domain):
     '''
     Parameters of the graph:
     n (int or iterable) – Number of nodes or iterable of nodes
@@ -281,7 +281,7 @@ def waxman_graph(N, deg, dia, dim):
     return best_G, best_avg_deg, best_diam
 
 ########################################################################
-def watts_strogatz_graph(N, deg, dia, dim):
+def watts_strogatz_graph(N, deg, dia, dim, domain):
     '''
     Parameters of the graph:
     n (int) – The number of nodes
@@ -315,7 +315,7 @@ def watts_strogatz_graph(N, deg, dia, dim):
     return best_G, best_avg_deg, best_diam
 
 ########################################################################
-def duplication_divergence_graph(N, deg, dia, dim):
+def duplication_divergence_graph(N, deg, dia, dim, domain):
     '''
     Parameters of the graph:
     n (int) – The desired number of nodes in the graph.
@@ -411,7 +411,7 @@ def duplication_divergence_graph(N, deg, dia, dim):
     return best_G, best_avg_deg, best_diam
 
 ########################################################################
-def powerlaw_cluster_graph(N, deg, dia, dim):
+def powerlaw_cluster_graph(N, deg, dia, dim, domain):
     '''
     Parameters of the graph:
     n (int) – the number of nodes
@@ -448,7 +448,7 @@ def powerlaw_cluster_graph(N, deg, dia, dim):
     return best_G, best_avg_deg, best_diam
 
 #####################################################################
-def stochastic_block_model(N, deg, dia, dim):
+def stochastic_block_model(N, deg, dia, dim, domain):
     '''
 
     :param N: Number of Nodes
@@ -513,7 +513,7 @@ def stochastic_block_model(N, deg, dia, dim):
     return best_G, best_avg_deg, best_diam
 
 #####################################################################
-def r_mat_graph(N, deg, dia, dim):
+def r_mat_graph(N, deg, dia, dim, domain):
 
     tolerance = 0.5
     curr_deg_error = float('inf')
@@ -557,7 +557,7 @@ def r_mat_graph(N, deg, dia, dim):
     return best_G, best_avg_deg, best_diam
 
 #####################################################################
-def hyperbolic_graph(N, deg, dia, dim):
+def hyperbolic_graph(N, deg, dia, dim, domain):
     '''
         Parameters of the graph:
         N = Num of nodes
@@ -603,7 +603,7 @@ def hyperbolic_graph(N, deg, dia, dim):
     return best_G, best_avg_deg, best_diam
 
 ########################################################################
-def stochastic_kronecker_graph(N, deg, dia, dim):
+def stochastic_kronecker_graph(N, deg, dia, dim, domain):
     '''
     Parameters of the graph:
     degree_seq
@@ -629,37 +629,56 @@ def stochastic_kronecker_graph(N, deg, dia, dim):
 
     count =0
 
+    if domain == "social":
+        alphas, betas, gammas = [0.999], np.linspace(0.45, 0.8, 10), np.linspace(0.2, 0.4, 10)
+    elif domain == "biology":
+        alphas, betas, gammas = [0.85], np.linspace(0.6, 0.95, 10), np.linspace(0.01, 0.15, 10)
+    elif domain == "internet":
+        alphas, betas, gammas = np.linspace(0.95, 0.99, 10), np.linspace(0.55, 0.8, 10), np.linspace(0.05, 0.25, 10)
+    elif domain == "citation":
+        alphas, betas, gammas = [0.999], np.linspace(0.35, 0.6, 10), np.linspace(0.2, 0.8, 10)
+    else:
+        alphas, betas, gammas = np.linspace(0.1, 1.0, 20), np.linspace(0.1, 1.0, 20), np.linspace(0.1, 1.0, 20)
+
+
+
     while count < max_tries:
-        init.makeStochasticCustom(np.asarray([0.981, 0.633, 0.633, 0.048]))
+        FLAG =  False
+        for alpha, beta, gamma in itertools.product(*[alphas, betas, gammas]):
 
-        k = round(np.log2(N))
+            init.makeStochasticCustom(np.asarray([alpha, beta, beta, gamma]))
 
-        best_G = kronecker_generator.generateStochasticKron(init, k)
+            k = round(np.log2(N))
 
-        lcc = graph_util.get_lcc_undirected(best_G)[0]
+            best_G = kronecker_generator.generateStochasticKron(init, k)
 
-        curr_avg_deg = np.mean(list(dict(nx.degree(lcc)).values()))
+            lcc = graph_util.get_lcc_undirected(best_G)[0]
 
-        avg_deg_error = abs(curr_avg_deg-deg)
+            curr_avg_deg = np.mean(list(dict(nx.degree(lcc)).values()))
+            
+            #print(curr_avg_deg)
 
-        if avg_deg_error < tolerance:
+            curr_diam = nx.algorithms.diameter(lcc)
+
+            avg_deg_error = abs(curr_avg_deg-deg)
+
+            if avg_deg_error < tolerance:
+                FLAG = True
+                break
+        if FLAG:
             break
-
         count += 1
 
-    best_G = lcc
-    best_avg_deg = curr_avg_deg
-    best_diam = nx.algorithms.diameter(lcc)
 
     end_time = time()
 
     print('Graph_Name: Stochastic Kronecker Graph')
-    print('Num_Nodes: ', nx.number_of_nodes(best_G), ' Avg_Deg : ', best_avg_deg, ' Diameter: ', best_diam)
+    print('Num_Nodes: ', nx.number_of_nodes(lcc), ' Avg_Deg : ', curr_avg_deg, ' Diameter: ', curr_diam)
     print('TIME: ', end_time - strt_time)
-    return lcc, best_avg_deg, best_diam
+    return lcc, curr_avg_deg, curr_diam
 ########################################################################################################################
 
-def lfr_benchmark_graph(N, deg, dia, dim):
+def lfr_benchmark_graph(N, deg, dia, dim, domain):
     '''
     Parameters of the graph:
     n (int) – Number of nodes in the created graph.
@@ -769,6 +788,13 @@ if __name__=='__main__':
 
     default_dia = 0
     default_dim = 128
+    
+    for domain in ["social", "biology", "internet"]:
+        for deg in [4, 6, 8, 10, 12]:
+            stochastic_kronecker_graph(1024, deg, 0, 128, domain)
+
+        for n in [256, 512, 1024, 2048, 4096]:
+            stochastic_kronecker_graph(n, 8, 0, 128, domain)
 
     # G, _, _ = barabasi_albert_graph(1024, 8, 0, 128)
 
