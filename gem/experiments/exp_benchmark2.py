@@ -105,6 +105,7 @@ if __name__ == "__main__":
                 curr_hyps = def_graph_hyps.copy()
             
                 curr_hyps[hyp_key] = curr_hyp_key_range
+                curr_hyps["domain"] = params["domain_name"]
                 hyp_str = '_'.join(
                             "%s=%r" % (key, val) for (key, val) in curr_hyps.items()
                         )
