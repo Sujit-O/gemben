@@ -233,7 +233,7 @@ def call_plot_hyp_all(data_sets, params):
 def call_exps(params, data_set):
     # Load Dataset
     print('Dataset: %s' % data_set)
-    di_graph = nx.read_gpickle('gem/data/%s/graph.gpickle' % data_set)
+    di_graph = nx.read_gpickle("gem/data/%s/graph.gpickle" % data_set)
     di_graph, nodeListMap = graph_util.get_lcc(di_graph)
     graph_util.print_graph_stats(di_graph)
 
