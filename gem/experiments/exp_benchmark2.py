@@ -114,7 +114,7 @@ if __name__ == "__main__":
                 curr_hyps[hyp_key] = curr_hyp_key_range
                 curr_hyps["domain"] = params["domain_name"]
                 hyp_str = '_'.join(
-                            "%s=%r" % (key, val) for (key, val) in curr_hyps.items()
+                            "%s=%r" % (key, val.strip("'")) for (key, val) in curr_hyps.items()
                         )
                 syn_data_folder = 'benchmark_%s_%s' % (graph, hyp_str)
                 graphClass = getattr(graph_gens, graph)
