@@ -81,13 +81,20 @@ if __name__ == "__main__":
 
 
 
+    
 
-
-
-    if not os.path.exists("gem/intermediate"):
-        os.makedirs("gem/intermediate")
-    if not os.path.exists("gem/results"):
-        os.makedirs("gem/results")
+    try:
+      os.makedirs("gem/intermediate")
+    except:
+      pass
+    try:
+      os.makedirs("gem/results")
+    except:
+      pass
+#     if not os.path.exists("gem/intermediate"):
+#         os.makedirs("gem/intermediate")
+#     if not os.path.exists("gem/results"):
+#         os.makedirs("gem/results")
 
     graph_hyp_keys = list(graph_hyp_range.keys())
     ev_cols = ["LP MAP", "LP P@100"]
