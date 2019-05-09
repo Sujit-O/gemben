@@ -174,8 +174,8 @@ def choose_best_hyp(data_set, di_graph, node_labels, params):
                                                          params["samp_scheme"]),
                 "df"
             )
-        plot_util.plot_hyp(meth_hyp_range.keys(), exp_param,
-                           meth, data_set, s_sch=params["samp_scheme"])
+        ###plot_util.plot_hyp(meth_hyp_range.keys(), exp_param,
+           ##:                meth, data_set, s_sch=params["samp_scheme"])
 
         # Store the best hyperparameter
         opt_hyp_f_pre = 'gem/experiments/config/%s_%s_%s' % (

@@ -42,7 +42,7 @@ def get_lcc_undirected(G):
     G2 = max(nx.connected_component_subgraphs(G), key=len)
     tdl_nodes = G2.nodes()
     nodeListMap = dict(zip(tdl_nodes, range(len(tdl_nodes))))
-    nx.relabel_nodes(G2, nodeListMap, copy=False)
+    nx.relabel_nodes(G2, nodeListMap, copy=True)
     return G2, nodeListMap
 
 def get_nk_lcc_undirected(G):
