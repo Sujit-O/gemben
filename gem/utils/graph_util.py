@@ -34,7 +34,7 @@ def get_lcc(di_graph):
     di_graph = max(nx.weakly_connected_component_subgraphs(di_graph), key=len)
     tdl_nodes = di_graph.nodes()
     nodeListMap = dict(zip(tdl_nodes, range(len(tdl_nodes))))
-    nx.relabel_nodes(di_graph, nodeListMap, copy=False)
+    nx.relabel_nodes(di_graph, nodeListMap, copy=True)
     return di_graph, nodeListMap
 
 
@@ -42,7 +42,7 @@ def get_lcc_undirected(G):
     G2 = max(nx.connected_component_subgraphs(G), key=len)
     tdl_nodes = G2.nodes()
     nodeListMap = dict(zip(tdl_nodes, range(len(tdl_nodes))))
-    nx.relabel_nodes(G2, nodeListMap, copy=False)
+    nx.relabel_nodes(G2, nodeListMap, copy=True)
     return G2, nodeListMap
 
 def get_nk_lcc_undirected(G):
@@ -117,7 +117,7 @@ def sample_graph_rw(di_graph, n_sampled_nodes=None,
             pdb.set_trace()
         sampled_graph = nx.DiGraph()
         sampled_graph.add_nodes_from(range(s_node_idx))
-        for st, ed, w in di_graph.edges_iter(data='weight', default=1):
+        for st, ed, w in di_graph.edges.data('weight', default=1):
             try:
                 v_i = node_l_inv[st]
                 v_j = node_l_inv[ed]

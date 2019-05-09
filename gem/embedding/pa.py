@@ -56,7 +56,8 @@ class PreferentialAttachment(StaticGraphEmbedding):
         graph = graph.to_undirected()
         t1 = time()
         self._X = np.array(
-            list(graph.degree(graph.nodes()).values())
+            #list(graph.degree(graph.nodes()).values())
+            list(dict(graph.degree()).values())
         ).reshape(graph.number_of_nodes(), 1)
         t2 = time()
         return self._X, (t2 - t1)

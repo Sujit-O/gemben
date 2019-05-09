@@ -132,7 +132,7 @@ def choose_best_hyp(data_set, di_graph, node_labels, params):
         # Test each hyperparameter
         ev_cols = ["GR MAP", "LP MAP", "NC F1 score"]
         hyp_df = pd.DataFrame(
-            columns=meth_hyp_range.keys() + ev_cols + ["Round Id"]
+            columns=list(meth_hyp_range.keys()) + ev_cols + ["Round Id"]
         )
         hyp_r_idx = 0
         for hyp in itertools.product(*meth_hyp_range.values()):
@@ -174,8 +174,8 @@ def choose_best_hyp(data_set, di_graph, node_labels, params):
                                                          params["samp_scheme"]),
                 "df"
             )
-        plot_util.plot_hyp(meth_hyp_range.keys(), exp_param,
-                           meth, data_set, s_sch=params["samp_scheme"])
+        ###plot_util.plot_hyp(meth_hyp_range.keys(), exp_param,
+           ##:                meth, data_set, s_sch=params["samp_scheme"])
 
         # Store the best hyperparameter
         opt_hyp_f_pre = 'gem/experiments/config/%s_%s_%s' % (
@@ -233,9 +233,19 @@ def call_plot_hyp_all(data_sets, params):
 def call_exps(params, data_set):
     # Load Dataset
     print('Dataset: %s' % data_set)
-    di_graph = nx.read_gpickle("gem/data/%s/graph.gpickle" % data_set)
+
+
+
+
+########  for SBM, r_mat, hyperbolic
+    #if data_set[10:13] == 'r_m' or data_set[10:13] == 'sto' or data_set[10:13] == 'hyp':
+     #   di_graph = nx.read_gpickle('gem/data/%s/graph.gpickle' % data_set)[0]
+    #else:
+    di_graph = nx.read_gpickle('gem/data/%s/graph.gpickle' % data_set)[0]
+
     di_graph, nodeListMap = graph_util.get_lcc(di_graph)
     graph_util.print_graph_stats(di_graph)
+
 
     # Load node labels if given
     if bool(params["node_labels"]):
@@ -370,6 +380,10 @@ if __name__ == '__main__':
     params["node_labels"] = int(params["node_labels"])
     # params["n_sample_nodes"] = int(params["n_sample_nodes"])
     params["is_undirected"] = bool(int(params["is_undirected"]))
+   
+
+    ## find best parameters for graph embedding methods
+    params["find_hyp"] = True
     params["plot_d"] = bool(int(params["plot_d"]))
     params["plot"] = bool(int(params["plot"]))
     params["hyp_plot"] = bool(int(params["hyp_plot"]))
