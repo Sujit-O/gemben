@@ -128,7 +128,7 @@ if __name__ == "__main__":
                             G, 'gem/data/%s/graph.gpickle' % syn_data_folder
                 )
                     os.system(
-                    "python gem/experiments/exp.py -data %s -meth %s -dim %d -rounds 1 -s_sch %s -exp lp" % (
+                    "python3 gem/experiments/exp.py -data %s -meth %s -dim %d -rounds 1 -s_sch %s -exp lp" % (
                         syn_data_folder,
                         meth,
                         curr_hyps["dim"],

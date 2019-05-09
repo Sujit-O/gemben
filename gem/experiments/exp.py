@@ -236,11 +236,13 @@ def call_exps(params, data_set):
 
 
 
+
 ########  for SBM, r_mat, hyperbolic
     #if data_set[10:13] == 'r_m' or data_set[10:13] == 'sto' or data_set[10:13] == 'hyp':
      #   di_graph = nx.read_gpickle('gem/data/%s/graph.gpickle' % data_set)[0]
     #else:
     di_graph = nx.read_gpickle('gem/data/%s/graph.gpickle' % data_set)[0]
+
     di_graph, nodeListMap = graph_util.get_lcc(di_graph)
     graph_util.print_graph_stats(di_graph)
 
