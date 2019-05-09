@@ -81,13 +81,20 @@ if __name__ == "__main__":
 
 
 
+    
 
-
-
-    if not os.path.exists("gem/intermediate"):
-        os.makedirs("gem/intermediate")
-    if not os.path.exists("gem/results"):
-        os.makedirs("gem/results")
+    try:
+      os.makedirs("gem/intermediate")
+    except:
+      pass
+    try:
+      os.makedirs("gem/results")
+    except:
+      pass
+#     if not os.path.exists("gem/intermediate"):
+#         os.makedirs("gem/intermediate")
+#     if not os.path.exists("gem/results"):
+#         os.makedirs("gem/results")
 
     graph_hyp_keys = list(graph_hyp_range.keys())
     ev_cols = ["LP MAP", "LP P@100"]
@@ -105,8 +112,9 @@ if __name__ == "__main__":
                 curr_hyps = def_graph_hyps.copy()
             
                 curr_hyps[hyp_key] = curr_hyp_key_range
+                curr_hyps["domain"] = params["domain_name"]
                 hyp_str = '_'.join(
-                            "%s=%r" % (key, val) for (key, val) in curr_hyps.items()
+                            "%s=%s" % (key, str(val).strip("'")) for (key, val) in curr_hyps.items()
                         )
                 syn_data_folder = 'benchmark_%s_%s' % (graph, hyp_str)
                 graphClass = getattr(graph_gens, graph)
