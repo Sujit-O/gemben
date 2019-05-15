@@ -382,8 +382,7 @@ if __name__ == '__main__':
     params["is_undirected"] = bool(int(params["is_undirected"]))
    
 
-    ## find best parameters for graph embedding methods
-    params["find_hyp"] = True
+    
     params["plot_d"] = bool(int(params["plot_d"]))
     params["plot"] = bool(int(params["plot"]))
     params["hyp_plot"] = bool(int(params["hyp_plot"]))
