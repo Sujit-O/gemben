@@ -119,7 +119,7 @@ def choose_best_hyp(data_set, di_graph, node_labels, params):
 
     # Test each hyperparameter for each method and store the best
     for meth in params["methods"]:
-        dim = int(params["dimensions"])
+        dim = int(params["dimensions"][0])
         MethClass = getattr(
             importlib.import_module("gem.embedding.%s" % meth),
             methClassMap[meth]
