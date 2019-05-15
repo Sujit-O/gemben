@@ -34,7 +34,7 @@ def get_lcc(di_graph):
     di_graph = max(nx.weakly_connected_component_subgraphs(di_graph), key=len)
     tdl_nodes = di_graph.nodes()
     nodeListMap = dict(zip(tdl_nodes, range(len(tdl_nodes))))
-    nx.relabel_nodes(di_graph, nodeListMap, copy=True)
+    di_graph = nx.relabel_nodes(di_graph, nodeListMap, copy=True)
     return di_graph, nodeListMap
 
 
@@ -42,14 +42,14 @@ def get_lcc_undirected(G):
     G2 = max(nx.connected_component_subgraphs(G), key=len)
     tdl_nodes = G2.nodes()
     nodeListMap = dict(zip(tdl_nodes, range(len(tdl_nodes))))
-    nx.relabel_nodes(G2, nodeListMap, copy=True)
+    G2 = nx.relabel_nodes(G2, nodeListMap, copy=True)
     return G2, nodeListMap
 
 def get_nk_lcc_undirected(G):
     G2 = max(nx.connected_component_subgraphs(G), key=len)
     tdl_nodes = G2.nodes()
     nodeListMap = dict(zip(tdl_nodes, range(len(tdl_nodes))))
-    nx.relabel_nodes(G2, nodeListMap, copy=True)
+    G2 = nx.relabel_nodes(G2, nodeListMap, copy=True)
     return G2, nodeListMap
 
 def print_graph_stats(G):
