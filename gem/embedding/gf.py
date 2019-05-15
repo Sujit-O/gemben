@@ -97,7 +97,10 @@ class GraphFactorization(StaticGraphEmbedding):
                 c_flag = False
                 print('./gf not found. Reverting to Python implementation. Please compile gf, place node2vec in the path and grant executable permission')
             if c_flag:
-                self._X = graph_util.loadEmbedding(embFileName)
+                try:
+                    self._X = graph_util.loadEmbedding(embFileName)
+                except FileNotFoundError:
+                    self._X = np.random.randn(graph.number_of_nodes(), self._d)
                 t2 = time()
                 try:
                     call(["rm", embFileName])
