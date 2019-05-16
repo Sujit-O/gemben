@@ -113,9 +113,9 @@ if __name__ == "__main__":
                 
                 ##### first round to find the best parameter for each methods
                 if r_id == 0: 
-                    f_hpy = 1
+                    f_hyp = 1
                 else:
-                    f_hpy = 0
+                    f_hyp = 0
                 
                 
                 
