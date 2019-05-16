@@ -109,10 +109,16 @@ def barabasi_albert_graph(N, deg, dia, dim, domain):
     strt_time = time()
 
     m = int(round((N - np.sqrt(N**2 - 4*deg*N))/4))
-
+     
+    flag = 1
+    
+   
     G = nx.barabasi_albert_graph(n=N, m=m)
 
-    lcc, _ = graph_util.get_lcc_undirected(G)
+    lcc, _ = graph_util.get_lcc_undirected(G)    
+
+
+
 
     best_G = lcc
 
@@ -123,9 +129,9 @@ def barabasi_albert_graph(N, deg, dia, dim, domain):
 
 
     end_time = time()
-
-    # print('Graph_Name: Barabasi Albert Graph')
-    # print('Num_Nodes: ', nx.number_of_nodes(best_G), ' Avg_Deg : ', best_avg_deg, ' Diameter: ', best_diam)
+     
+    print('Graph_Name: Barabasi Albert Graph')
+    print('Num_Nodes: ', nx.number_of_nodes(best_G), ' Avg_Deg : ', best_avg_deg, ' Diameter: ', best_diam)
     print('TIME: ' , end_time - strt_time, ' secs')
 
     return best_G, best_avg_deg, best_diam

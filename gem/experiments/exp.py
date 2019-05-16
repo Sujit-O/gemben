@@ -178,7 +178,8 @@ def choose_best_hyp(data_set, di_graph, node_labels, params):
            ##:                meth, data_set, s_sch=params["samp_scheme"])
 
         # Store the best hyperparameter
-        opt_hyp_f_pre = 'gem/experiments/config/%s_%s_%s' % (
+        ####### put the file into synthetic
+        opt_hyp_f_pre = 'gem/experiments/config/synthetic/%s_%s_%s' % (
             data_set,
             meth,
             params["samp_scheme"]
