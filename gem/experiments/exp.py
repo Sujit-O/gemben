@@ -387,6 +387,8 @@ if __name__ == '__main__':
     params["plot"] = bool(int(params["plot"]))
     params["hyp_plot"] = bool(int(params["hyp_plot"]))
     params["hyp_plot_all"] = bool(int(params["hyp_plot_all"]))
+    params["find_hyp"] = bool(int(params["find_hyp"]))
+    
     if params["methods"] == "all":
         params["methods"] = methClassMap.keys()
     else:
