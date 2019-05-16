@@ -110,12 +110,11 @@ def barabasi_albert_graph(N, deg, dia, dim, domain):
 
     m = int(round((N - np.sqrt(N**2 - 4*deg*N))/4))
      
-    flag = 1
-    
-   
+       
     G = nx.barabasi_albert_graph(n=N, m=m)
 
-    lcc, _ = graph_util.get_lcc_undirected(G)    
+    lcc, _ = graph_util.get_lcc_undirected(G)
+             
 
 
 

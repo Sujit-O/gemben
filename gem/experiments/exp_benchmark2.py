@@ -127,10 +127,18 @@ if __name__ == "__main__":
                             "%s=%s" % (key, str(val).strip("'")) for (key, val) in curr_hyps.items()
                         )
                 syn_data_folder = 'benchmark_%s_%s' % (graph, hyp_str)
+                
                 graphClass = getattr(graph_gens, graph)
-                G = graphClass(**curr_hyps)
-                 
-                  
+                
+                
+                flag =  1
+                ##### flag = 0 means the labels are continous on lcc
+                while flag:
+                    print("Graph is generating...")
+                    G = graphClass(**curr_hyps)[0]
+                    if len(set(G.nodes())) == G.number_of_nodes() and list(G.nodes())[-1] == G.number_of_nodes() -1:
+                        flag = 0
+                    
                   
                   
                 if G:
