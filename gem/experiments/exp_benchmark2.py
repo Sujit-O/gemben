@@ -24,6 +24,7 @@ methClassMap = {"gf": "GraphFactorization",
                 "aa": "AdamicAdar",
                 "jc": "JaccardCoefficient"}
 
+
 if __name__ == "__main__":
     ''' Sample usage
     python experiments/exp_synthetic.py -syn_names all -plot_hyp_data 1 -meths all
@@ -108,7 +109,16 @@ if __name__ == "__main__":
             for curr_hyp_key_range, r_id in itertools.product(
                 *[graph_hyp_range[hyp_key], range(params["rounds"])]
             ):
- 
+                
+                
+                ##### first round to find the best parameter for each methods
+                if r_id == 0: 
+                    f_hpy = 1
+                else:
+                    f_hpy = 0
+                
+                
+                
                 curr_hyps = def_graph_hyps.copy()
             
                 curr_hyps[hyp_key] = curr_hyp_key_range
@@ -120,6 +130,9 @@ if __name__ == "__main__":
                 graphClass = getattr(graph_gens, graph)
                 G = graphClass(**curr_hyps)
                  
+                  
+                  
+                  
                 if G:
                 
                     if not os.path.exists("gem/data/%s" % syn_data_folder):
@@ -127,11 +140,14 @@ if __name__ == "__main__":
                     nx.write_gpickle(
                             G, 'gem/data/%s/graph.gpickle' % syn_data_folder
                 )
+                    
+                    ##### only find the best hyp for first round
                     os.system(
-                    "python3 gem/experiments/exp.py -data %s -meth %s -dim %d -rounds 1 -s_sch %s -exp lp" % (
+                    "python3 gem/experiments/exp.py -data %s -meth %s -dim %d -rounds 1 -find_hyp %d -s_sch %s -exp lp" % (
                         syn_data_folder,
                         meth,
                         curr_hyps["dim"],
+                        f_hyp,
                         samp_scheme
                     )
                 )
