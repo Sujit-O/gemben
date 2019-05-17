@@ -21,6 +21,11 @@ __pycache__/
 # C extensions
 *.so
 
+core.*
+
+gem/experiments/config/benchmark*
+gem/experiments/config/synthetic/*
+
 # Distribution / packaging
 .Python
 env/
