@@ -10,4 +10,4 @@
 cd /home/rcf-proj/ef/palashgo/Bench-2.3/GEM-benchmark
 unset PYTHONPATH
 source /usr/usc/python/3.6.0/setup.sh
-KERAS_BACKEND=theano python3 gem/experiments/exp_benchmark2.py -meth ${METH} -graph ${GRAPH} -rounds 5
+KERAS_BACKEND=theano python3 gem/experiments/exp_benchmark2.py -meth ${METH} -graphs ${GRAPH} -rounds 5
