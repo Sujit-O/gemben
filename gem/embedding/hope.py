@@ -61,8 +61,25 @@ class HOPE(StaticGraphEmbedding):
         # M_g = I - self._beta*A
         # M_l = self._beta*A
         A = nx.to_numpy_matrix(graph)
-        M_g = np.eye(graph.number_of_nodes()) - self._beta * A
-        M_l = self._beta * A
+        if self._sim_fn == "katz":
+            M_g = np.eye(graph.number_of_nodes()) - self._beta * A
+            M_l = self._beta * A
+        elif self._sim_fn == "pagerank":
+            row_sums = A.sum(axis=1)
+            P = A / row_sums[:, np.newaxis]
+            M_g = np.eye(graph.number_of_nodes()) - self._beta * P
+            M_l = (1 - self._beta) * np.eye(graph.number_of_nodes()
+        elif self._sim_fn == "cn":
+            M_g = np.eye(graph.number_of_nodes())
+            M_l = np.dot(A, A)
+        elif self._sim_fn == "aa":
+            D = A.sum(axis=1) + A.sum(axis=0) 
+            D = np.diag(np.reciprocal(D.astype('float')))
+            M_g = np.eye(graph.number_of_nodes())
+            M_l = np.dot(np.dot(A, D), A)
+        else:
+            M_g = np.eye(graph.number_of_nodes()) - self._beta * A
+            M_l = self._beta * A                                
         try:
             S = np.dot(np.linalg.inv(M_g), M_l)
         except:
