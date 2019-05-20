@@ -68,7 +68,7 @@ class HOPE(StaticGraphEmbedding):
             row_sums = A.sum(axis=1)
             P = A / row_sums[:, np.newaxis]
             M_g = np.eye(graph.number_of_nodes()) - self._beta * P
-            M_l = (1 - self._beta) * np.eye(graph.number_of_nodes()
+            M_l = (1 - self._beta) * np.eye(graph.number_of_nodes())
         elif self._sim_fn == "cn":
             M_g = np.eye(graph.number_of_nodes())
             M_l = np.dot(A, A)

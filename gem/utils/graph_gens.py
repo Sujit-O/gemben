@@ -10,7 +10,7 @@ import scipy
 import networkit as nk
 from scipy import special
 from numpy import pi
-
+import itertools
 import sys
 sys.path.append('./')
 sys.path.append(os.path.realpath(__file__))
