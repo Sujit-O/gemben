@@ -126,50 +126,49 @@ if __name__ == "__main__":
                 hyp_str = '_'.join(
                             "%s=%s" % (key, str(val).strip("'")) for (key, val) in curr_hyps.items()
                         )
-                syn_data_folder = 'benchmark_%s_%s' % (graph, hyp_str)
+                syn_data_folder = 'benchmark_%s_%s_%s' % (graph, hyp_str, r_id)
                 
                 graphClass = getattr(graph_gens, graph)
                 
-                
-                flag =  1
-                ##### flag = 0 means the labels are continous on lcc
-                while flag:
-                    print("Graph is generating...")
-                    G = graphClass(**curr_hyps)[0]
-                    if len(set(G.nodes())) == G.number_of_nodes() and list(G.nodes())[-1] == G.number_of_nodes() -1:
-                        flag = 0
-                    
-                  
-                  
-                if G:
-                
-                    if not os.path.exists("gem/data/%s" % syn_data_folder):
-                        os.makedirs("gem/data/%s" % syn_data_folder)
-                    nx.write_gpickle(
+                try:
+                    nx.read_gpickle(
                             G, 'gem/data/%s/graph.gpickle' % syn_data_folder
-                )
+                  )
+                except:
+                    flag =  1
+                    ##### flag = 0 means the labels are continous on lcc
+                    while flag:
+                        print("Graph is generating...")
+                        G = graphClass(**curr_hyps)[0]
+                        if len(set(G.nodes())) == G.number_of_nodes() and list(G.nodes())[-1] == G.number_of_nodes() -1:
+                            flag = 0
+                    if G:
+                        if not os.path.exists("gem/data/%s" % syn_data_folder):
+                            os.makedirs("gem/data/%s" % syn_data_folder)
+                        nx.write_gpickle(
+                                G, 'gem/data/%s/graph.gpickle' % syn_data_folder
+                    )
                     
                     ##### only find the best hyp for first round
-                    os.system(
-                    "python3 gem/experiments/exp.py -data %s -meth %s -dim %d -rounds 1 -find_hyp %d -s_sch %s -exp lp" % (
-                        syn_data_folder,
-                        meth,
-                        curr_hyps["dim"],
-                        f_hyp,
-                        samp_scheme
-                    )
+                os.system(
+                  "python3 gem/experiments/exp.py -data %s -meth %s -dim %d -rounds 1 -find_hyp %d -s_sch %s -exp lp" % (
+                      syn_data_folder,
+                      meth,
+                      curr_hyps["dim"],
+                      f_hyp,
+                      samp_scheme
+                  )
                 )
-                    MAP, prec, n_samps = pickle.load(
-                    open('gem/results/%s_%s_%d_%s.lp' % (
-                        syn_data_folder, meth, 
-                        curr_hyps["dim"], samp_scheme), 'rb')
-                )        
-                    hyp_df.loc[hyp_r_idx, graph_hyp_keys] = \
-                    pd.Series(curr_hyps)
-                    prec_100 = prec[int(n_samps[0])][0][100]
-                    hyp_df.loc[hyp_r_idx, ev_cols + ["Round Id"]] = \
-                    [MAP[int(n_samps[0])][0], prec_100, r_id]
-                    hyp_r_idx += 1
+                MAP, prec, n_samps = pickle.load(
+                open('gem/results/%s_%s_%d_%s.lp' % (
+                    syn_data_folder, meth, 
+                    curr_hyps["dim"], samp_scheme), 'rb'))        
+                hyp_df.loc[hyp_r_idx, graph_hyp_keys] = \
+                pd.Series(curr_hyps)
+                prec_100 = prec[int(n_samps[0])][0][100]
+                hyp_df.loc[hyp_r_idx, ev_cols + ["Round Id"]] = \
+                [MAP[int(n_samps[0])][0], prec_100, r_id]
+                hyp_r_idx += 1
 
         hyp_df.to_hdf(
             "gem/intermediate/%s_%s_%s_lp_%s_data_hyp.h5" % (
