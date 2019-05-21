@@ -136,6 +136,7 @@ def expLP(digraph, graph_embedding,
     summ_file.write('Method\t%s\n' % metrics.getMetricsHeader())
     for n_s in n_sample_nodes_l:
         n_s = int(n_s)
+        n_s = min(n_s, train_digraph.number_of_nodes())
         MAP[n_s] = [None] * rounds
         prec_curv[n_s] = [None] * rounds
         for round_id in range(rounds):
