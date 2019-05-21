@@ -173,8 +173,8 @@ def expLP(digraph, graph_embedding,
             )
         ))
     summ_file.close()
-    if len(prec_curv[1024][0]) < 100:
-        pdb.set_trace()
+    #if len(prec_curv[-1][0]) < 100:
+        #pdb.set_trace()
     pickle.dump([MAP, prec_curv, n_sample_nodes_l],
                 open('%s_%s_%s.lp' % (res_pre, m_summ, sampling_scheme),
                      'wb'))
