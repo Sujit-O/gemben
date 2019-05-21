@@ -66,7 +66,10 @@ class HOPE(StaticGraphEmbedding):
             M_g = np.eye(graph.number_of_nodes()) - self._beta * A
             M_l = self._beta * A
         elif self._sim_fn == "pagerank":
-            row_sums = A.sum(axis=1)
+            ## np.matrix can't 
+            A = np.array(A)
+            ## in case the sum is 0 
+            row_sums = A.sum(axis=1) + 1e-8
             P = A / row_sums[:, np.newaxis]
             M_g = np.eye(graph.number_of_nodes()) - self._beta * P
             M_l = (1 - self._beta) * np.eye(graph.number_of_nodes())

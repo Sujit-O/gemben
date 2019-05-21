@@ -13,5 +13,5 @@ source /usr/usc/python/anaconda3/setup.sh
 source /usr/usc/cmake/3.7.2/setup.sh
 
 
-cd /home/rcf-proj/ef/dh_599/Benchmark/GEM-benchmark-nx2
-KERAS_BACKEND=theano python3 gem/experiments/exp_benchmark2.py -meth ${METH} -domain ${DOM} -graph ${GRAPH} -rounds 5
+cd /home/rcf-proj/ef/dh_599/Benchmark/GEM-benchmark-nx1
+KERAS_BACKEND=theano python3 gem/experiments/exp_benchmark2.py -meth ${METH}  -graph ${GRAPH} -rounds 5
