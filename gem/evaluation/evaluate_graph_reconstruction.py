@@ -115,4 +115,4 @@ def expGR(digraph, graph_embedding,
                  err_b,
                  n_sampled_nodes_l],
                 open('%s_%s_%s.gr' % (res_pre, m_summ, sampling_scheme), 'wb'))
-    return MAP[MAP.keys()[0]]
+    return MAP[list(MAP.keys())[0]]

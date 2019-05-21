@@ -36,6 +36,7 @@ class HOPE(StaticGraphEmbedding):
             'method_name': 'hope_gsvd'
         }
         hyper_params.update(kwargs)
+        self._sim_fn = ""
         for key in hyper_params.keys():
             self.__setattr__('_%s' % key, hyper_params[key])
         for dictionary in hyper_dict:
