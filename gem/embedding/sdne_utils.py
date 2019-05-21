@@ -89,6 +89,7 @@ def batch_generator_vae(X, beta, batch_size, shuffle):
 
 
 def batch_generator_sdne(X, beta, batch_size, shuffle):
+    batch_size = min(batch_size, X.shape[0])
     row_indices, col_indices = X.nonzero()
     sample_index = np.arange(row_indices.shape[0])
     number_of_batches = row_indices.shape[0] // batch_size
