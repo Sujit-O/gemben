@@ -59,6 +59,9 @@ def expGR(digraph, graph_embedding,
     print('\tGraph Reconstruction')
     summ_file = open('%s_%s_%s.grsumm' % (res_pre, m_summ, sampling_scheme), 'w')
     summ_file.write('Method\t%s\n' % metrics.getMetricsHeader())
+    n_sample_nodes_l = [min(int(n), digraph.number_of_nodes()) for n in n_sample_nodes_l]
+    if not n_sample_nodes_l:
+        n_sample_nodes_l = [node_num]
     MAP = {}
     prec_curv = {}
     err = {}
