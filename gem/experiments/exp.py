@@ -23,7 +23,6 @@ from gem.evaluation.visualize_embedding import expVis
 methClassMap = {"gf": "GraphFactorization",
                 "hope": "HOPE",
                 "lap": "LaplacianEigenmaps",
-                "lle": "LocallyLinearEmbedding",
                 "node2vec": "node2vec",
                 "sdne": "SDNE",
                 "pa": "PreferentialAttachment",
