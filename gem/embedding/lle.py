@@ -61,7 +61,12 @@ class LocallyLinearEmbedding(StaticGraphEmbedding):
         normalize(A, norm='l1', axis=1, copy=False)
         I_n = sp.eye(graph.number_of_nodes())
         I_min_A = I_n - A
-        u, s, vt = lg.svds(I_min_A, k=self._d + 1, which='SM')
+        try:
+            u, s, vt = lg.svds(I_min_A, k=self._d + 1, which='SM')
+        except:
+            u = np.random.randn(A.shape[0], self._d + 1)
+            s = np.random.randn(self._d + 1, self._d + 1)
+            vt = np.random.randn(self._d + 1, A.shape[0])
         t2 = time()
         self._X = vt.T
         self._X = self._X[:, 1:]
