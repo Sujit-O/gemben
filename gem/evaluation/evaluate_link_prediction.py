@@ -87,6 +87,7 @@ def expLP(digraph, graph_embedding,
     print('\tLink Prediction')
     MAP = {}
     prec_curv = {}
+    n_sample_nodes_l = [min(int(n), digraph.number_of_nodes()) for n in n_sample_nodes_l]
 
     # Randomly hide (1-train_ratio)*100% of links
     node_num = digraph.number_of_nodes()
