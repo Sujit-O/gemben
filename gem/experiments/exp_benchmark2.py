@@ -165,7 +165,8 @@ if __name__ == "__main__":
                     curr_hyps["dim"], samp_scheme), 'rb'))        
                 hyp_df.loc[hyp_r_idx, graph_hyp_keys] = \
                 pd.Series(curr_hyps)
-                prec_100 = prec[int(n_samps[0])][0][100]
+                #prec_100 = prec[int(n_samps[0])][0][100]
+                prec_100 = prec[-1][0][100]
                 hyp_df.loc[hyp_r_idx, ev_cols + ["Round Id"]] = \
                 [MAP[int(n_samps[0])][0], prec_100, r_id]
                 hyp_r_idx += 1
