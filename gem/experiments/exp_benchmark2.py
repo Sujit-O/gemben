@@ -167,7 +167,7 @@ if __name__ == "__main__":
                 pd.Series(curr_hyps)
                 #prec_100 = prec[int(n_samps[0])][0][100]
                 try:
-                  prec_100 = prec.values()[0][0][100]
+                  prec_100 = list(prec.values())[0][0][100]
                 except:
                   pdb.set_trace()
                 hyp_df.loc[hyp_r_idx, ev_cols + ["Round Id"]] = \
