@@ -132,7 +132,7 @@ if __name__ == "__main__":
                         )
                 
                 hyp_str_graph_name = '_'.join(
-                            "%s=%s" % (key, str(val).strip("'")) for (key, val) in curr_hyps.items() if key != 'dim' or key != 'domain'
+                            "%s=%s" % (key, str(val).strip("'")) for (key, val) in curr_hyps.items() if key != 'dim' 
                         )
                 
                 syn_data_folder = 'benchmark_%s_%s_%s' % (graph, hyp_str_graph_name, r_id)
