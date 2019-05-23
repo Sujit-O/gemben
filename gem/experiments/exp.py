@@ -12,7 +12,7 @@ import sys
 import numpy as np
 import pandas as pd
 sys.path.insert(0, './')
-
+import os
 from gem.utils      import graph_util, plot_util
 from gem.evaluation import visualize_embedding as viz
 from gem.evaluation.evaluate_graph_reconstruction import expGR
@@ -115,7 +115,10 @@ def choose_best_hyp(data_set, di_graph, node_labels, params):
         model_hyp_range = json.load(
             open('gem/experiments/config/default_hypRange.conf', 'r')
         )
-
+    try:
+        os.makedirs("gem/temp_hyp_res")
+    except:
+        pass
     # Test each hyperparameter for each method and store the best
     for meth in params["methods"]:
         dim = int(params["dimensions"][0])
@@ -159,6 +162,10 @@ def choose_best_hyp(data_set, di_graph, node_labels, params):
             lp_max, lp_hyp[meth] = get_max(lp_m, lp_max, hyp_d, lp_hyp[meth])
             nc_max, nc_hyp[meth] = get_max(nc_m, nc_max, hyp_d, nc_hyp[meth])
             hyp_df_row = dict(zip(meth_hyp_range.keys(), hyp))
+            f_hyp_temp = open("gem/temp_hyp_res/%s_%s.txt" % (data_set, meth), "a")
+            hyp_str = '_'.join("%s=%s" % (key, str(val).strip("'")) for (key, val) in hyp_d.items())
+            f_hyp_temp.write('%s: MAP: %f\n' % (hyp_str, lp_max))
+            f_hyp_temp.close()
             for r_id in range(params["rounds"]):
                 hyp_df.loc[hyp_r_idx, meth_hyp_range.keys()] = \
                     pd.Series(hyp_df_row)
