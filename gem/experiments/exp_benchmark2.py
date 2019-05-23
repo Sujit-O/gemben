@@ -92,6 +92,10 @@ if __name__ == "__main__":
       os.makedirs("gem/results")
     except:
       pass
+    try:
+      os.makedirs("gem/temp")
+    except:
+      pass
 #     if not os.path.exists("gem/intermediate"):
 #         os.makedirs("gem/intermediate")
 #     if not os.path.exists("gem/results"):
@@ -170,6 +174,10 @@ if __name__ == "__main__":
                   prec_100 = list(prec.values())[0][0][100]
                 except:
                   pdb.set_trace()
+                f_temp = open("gem/temp/%s_%s_%s_lp_%s_data_hyp.txt" % (
+                  params["domain_name"], graph, meth, samp_scheme), 'a')
+                f_temp.write('%s: round: %d, MAP: %f, prec_100: %f' % (hyp_str, r_id, MAP[int(n_samps[0])][0], prec_100))
+                f_temp.close()
                 hyp_df.loc[hyp_r_idx, ev_cols + ["Round Id"]] = \
                 [MAP[int(n_samps[0])][0], prec_100, r_id]
                 hyp_r_idx += 1
