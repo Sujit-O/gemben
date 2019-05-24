@@ -548,7 +548,8 @@ def plot_p_at_k(res_pre, res_suffix, exp_type, m_names_f,
                                   % (res_pre, method, d, res_suffix))
                             continue
                         df_map.loc[df_map_idx, 'd'] = d
-                        df_map.loc[df_map_idx, 'MAP'] = MAP[d_idx][idx][int(n_s[0])][round_id]
+#                         df_map.loc[df_map_idx, 'MAP'] = MAP[d_idx][idx][int(n_s[0])][round_id]
+                        df_map.loc[df_map_idx, 'MAP'] = list(MAP[d_idx][idx].values())[0][round_id]
                         df_map.loc[df_map_idx, 'Method'] = m_names[idx]
                         df_map.loc[df_map_idx, 'Round id'] = round_id
                         df_map_idx += 1
