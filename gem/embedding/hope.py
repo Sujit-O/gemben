@@ -86,25 +86,22 @@ class HOPE(StaticGraphEmbedding):
             M_l = self._beta * A                                
         try:
             S = np.dot(np.linalg.inv(M_g), M_l)
+            u, s, vt = lg.svds(S, k=self._d // 2)
+            X1 = np.dot(u, np.diag(np.sqrt(s)))
+            X2 = np.dot(vt.T, np.diag(np.sqrt(s)))
+            t2 = time()
+            self._X = np.concatenate((X1, X2), axis=1)
+            p_d_p_t = np.dot(u, np.dot(np.diag(s), vt))
+            eig_err = np.linalg.norm(p_d_p_t - S)
+            print('SVD error (low rank): %f' % eig_err)
+            return self._X, (t2 - t1)
         except:
-            print ('Singularity Matrix. Assigning random emebdding')
+            print ('Singularity Matrix or SVD did not converge. Assigning random emebdding')
             X1 = np.random.randn(A.shape[0], self._d // 2)
             X2 = np.random.randn(A.shape[0], self._d // 2)
             t2 = time()
             self._X = np.concatenate((X1, X2), axis=1)
-            return self._X, (t2 - t1)
-
-
-        u, s, vt = lg.svds(S, k=self._d // 2)
-        X1 = np.dot(u, np.diag(np.sqrt(s)))
-        X2 = np.dot(vt.T, np.diag(np.sqrt(s)))
-        t2 = time()
-        self._X = np.concatenate((X1, X2), axis=1)
-
-        p_d_p_t = np.dot(u, np.dot(np.diag(s), vt))
-        eig_err = np.linalg.norm(p_d_p_t - S)
-        print('SVD error (low rank): %f' % eig_err)
-        return self._X, (t2 - t1)
+            return self._X, (t2 - t1)       
 
     def get_embedding(self):
         return self._X
