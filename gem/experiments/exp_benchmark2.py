@@ -184,8 +184,8 @@ if __name__ == "__main__":
                 f_temp.write('%s: round: %d, MAP: %f, prec_100: %f' % (hyp_str, r_id, list(MAP.values())[0][0], prec_100))
                 f_temp.close()
                 hyp_df.loc[hyp_r_idx, ev_cols + ["Round Id"]] = \
-                #[MAP[int(n_samps[0])][0], prec_100, r_id]
                 [list(MAP.values())[0][0], prec_100, r_id]
+                #[MAP[int(n_samps[0])][0], prec_100, r_id]
                 hyp_r_idx += 1
 
         hyp_df.to_hdf(
