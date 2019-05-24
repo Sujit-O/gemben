@@ -56,15 +56,21 @@ class LaplacianEigenmaps(StaticGraphEmbedding):
         graph = graph.to_undirected()
         t1 = time()
         L_sym = nx.normalized_laplacian_matrix(graph)
+        
+        try:
+            w, v = lg.eigs(L_sym, k=self._d + 1, which='SM')
+            t2 = time()
+            self._X = v[:, 1:]
 
-        w, v = lg.eigs(L_sym, k=self._d + 1, which='SM')
-        t2 = time()
-        self._X = v[:, 1:]
-
-        p_d_p_t = np.dot(v, np.dot(np.diag(w), v.T))
-        eig_err = np.linalg.norm(p_d_p_t - L_sym)
-        print ('Laplacian matrix recon. error (low rank): %f' % eig_err)
-        return self._X, (t2 - t1)
+            p_d_p_t = np.dot(v, np.dot(np.diag(w), v.T))
+            eig_err = np.linalg.norm(p_d_p_t - L_sym)
+            print ('Laplacian matrix recon. error (low rank): %f' % eig_err)
+            return self._X, (t2 - t1)
+        except:
+            print ('SVD did not converge. Assigning random emebdding')
+            X = np.random.randn(L_sym.shape[0], self._d)
+            t2 = time()
+            return self._X, (t2 - t1)
 
     def get_embedding(self):
         return self._X
