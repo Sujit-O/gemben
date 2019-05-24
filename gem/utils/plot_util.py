@@ -735,7 +735,7 @@ def plot_F1(res_pre, res_suffix, exp_type,
 def plotExpRes(res_pre, methods, exp,
                d_arr, save_fig_pre,
                n_rounds, plot_d,
-               samp_scheme="u_rand", K=32768):
+               samp_scheme="u_rand", K=1024):
     m_names = [m_name_l[meth] for meth in methods]
     map_gr = None
     map_lp = None
