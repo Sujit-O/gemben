@@ -162,7 +162,7 @@ class SDNE(StaticGraphEmbedding):
             generator=batch_generator_sdne(S, self._beta, self._n_batch, True),
             nb_epoch=self._num_iter,
             samples_per_epoch=S.nonzero()[0].shape[0] // self._n_batch,
-            verbose=1,
+            verbose=0,
             callbacks=[callbacks.TerminateOnNaN()]
         )
         loss = history.history['loss']
