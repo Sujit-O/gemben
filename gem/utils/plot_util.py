@@ -508,7 +508,7 @@ def plot_hyp_all(hyp_keys, exp_param, meth, data_sets,
 
 def plot_p_at_k(res_pre, res_suffix, exp_type, m_names_f,
                 m_names, d_arr, n_rounds, save_fig_name,
-                K=32768, plot_d=False, s_sch="u_rand"):
+                K=1024, plot_d=False, s_sch="u_rand"):
     log_K = int(np.log2(K)) + 1
     num_k = log_K - 3
     df_map = pd.DataFrame(np.zeros((n_rounds * len(m_names) * len(d_arr), 4)),
