@@ -141,7 +141,7 @@ if __name__ == "__main__":
                 
                 try:
                     nx.read_gpickle(
-                            G, 'gem/data/%s/graph.gpickle' % syn_data_folder
+                            'gem/data/%s/graph.gpickle' % syn_data_folder
                   )
                 except:
                     flag =  1
