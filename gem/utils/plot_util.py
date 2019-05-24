@@ -537,7 +537,8 @@ def plot_p_at_k(res_pre, res_suffix, exp_type, m_names_f,
                     else:
                         [MAP[d_idx][idx], prec_curv, n_s] = pickle.load(f)
                     try:
-                        prec_curv = prec_curv[int(n_s[0])]
+                        prec_curv = list(prec_curv.values())[0]
+                        #prec_curv = prec_curv[int(n_s[0])]
                     except:
                         pdb.set_trace()
                     for round_id in range(min(n_rounds, len(prec_curv))):
