@@ -157,22 +157,24 @@ if __name__ == "__main__":
                         nx.write_gpickle(
                                 G, 'gem/data/%s/graph.gpickle' % syn_data_folder
                     )
+                perf_exp = not params["lexp"]      
                 if params["lexp"]:
                   try:
                     MAP, prec, n_samps = pickle.load(
                       open('gem/results/%s_%s_%d_%s.lp' % (
                           syn_data_folder, meth, 
                           curr_hyps["dim"], samp_scheme), 'rb'))
-                  except:        
+                  except:   
+                      perf_exp = 1
                        ##### only find the best hyp for first round
-                      os.system(
-                        "python3 gem/experiments/exp.py -data %s -meth %s -dim %d -rounds 1 -find_hyp %d -s_sch %s -exp lp" % (
-                            syn_data_folder,
-                            meth,
-                            curr_hyps["dim"],
-                            f_hyp,
-                            samp_scheme
-                        )
+                if perf_exp:
+                    os.system(
+                      "python3 gem/experiments/exp.py -data %s -meth %s -dim %d -rounds 1 -find_hyp %d -s_sch %s -exp lp" % (
+                          syn_data_folder,
+                          meth,
+                          curr_hyps["dim"],
+                          f_hyp,
+                          samp_scheme
                       )
                 MAP, prec, n_samps = pickle.load(
                 open('gem/results/%s_%s_%d_%s.lp' % (
