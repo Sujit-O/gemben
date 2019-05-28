@@ -30,7 +30,7 @@ from keras.optimizers import SGD, Adam
 from keras import backend as KBack
 from keras import callbacks
 
-from theano.printing import debugprint as dbprint, pprint
+# from theano.printing import debugprint as dbprint, pprint
 from time import time
 
 
