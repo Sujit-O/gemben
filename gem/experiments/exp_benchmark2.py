@@ -176,6 +176,7 @@ if __name__ == "__main__":
                           f_hyp,
                           samp_scheme
                       )
+                    )
                 MAP, prec, n_samps = pickle.load(
                 open('gem/results/%s_%s_%d_%s.lp' % (
                     syn_data_folder, meth, 
