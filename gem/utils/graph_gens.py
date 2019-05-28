@@ -778,7 +778,7 @@ def lfr_benchmark_graph(N, deg, dia, dim, domain):
 
     end_time = time()
 
-    print('Graph_Name: powerlaw_cluster_graph')
+    print('Graph_Name: lfr_benchmark_graph')
     print('Num_Nodes: ', nx.number_of_nodes(best_G), ' Avg_Deg : ', best_avg_deg, ' Diameter: ', best_diam)
     print('TIME: ', end_time - strt_time)
     return best_G, best_avg_deg, best_diam
