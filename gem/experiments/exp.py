@@ -407,6 +407,14 @@ if __name__ == '__main__':
         params["nc_test_ratio_arr"] = params["nc_test_ratio_arr"].split(',')
         params["nc_test_ratio_arr"] = \
             [float(ratio) for ratio in params["nc_test_ratio_arr"]]
+    try:
+      os.makedirs("gem/intermediate")
+    except:
+      pass
+    try:
+      os.makedirs("gem/results")
+    except:
+      pass
 
     for data_set in params["data_sets"]:
         if not int(params["load_exp"]):
