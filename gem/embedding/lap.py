@@ -68,7 +68,7 @@ class LaplacianEigenmaps(StaticGraphEmbedding):
             return self._X, (t2 - t1)
         except:
             print ('SVD did not converge. Assigning random emebdding')
-            X = np.random.randn(L_sym.shape[0], self._d)
+            self._X = np.random.randn(L_sym.shape[0], self._d)
             t2 = time()
             return self._X, (t2 - t1)
 
