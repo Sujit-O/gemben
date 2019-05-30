@@ -402,7 +402,10 @@ if __name__ == '__main__':
         params["methods"] = methClassMap.keys()
     else:
         params["methods"] = params["methods"].split(',')
+    params["methods"] = list(set(params["methods"]))       
+        
     params["dimensions"] = params["dimensions"].split(',')
+    params["dimensions"] = list(set(params["dimensions"]))
     if "nc_test_ratio_arr" in params:
         params["nc_test_ratio_arr"] = params["nc_test_ratio_arr"].split(',')
         params["nc_test_ratio_arr"] = \
