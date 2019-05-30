@@ -385,6 +385,8 @@ if __name__ == '__main__':
 
     params["experiments"] = params["experiments"].split(',')
     params["data_sets"] = params["data_sets"].split(',')
+    params["experiments"] = list(set(params["experiments"]))
+    params["data_sets"] = list(set(params["data_sets"]))
     params["rounds"] = int(params["rounds"])
     params["node_labels"] = int(params["node_labels"])
     # params["n_sample_nodes"] = int(params["n_sample_nodes"])
