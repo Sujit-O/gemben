@@ -434,6 +434,7 @@ if __name__ == '__main__':
                                  params["experiments"], params["dimensions"],
                                  'gem/plots/%s_%s' % (data_set, params["samp_scheme"]),
                                  params["rounds"], params["plot_d"],
+                                 params["train_ratio_lp"],
                                  params["samp_scheme"])
         if int(params["hyp_plot"]):
             call_plot_hyp(data_set, params)
