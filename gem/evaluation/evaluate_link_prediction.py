@@ -177,7 +177,7 @@ def expLP(digraph, graph_embedding,
     #if len(prec_curv[-1][0]) < 100:
         #pdb.set_trace()
     pickle.dump([MAP, prec_curv, n_sample_nodes_l],
-                open('%s_%s_%s.lp' % (res_pre, m_summ, sampling_scheme),
+                open('%s_%s_%s_%s.lp' % (res_pre, m_summ, sampling_scheme, str(train_ratio)),
                      'wb'))
     print('Link prediction evaluation complete. Time: %f sec' % (time() - t1))
     # prec_curv2 = [p[4096] for p in prec_curv[prec_curv.keys()[0]]]
