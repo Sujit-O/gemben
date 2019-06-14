@@ -78,7 +78,8 @@ def run_exps(MethObj, meth, dim, di_graph, data_set, node_labels, params):
         lp = expLP(di_graph, MethObj,
                    params["n_sample_nodes"].split(","),
                    n_r, res_pre,
-                   m_summ, is_undirected=params["is_undirected"],
+                   m_summ, train_ratio=params["train_ratio_lp"],
+                   is_undirected=params["is_undirected"],
                    sampling_scheme=params["samp_scheme"])
     if "nc" in params["experiments"]:
         if "nc_test_ratio_arr" not in params:
@@ -364,6 +365,8 @@ if __name__ == '__main__':
                         help='plot the hyperparameter results (default: True)')
     parser.add_argument('-hyp_plot_all', '--hyp_plot_all',
                         help='plot the hyperparameter results (all) (default: True)')
+    parser.add_argument('-train_ratio_lp', '--train_ratio_lp',
+                        help='fraction of data used for training(default: 0.8)')
     parser.add_argument('-viz_params', '--viz_params',
                         help='which params to use for viz (default: gr)')
     parser.add_argument('-find_hyp', '--find_hyp',
@@ -389,6 +392,7 @@ if __name__ == '__main__':
     params["data_sets"] = list(set(params["data_sets"]))
     params["rounds"] = int(params["rounds"])
     params["node_labels"] = int(params["node_labels"])
+    params["train_ratio_lp"] = float(params["train_ratio_lp"])
     # params["n_sample_nodes"] = int(params["n_sample_nodes"])
     params["is_undirected"] = bool(int(params["is_undirected"]))
    
