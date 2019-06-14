@@ -508,7 +508,7 @@ def plot_hyp_all(hyp_keys, exp_param, meth, data_sets,
 
 def plot_p_at_k(res_pre, res_suffix, exp_type, m_names_f,
                 m_names, d_arr, n_rounds, save_fig_name,
-                K=1024, plot_d=False, s_sch="u_rand"):
+                K=1024, plot_d=False, plot_ratio=0.8, s_sch="u_rand"):
     log_K = int(np.log2(K)) + 1
     num_k = log_K - 3
     df_map = pd.DataFrame(np.zeros((n_rounds * len(m_names) * len(d_arr), 4)),
@@ -530,7 +530,7 @@ def plot_p_at_k(res_pre, res_suffix, exp_type, m_names_f,
         p_at_k_ind = [2**i - 1 for i in range(3, log_K)]
         for idx, method in enumerate(m_names_f):
             try:
-                with open('%s_%s_%d_%s%s' % (res_pre, method, d, s_sch, res_suffix), 'rb') as f:
+                with open('%s_%s_%d_%s_%s%s' % (res_pre, method, d, s_sch, str(plot_ratio), res_suffix), 'rb') as f:
                     if exp_type == 'gr':
                         [_, _, MAP[d_idx][idx], prec_curv, _, _, n_s] = \
                             pickle.load(f)
@@ -569,8 +569,8 @@ def plot_p_at_k(res_pre, res_suffix, exp_type, m_names_f,
                             round_id
                         df_idx += num_k
             except IOError:
-                print('File %s_%s_%d%s not found. Ignoring it for p@k plot' \
-                      % (res_pre, method, d, res_suffix))
+                print('File %s_%s_%d_%s_%s%s not found. Ignoring it for p@k plot' \
+                      % (res_pre, method, d, s_sch, str(plot_ratio), res_suffix))
                 continue
             # except:
             #     pdb.set_trace()
@@ -589,15 +589,15 @@ def plot_p_at_k(res_pre, res_suffix, exp_type, m_names_f,
                 ax.lines[line_i].set_marker(marker[line_i])
             # ax.grid()
             # ax.legend_.remove()
-            plt.savefig('%s_d_%d.pdf' % (save_fig_name, d),
+            plt.savefig('%s_d_%d_plot_ratio_%s.pdf' % (save_fig_name, d, str(plot_ratio),
                         dpi=300, format='pdf', bbox_inches='tight')
             plt.clf()
 
             df_map = df_map[:df_map_idx]
             ax = seaborn.barplot(x="Method", y="MAP", data=df_map)
-            plt.savefig('%s_d_%d_map.pdf' % (save_fig_name, d),
+            plt.savefig('%s_d_%d_plot_ratio_%s_map.pdf' % (save_fig_name, d, str(plot_ratio)),
                         dpi=300, format='pdf', bbox_inches='tight')
-            plt.savefig('%s_d_%d_map.png' % (save_fig_name, d),
+            plt.savefig('%s_d_%d_%s_map.png' % (save_fig_name, d, str(plot_ratio)),
                         dpi=300, bbox_inches='tight')
             plt.clf()
 
@@ -612,9 +612,9 @@ def plot_p_at_k(res_pre, res_suffix, exp_type, m_names_f,
         # ax.grid()
         # ax.legend_.remove()
         ax.legend()
-        plt.savefig('%s_map.pdf' % save_fig_name,
+        plt.savefig('%s_%s_map.pdf' % (save_fig_name, str(plot_ratio)),
                     dpi=300, format='pdf', bbox_inches='tight')
-        plt.savefig('%s_map.png' % save_fig_name,
+        plt.savefig('%s_%s_map.png' % (save_fig_name, str(plot_ratio)),
                     dpi=300, bbox_inches='tight')
         plt.clf()
         df_p_100 = df_p_100[:df_p_100_idx]
@@ -627,9 +627,9 @@ def plot_p_at_k(res_pre, res_suffix, exp_type, m_names_f,
         # ax.grid()
         # ax.legend_.remove()
         ax.legend()
-        plt.savefig('%s_p_100.pdf' % save_fig_name,
+        plt.savefig('%s_%s_p_100.pdf' % (save_fig_name, str(plot_ratio)),
                     dpi=300, format='pdf', bbox_inches='tight')
-        plt.savefig('%s_p_100.png' % save_fig_name,
+        plt.savefig('%s_%s_p_100.png' % (save_fig_name, str(plot_ratio)),
                     dpi=300, bbox_inches='tight')
         plt.clf()
     return MAP
@@ -735,6 +735,7 @@ def plot_F1(res_pre, res_suffix, exp_type,
 def plotExpRes(res_pre, methods, exp,
                d_arr, save_fig_pre,
                n_rounds, plot_d,
+               plot_ratio=0.8,
                samp_scheme="u_rand", K=1024):
     m_names = [m_name_l[meth] for meth in methods]
     map_gr = None
@@ -752,7 +753,7 @@ def plotExpRes(res_pre, methods, exp,
         map_lp = plot_p_at_k(res_pre, '.lp',
                              'lp', methods, m_names, d_arr,
                              n_rounds, '%s_lp' % save_fig_pre,
-                             K=K, plot_d=plot_d,
+                             K=K, plot_d=plot_d, plot_ratio=plot_ratio,
                              s_sch=samp_scheme)
     if "nc" in exp:
         print('NC')
