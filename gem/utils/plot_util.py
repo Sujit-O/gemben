@@ -589,7 +589,7 @@ def plot_p_at_k(res_pre, res_suffix, exp_type, m_names_f,
                 ax.lines[line_i].set_marker(marker[line_i])
             # ax.grid()
             # ax.legend_.remove()
-            plt.savefig('%s_d_%d_plot_ratio_%s.pdf' % (save_fig_name, d, str(plot_ratio),
+            plt.savefig('%s_d_%d_plot_ratio_%s.pdf' % (save_fig_name, d, str(plot_ratio)),
                         dpi=300, format='pdf', bbox_inches='tight')
             plt.clf()
 
