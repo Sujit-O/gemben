@@ -124,7 +124,7 @@ def bayesian_optimization(data_set, di_graph, node_labels, params):
     params['di_graph'] = di_graph
 
     ## test for gf
-    pdb.set_trace()
+    #pdb.set_trace()
     bayesian_opt = BayesianOpt(**params)
     bayesian_opt.optimize()
 
