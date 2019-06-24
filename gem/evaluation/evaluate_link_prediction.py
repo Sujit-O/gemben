@@ -40,7 +40,7 @@ def evaluateStaticLinkPrediction(train_digraph, test_digraph,
     filtered_edge_list = [e for e in predicted_edge_list if not train_digraph.has_edge(e[0], e[1])]
     if 'partition' in train_digraph.node[0]:
         filtered_edge_list = [e for e in predicted_edge_list if train_digraph.node[e[0]]['partition'] != train_digraph.node[e[1]]['partition']]
-    pickle.dump(filtered_edge_list, 'gem/nodeListMap/preds.pickle')
+    pickle.dump(filtered_edge_list, open('gem/nodeListMap/preds.pickle', 'wb'))
     t1 = time()
     MAP = metrics.computeMAP(filtered_edge_list, test_digraph)
     t2 = time()
@@ -114,7 +114,7 @@ def expLP(digraph, graph_embedding,
         ####nx.relabel_nodes(test_digraph, nodeListMap, copy=False)
         test_digraph = nx.relabel_nodes(test_digraph, nodeListMap, copy=True)
         
-    pickle.dump(nodeListMap, 'gem/nodeListMap/lp_lcc.pickle')
+    pickle.dump(nodeListMap, open('gem/nodeListMap/lp_lcc.pickle', 'wb'))
 
     t1 = time()
     # learn graph embedding on train subgraph
@@ -159,7 +159,7 @@ def expLP(digraph, graph_embedding,
                 X_sub = None
             test_digraph_s = test_digraph.subgraph(node_l)
             nodeListMap = dict(zip(node_l, range(len(node_l))))
-            pickle.dump(nodeListMap, 'gem/nodeListMap/lp_lcc_samp.pickle')
+            pickle.dump(nodeListMap, open('gem/nodeListMap/lp_lcc_samp.pickle', 'wb'))
             test_digraph_s = nx.relabel_nodes(test_digraph_s, nodeListMap, copy=True)
             MAP[n_s][round_id], prec_curv[n_s][round_id] = \
                 evaluateStaticLinkPrediction(train_digraph_s, test_digraph_s,
