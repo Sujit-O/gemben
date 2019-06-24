@@ -256,6 +256,8 @@ def call_exps(params, data_set):
     di_graph, nodeListMap = graph_util.get_lcc(di_graph)
     try:
       os.makedirs('gem/nodeListMap')
+    except:
+      pass
     pickle.dump(nodeListMap, 'gem/nodeListMap/%s.pickle' % data_set)
     graph_util.print_graph_stats(di_graph)
 
