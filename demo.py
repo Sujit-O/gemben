@@ -12,6 +12,8 @@ node_edges = []
 for i in range(len(maps)): 
     node_edges.append([]) 
 for (st, ed, w) in preds: 
+    if st >= len(maps) or ed >= len(maps):
+        continue
     try:
         node_edges[st].append((st, ed, w))
     except:
