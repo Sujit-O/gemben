@@ -21,7 +21,7 @@ pdb.set_trace() # Identify and define nodeName here
 preds_sorted = sorted(node_edges[maps[node_name]], key=lambda x: x[2])
 maps_rev = {v:k for k,v in maps.items()}
 for i in range(1, 6):
-    print('%s, %s' % (nodeName, maps_rev[preds_sorted[-i][1]]))
+    print('%s, %s' % (node_name, maps_rev[preds_sorted[-i][1]]))
     if G.has_edge(maps[node_name], preds_sorted[-i][1]):
         print('Correct Prediction')
     else:
