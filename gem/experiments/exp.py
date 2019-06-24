@@ -258,7 +258,7 @@ def call_exps(params, data_set):
       os.makedirs('gem/nodeListMap')
     except:
       pass
-    pickle.dump(nodeListMap, 'gem/nodeListMap/%s.pickle' % data_set)
+    pickle.dump(nodeListMap, open('gem/nodeListMap/%s.pickle' % data_set, 'wb'))
     graph_util.print_graph_stats(di_graph)
 
 
