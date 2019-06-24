@@ -41,6 +41,7 @@ def evaluateStaticLinkPrediction(train_digraph, test_digraph,
     if 'partition' in train_digraph.node[0]:
         filtered_edge_list = [e for e in predicted_edge_list if train_digraph.node[e[0]]['partition'] != train_digraph.node[e[1]]['partition']]
     pickle.dump(filtered_edge_list, open('gem/nodeListMap/preds.pickle', 'wb'))
+    pickle.dump(test_digraph, open('gem/nodeListMap/test_graph.pickle', 'wb'))
     t1 = time()
     MAP = metrics.computeMAP(filtered_edge_list, test_digraph)
     t2 = time()
