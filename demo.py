@@ -12,7 +12,10 @@ node_edges = []
 for i in range(len(maps)): 
     node_edges.append([]) 
 for (st, ed, w) in preds: 
-    node_edges[st].append((st, ed, w))
+    try:
+        node_edges[st].append((st, ed, w))
+    except:
+        pass
 
 pdb.set_trace() # Identify and define nodeName here
 preds_sorted = sorted(node_edges[maps[node_name]], key=lambda x: x[2])
