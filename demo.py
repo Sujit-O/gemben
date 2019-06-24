@@ -6,7 +6,7 @@ map1 = pickle.load(open('gem/nodeListMap/arqui_0.pickle', 'rb'))
 map2 = pickle.load(open('gem/nodeListMap/lp_lcc.pickle', 'rb'))
 maps = {k: map2[v] for k,v in map1.items() if v in map2}
 preds = pickle.load(open('preds.pickle', 'rb'))
-G = pickle.load(open('test_graph.pickle', 'rb')
+G = pickle.load(open('test_graph.pickle', 'rb'))
 
 node_edges = []
 for i in range(len(maps)): 
