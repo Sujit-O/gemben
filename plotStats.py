@@ -1,10 +1,6 @@
 try: import cPickle as pickle
 except: import pickle
 from os import environ
-# if 'DISPLAY' not in environ:
-#     import matplotlib
-#     matplotlib.use('Agg')
-
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
@@ -39,28 +35,44 @@ df = df[df['Unnamed: 0'].isin(graph_names)]
 df['# of nodes'] = df['number_nodes']
 df['Avg. degree'] = df['ave_degree']
 
-
 domains = ['Biological', 'Technological', 'Economic']
-
-
 # fin1, axarray1 = plt.subplots(3, 2, figsize=(7, 4), sharex='col', sharey='row')
-fin1, axarray1 = plt.subplots(len(domains), 2, figsize=(7, 4), sharex='col')
-# fin1, axarray1 = plt.subplots(3, 2, figsize=(7, 4))
-
+lines = None 
+labels = None 
+fin1, axarray1 = plt.subplots(len(domains), 2, figsize=(7.5, 4))
 for idx, domain in enumerate(domains):
     df2 = df[df['networkDomain'] == domain]
-    ax = seaborn.distplot(df2['# of nodes'], kde=True, rug=True, ax=axarray1[idx, 0])
-    ax.set_xlim([200, 1500])
-    ax.set_ylabel(domain)
-    if idx < len(domains) - 1:
-        ax.set_xlabel('')
-    ax = seaborn.distplot(df2['Avg. degree'], kde=True, rug=True, ax=axarray1[idx, 1])
-
-    ax.set_xlim([2, 6])
+    ax = seaborn.distplot(df2['# of nodes'], 
+        kde=True, rug=True, 
+        ax=axarray1[idx, 0],
+        rug_kws={"color": "#3cb371","label": "Actual data"},
+        kde_kws={"color": "#e74c3c", "lw": 1, "label": "Gaussian kernel density estimate"},
+        hist_kws={"histtype": 'stepfilled', "linewidth": 0.8,
+         "alpha": 0.5, "color": "#95a5a6","label": "Histogram",  "edgecolor":'#1560bd'})
     ax.set_ylabel('')
+    ax.get_legend().remove()
     if idx < len(domains) - 1:
         ax.set_xlabel('')
-# pdb.set_trace()
+    
+    ax = seaborn.distplot(df2['Avg. degree'], 
+        kde=True, 
+        rug=True, 
+        ax=axarray1[idx, 1], 
+        rug_kws={"color": "#3cb371","label": "Actual data"},
+        kde_kws={"color": "#e74c3c", "lw": 1, "label": "Gaussian kernel density estimate"},
+        hist_kws={"histtype": 'stepfilled', "linewidth": 0.8,
+         "alpha": 0.5, "color": "#95a5a6","label": "Histogram","edgecolor":'#1560bd'})
+    lines,labels = ax.get_legend_handles_labels()
+    ax.set_ylabel(domain)
+    ax.yaxis.set_label_position("right")
+    if idx < len(domains) - 1:
+        ax.set_xlabel('')
+    ax.get_legend().remove()    
+
+axarray1[2, 1].set_xlim([2, 2.3])
+fin1.legend(lines,labels,loc='lower center', bbox_to_anchor=(0.46,-0.008),#(0.46, -0.01),
+                ncol=len(domains)+1, fancybox=True, shadow=True,prop={'size': 6})
+fin1.text(0.05, 0.5, "Density Function", va='center', rotation='vertical', fontdict ={'fontsize': 8})
 plt.savefig(
        'realgraphProps.pdf', # gem/plots/hyp/
        dpi=300, format='pdf', bbox_inches='tight'
