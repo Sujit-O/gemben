@@ -3,8 +3,10 @@ Authors
 
 Core Development
 ----------------
+
 ::	
-	Palash~Goyal, Di Huang, Ankita Goswami
+	
+    Palash~Goyal, Di Huang, Ankita Goswami
 	University of Southern California
 	Information Sciences Institute
 

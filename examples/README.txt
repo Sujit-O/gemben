@@ -3,4 +3,4 @@
 General examples
 ================
 
-General-purpose and introductory examples for the `pykg2vec` library.
+General-purpose and introductory examples for the `GEM-Benchmark` library.
