@@ -20,7 +20,7 @@ import sphinx_rtd_theme
 
 # -- Project information -----------------------------------------------------
 
-project = 'gem'
+project = 'gemben'
 copyright = '2019, Palash Goyal, Di Huang, Ankita Goswami, Sujit Rokka Chhetri, Arquimedes Canedo and Emilio Ferrara'
 author = 'Palash Goyal, Di Huang, Ankita Goswami, Sujit Rokka Chhetri, Arquimedes Canedo and Emilio Ferrara'
 
@@ -30,7 +30,7 @@ version = "0.0.1"
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
-sys.path.insert(0, os.path.abspath('../gem'))
+sys.path.insert(0, os.path.abspath('../gemben'))
 # -- General configuration ---------------------------------------------------
 
 # Try to override the matplotlib configuration as early as possible
@@ -199,7 +199,7 @@ html_static_path = ['_static']
 #html_file_suffix = None
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'gemdoc'
+htmlhelp_basename = 'gembendoc'
 
 
 # -- Options for LaTeX output ---------------------------------------------
@@ -245,7 +245,7 @@ latex_elements = {
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'gem', u'gem Documentation',
+    ('index', 'gemben', u'gemben Documentation',
      [u'Palash Goyal, Di Huang, Ankita Goswami, Sujit Rokka Chhetri, Arquimedes Canedo and Emilio Ferrara'], 1)
 ]
 
@@ -259,8 +259,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-  ('index', 'gem', u'gem Documentation',
-   u'Palash Goyal, Di Huang, Ankita Goswami, Sujit Rokka Chhetri, Arquimedes Canedo and Emilio Ferrara', 'gem', 'gem.',
+  ('index', 'gemben', u'gemben Documentation',
+   u'Palash Goyal, Di Huang, Ankita Goswami, Sujit Rokka Chhetri, Arquimedes Canedo and Emilio Ferrara', 'gemben', 'gemben.',
    'Miscellaneous'),
 ]
 
