@@ -1,4 +1,4 @@
-[![Documentation Status](https://readthedocs.org/projects/gem/badge/?version=latest)](https://gem.readthedocs.io/en/latest/?badge=latest)
+[![Documentation Status](https://readthedocs.org/projects/gemben/badge/?version=latest)](https://gemben.readthedocs.io/en/latest/?badge=latest)
 
 # GEM-benchmark 
 
