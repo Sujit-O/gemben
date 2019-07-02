@@ -1,4 +1,4 @@
-Citing pykg2vec
+Citing gemben
 ================
 
 If you found this open source library useful, please kindly cite us::

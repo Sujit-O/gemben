@@ -7,8 +7,8 @@ Core Development
 ::	
 	
     Palash~Goyal, Di Huang, Ankita Goswami
-	University of Southern California
-	Information Sciences Institute
+    University of Southern California
+    Information Sciences Institute
 
     Sujit Rokka Chhetri 
     University of California, Irvine
@@ -16,7 +16,7 @@ Core Development
 
     Arquimedes Canedo
     Siemens Corporate Technology
-    
+
     Emilio Ferrara
     University of Southern California
-	Information Sciences Institute
+    Information Sciences Institute
