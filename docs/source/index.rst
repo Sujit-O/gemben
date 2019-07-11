@@ -19,7 +19,6 @@ See the source code repository on github: https://github.com/palash1992/GEM-benc
    dependency
    install
    testing
-   contribute
 
 .. toctree::
    :maxdepth: 2
