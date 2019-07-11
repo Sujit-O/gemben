@@ -35,6 +35,13 @@ See the source code repository on github: https://github.com/palash1992/GEM-benc
 .. toctree::
    :maxdepth: 2
    :hidden:
+   :caption: Dataset
+
+   dataset
+
+.. toctree::
+   :maxdepth: 2
+   :hidden:
    :caption: Experiments
 
    exp
@@ -45,13 +52,6 @@ See the source code repository on github: https://github.com/palash1992/GEM-benc
    :caption: API Documentation
 
    api
-
-.. toctree::
-   :maxdepth: 2
-   :hidden:
-   :caption: Dataset
-
-   dataset
 
 .. toctree::
    :maxdepth: 2
