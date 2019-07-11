@@ -1,7 +1,7 @@
 Background
 ===============
 
-This section introduces the notation used in this benchmark library, and provides a brief overview of graph embedding methods. In-depth analysis of graph embedding theory we refer the reader to here_.
+This section introduces the notation used in this benchmark library, and provides a brief overview of graph embedding methods. In-depth analysis of graph embedding theory we refer the reader to `here`_.
 
 :math:`G (V, E)` denotes a weighted graph where :math:`V` is the set of vertices and :math:`E` is the set of edges. We represent :math:`W` as the adjacency matrix of :math:`G`, where :math:`W_{ij} = 1` represents the presence of an edge between :math:`i` and :math:`j`. A graph embedding is a mapping :math:`f: V -> \mathbb{R}^d`, where :math:`d  << |V|` and the function :math:`f` preserves some proximity measure defined on graph :math:`G`. It aims to map similar nodes close to each other. Function :math:`f` when applied on the graph :math:`G` yields an embedding :math:`Y`.
 
@@ -28,7 +28,7 @@ Graph embedding methods embed graph vertices into a low-dimensional space. The g
 Factorization based approaches
 -------------------------------
 
-Factorization based approaches apply factorization on graph related matrices to obtain the node representation. Graph matrices such as the adjacency matrix, Laplacian matrix, and Katz similarity matrix contain information about node connectivity and the graph's structure. Other matrix factorization approaches use the eigenvectors from spectral decomposition of a graph matrix as node embeddings. For example, to preserve locality, LLE_ uses :math:`d` eigenvectors corresponding to eigenvalues from second smallest to :math:`(d+1)^{th}` smallest from the sparse matrix :math:`(I-W)^\intercal(I-W)`. It assumes that the embedding of each node is a linear weighted combination of the neighbor's embeddings. `Laplacian Eigenmaps`_ take the first :math:`d` eigenvectors with the smallest eigenvalues of the normalized Laplacian :math:`D^{-1/2}LD^{-1/2}`. Both LLE and Laplacian Eigenmaps were designed to preserve the local geometric relationships of the data. Another type of matrix factorization methods learn node embeddings under different optimization functions in order to preserve certain properties. `Structural Preserving Embedding`_  builds upon Laplacian Eigenmaps to recover the original graph. `Cauchy Graph Embedding`_ uses a quadratic distance formula in the objective function to emphasize similar nodes instead of dissimilar nodes. `Graph Factorization`_  uses an approximation function to factorize the adjacency matrix in a more scalable manner. `GraRep`_ and `HOPE`_ were invented to keep the high order proximity in the graph. Factorization based approaches have been widely used in practical applications due to their scalability. The methods are also easy to implement and can yield quick insights into the data set.
+Factorization based approaches apply factorization on graph related matrices to obtain the node representation. Graph matrices such as the adjacency matrix, Laplacian matrix, and Katz similarity matrix contain information about node connectivity and the graph's structure. Other matrix factorization approaches use the eigenvectors from spectral decomposition of a graph matrix as node embeddings. For example, to preserve locality, LLE_ uses :math:`d` eigenvectors corresponding to eigenvalues from second smallest to :math:`(d+1)^{th}` smallest from the sparse matrix :math:`(I-W)^\intercal(I-W)`. It assumes that the embedding of each node is a linear weighted combination of the neighbor's embeddings. `Laplacian Eigenmaps`_ take the first :math:`d` eigenvectors with the smallest eigenvalues of the normalized Laplacian :math:`D^{-1/2}LD^{-1/2}`. Both LLE and Laplacian Eigenmaps were designed to preserve the local geometric relationships of the data. Another type of matrix factorization methods learn node embeddings under different optimization functions in order to preserve certain properties. `Structural Preserving Embedding`_ builds upon Laplacian Eigenmaps to recover the original graph. `Cauchy Graph Embedding`_ uses a quadratic distance formula in the objective function to emphasize similar nodes instead of dissimilar nodes. `Graph Factorization`_  uses an approximation function to factorize the adjacency matrix in a more scalable manner. `GraRep`_ and `HOPE`_ were invented to keep the high order proximity in the graph. Factorization based approaches have been widely used in practical applications due to their scalability. The methods are also easy to implement and can yield quick insights into the data set.
 
 Random walk approaches
 -------------------------
@@ -44,7 +44,7 @@ The third category of graph embedding approaches is based on neural networks. De
 .. _LLE:
 	https://science.sciencemag.org/content/290/5500/2323
 
-.. _Preserving Embedding:
+.. _Structural Preserving Embedding:
 	http://www.cs.columbia.edu/~jebara/papers/spe-icml09.pdf
 
 .. _Cauchy Graph Embedding:
@@ -96,11 +96,7 @@ The third category of graph embedding approaches is based on neural networks. De
 	https://arxiv.org/pdf/1611.07308.pdf
 
 .. _here:
-
-.. _here:
 	https://arxiv.org/abs/1705.02801
-
-
 
 .. _community detection:
     http://homes.sice.indiana.edu/filiradi/Mypapers/pre78_046110_2008.pdf

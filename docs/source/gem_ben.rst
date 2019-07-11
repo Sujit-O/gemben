@@ -21,7 +21,7 @@ We propose a novel data set containing 100 real world graphs from four domains: 
 
 
 .. image:: ../../figures/realgraphProps.png
-   :width: 600
+   :width: 800
    :align: center
    :alt: Structure of the pykg2vec library.
 
