@@ -143,7 +143,7 @@ class AE(StaticGraphEmbedding):
         loss = history.history['loss']
         # Get embedding for all points
         if loss[0] == np.inf or np.isnan(loss[0]):
-            print 'Model diverged. Assigning random embeddings'
+            print('Model diverged. Assigning random embeddings')
             self._Y = np.random.randn(self._node_num, self._d)
         else:
             self._Y = model_batch_predictor(self._autoencoder, S, self._n_batch)

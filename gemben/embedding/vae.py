@@ -121,8 +121,8 @@ class VAE(StaticGraphEmbedding):
         y_log_var = KBack.log(KBack.square(y_std))
         vae_loss = merge(
             [y_mean, y_std],
-            mode=lambda (a, b): -0.5 * KBack.sum(
-                1 + KBack.log(KBack.square(b)) - KBack.square(a) - KBack.square(b),
+            mode=lambda x: -0.5 * KBack.sum(
+                1 + KBack.log(KBack.square(x[1])) - KBack.square(x[0]) - KBack.square(x[1]),
                 axis=-1
             ),
             output_shape=lambda L: (L[1][0], 1)
