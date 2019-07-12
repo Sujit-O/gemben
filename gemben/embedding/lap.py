@@ -1,3 +1,4 @@
+
 disp_avlbl = True
 import os
 if os.name == 'posix' and 'DISPLAY' not in os.environ:
@@ -64,10 +65,10 @@ class LaplacianEigenmaps(StaticGraphEmbedding):
 
             p_d_p_t = np.dot(v, np.dot(np.diag(w), v.T))
             eig_err = np.linalg.norm(p_d_p_t - L_sym)
-            print ('Laplacian matrix recon. error (low rank): %f' % eig_err)
+            print('Laplacian matrix recon. error (low rank): %f' % eig_err)
             return self._X, (t2 - t1)
         except:
-            print ('SVD did not converge. Assigning random emebdding')
+            print('SVD did not converge. Assigning random emebdding')
             self._X = np.random.randn(L_sym.shape[0], self._d)
             t2 = time()
             return self._X, (t2 - t1)
