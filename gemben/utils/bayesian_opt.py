@@ -13,15 +13,15 @@ from math import log10
 
 
 import sys
-sys.path.append('./')
-sys.path.append(os.path.realpath(__file__))
+# sys.path.append('./')
+# sys.path.append(os.path.realpath(__file__))
 
 from bayes_opt import BayesianOptimization
 from bayes_opt.observer import JSONLogger
 from bayes_opt.event import Events
 from bayes_opt.util import load_logs
 from bayes_opt import UtilityFunction
-from gem.experiments import exp
+from gemben.experiments import exp
 
 methClassMap = {"gf": "GraphFactorization",
 				"hope": "HOPE",

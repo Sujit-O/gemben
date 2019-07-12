@@ -1,6 +1,6 @@
 disp_avlbl = True
 import os
-if 'DISPLAY' not in os.environ:
+if os.name == 'posix' and 'DISPLAY' not in os.environ:
     disp_avlbl = False
     import matplotlib
     matplotlib.use('Agg')
@@ -14,16 +14,16 @@ import scipy.io as sio
 import networkx as nx
 
 import sys
-sys.path.append('./')
-sys.path.append(os.path.realpath(__file__))
+# sys.path.append('./')
+# sys.path.append(os.path.realpath(__file__))
 
 from .static_graph_embedding import StaticGraphEmbedding
-from gem.utils import graph_util, plot_util
-from gem.evaluation import evaluate_graph_reconstruction as gr
-from gem.evaluation import visualize_embedding as viz
+from gemben.utils import graph_util, plot_util
+from gemben.evaluation import evaluate_graph_reconstruction as gr
+from gemben.evaluation import visualize_embedding as viz
 from .sdne_utils import *
 
-from keras.layers import Input, Dense, Lambda, merge
+from keras.layers import Input, Dense, Lambda, merge,  Subtract
 from keras.models import Model, model_from_json
 import keras.regularizers as Reg
 from keras.optimizers import SGD, Adam
@@ -114,9 +114,10 @@ class VAE(StaticGraphEmbedding):
         # [x_hat, y] = self._autoencoder(x_in)
         [x_hat, y_mean, y_std, y2] = self._autoencoder(x_in)
         # Outputs
-        x_diff = merge([x_hat, x_in],
-                       mode=lambda (a, b): a - b,
-                       output_shape=lambda L: L[1])
+        x_diff = Subtract()([x_hat, x_in])
+        # x_diff = merge([x_hat, x_in],
+        #                mode=lambda (a, b): a - b,
+        #                output_shape=lambda L: L[1])
         y_log_var = KBack.log(KBack.square(y_std))
         vae_loss = merge(
             [y_mean, y_std],

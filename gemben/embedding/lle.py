@@ -1,6 +1,6 @@
 disp_avlbl = True
 import os
-if 'DISPLAY' not in os.environ:
+if os.name == 'posix' and 'DISPLAY' not in os.environ:
     disp_avlbl = False
     import matplotlib
     matplotlib.use('Agg')
@@ -17,12 +17,12 @@ from time import time
 import pdb
 
 import sys
-sys.path.append('./')
-sys.path.append(os.path.realpath(__file__))
+# sys.path.append('./')
+# sys.path.append(os.path.realpath(__file__))
 
 from .static_graph_embedding import StaticGraphEmbedding
-from gem.utils import graph_util, plot_util
-from gem.evaluation import visualize_embedding as viz
+from gemben.utils import graph_util, plot_util
+from gemben.evaluation import visualize_embedding as viz
 
 
 class LocallyLinearEmbedding(StaticGraphEmbedding):

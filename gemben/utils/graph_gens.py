@@ -12,10 +12,10 @@ from scipy import special
 from numpy import pi
 import itertools
 import sys
-sys.path.append('./')
-sys.path.append(os.path.realpath(__file__))
+# sys.path.append('./')
+# sys.path.append(os.path.realpath(__file__))
 
-from gem.utils import graph_util,kronecker_generator,kronecker_init_matrix
+from gemben.utils import graph_util,kronecker_generator,kronecker_init_matrix
 import math
 import multiprocessing
 

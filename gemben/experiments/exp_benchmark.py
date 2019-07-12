@@ -10,8 +10,8 @@ import pdb
 import os
 import sys
 from time import time
-sys.path.insert(0, './')
-from gem.utils import graph_gens
+# sys.path.insert(0, './')
+from gemben.utils import graph_gens
 
 methClassMap = {"gf": "GraphFactorization",
                 "hope": "HOPE",

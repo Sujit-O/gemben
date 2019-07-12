@@ -50,7 +50,7 @@ def solve_dmin(dmax, dmed, gamma):
 def benchmark(excess, defect, num_nodes, average_k, max_degree, tau, tau2, mixing_parameter,
                   overlapping_nodes, overlap_membership, nmin, nmax, fixed_range, clustering_coeff):
     dmin = solve_dmin(max_degree, average_k, -1*t1)
-    print dmin
+    print(dmin)
     exit()
 
 if __name__ == '__main__':

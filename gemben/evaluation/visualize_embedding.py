@@ -3,8 +3,8 @@ import networkx as nx
 from sklearn.manifold import TSNE
 
 import sys
-sys.path.insert(0, './')
-from gem.utils import plot_util
+# sys.path.insert(0, './')
+from gemben.utils import plot_util
 
 
 def plot_embedding2D(node_pos, node_colors=None, di_graph=None):

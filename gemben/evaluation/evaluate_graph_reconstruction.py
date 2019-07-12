@@ -1,7 +1,7 @@
 try: import cPickle as pickle
 except: import pickle
-from gem.evaluation import metrics
-from gem.utils import evaluation_util, graph_util
+from gemben.evaluation import metrics
+from gemben.utils import evaluation_util, graph_util
 import networkx as nx
 import numpy as np
 

@@ -1,6 +1,6 @@
 disp_avlbl = True
 import os
-if 'DISPLAY' not in os.environ:
+if os.name == 'posix' and 'DISPLAY' not in os.environ:
     disp_avlbl = False
     import matplotlib
     matplotlib.use('Agg')
@@ -14,13 +14,13 @@ import scipy.io as sio
 import networkx as nx
 
 import sys
-sys.path.append('./')
-sys.path.append(os.path.realpath(__file__))
+# sys.path.append('./')
+# sys.path.append(os.path.realpath(__file__))
 
 from .static_graph_embedding import StaticGraphEmbedding
-from gem.utils import graph_util, plot_util
-from gem.evaluation import evaluate_graph_reconstruction as gr
-from gem.evaluation import visualize_embedding as viz
+from gemben.utils import graph_util, plot_util
+from gemben.evaluation import evaluate_graph_reconstruction as gr
+from gemben.evaluation import visualize_embedding as viz
 from .sdne_utils import *
 
 from keras.layers import Input, Dense, Lambda, merge
@@ -168,7 +168,7 @@ class GCN(StaticGraphEmbedding):
         loss = history.history['loss']
         # Get embedding for all points
         if loss[-1] == np.inf or np.isnan(loss[-1]):
-            print 'Model diverged. Assigning random embeddings'
+            print('Model diverged. Assigning random embeddings')
             self._Y = np.random.randn(self._node_num, self._d)
         else:
             self._Y = model_batch_predictor(self._autoencoder, S, self._n_batch)

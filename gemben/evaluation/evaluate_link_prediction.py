@@ -1,15 +1,15 @@
 try: import cPickle as pickle
 except: import pickle
-from gem.evaluation import metrics
-from gem.utils import evaluation_util, graph_util
+from gemben.evaluation import metrics
+from gemben.utils import evaluation_util, graph_util
 import numpy as np
 import networkx as nx
 import pdb
 from time import time
 
 import sys
-sys.path.insert(0, './')
-from gem.utils import embed_util
+# sys.path.insert(0, './')
+from gemben.utils import embed_util
 
 
 def evaluateStaticLinkPrediction(train_digraph, test_digraph,

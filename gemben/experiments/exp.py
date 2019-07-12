@@ -11,14 +11,14 @@ import pdb
 import sys
 import numpy as np
 import pandas as pd
-sys.path.insert(0, './')
+# sys.path.insert(0, './')
 import os
-from gem.utils      import graph_util, plot_util
-from gem.evaluation import visualize_embedding as viz
-from gem.evaluation.evaluate_graph_reconstruction import expGR
-from gem.evaluation.evaluate_link_prediction import expLP, expLPT
-from gem.evaluation.evaluate_node_classification import expNC
-from gem.evaluation.visualize_embedding import expVis
+from gemben.utils      import graph_util, plot_util
+from gemben.evaluation import visualize_embedding as viz
+from gemben.evaluation.evaluate_graph_reconstruction import expGR
+from gemben.evaluation.evaluate_link_prediction import expLP, expLPT
+from gemben.evaluation.evaluate_node_classification import expNC
+from gemben.evaluation.visualize_embedding import expVis
 
 methClassMap = {"gf": "GraphFactorization",
                 "hope": "HOPE",
