@@ -224,19 +224,19 @@ class AE(StaticGraphEmbedding):
 
 if __name__ == '__main__':
     # load synthetic graph
-    file_prefix = "gem/data/sbm/graph.gpickle"
+    file_prefix = "gemben/data/sbm/graph.gpickle"
     G = nx.read_gpickle(file_prefix)
     node_colors = pickle.load(
-        open('gem/data/sbm/node_labels.pickle', 'rb')
+        open('ggemben/data/sbm/node_labels.pickle', 'rb')
     )
     embedding = AE(d=128, beta=5, nu1=1e-6, nu2=1e-6,
                    K=3, n_units=[500, 300, ],
                    n_iter=500, xeta=1e-3,
                    n_batch=1024,
-                   modelfile=['gem/intermediate/enc_model.json',
-                              'gem/intermediate/dec_model.json'],
-                   weightfile=['gem/intermediate/enc_weights.hdf5',
-                               'gem/intermediate/dec_weights.hdf5'])
+                   modelfile=['gemben/intermediate/enc_model.json',
+                              'gemben/intermediate/dec_model.json'],
+                   weightfile=['gemben/intermediate/enc_weights.hdf5',
+                               'gemben/intermediate/dec_weights.hdf5'])
     embedding.learn_embedding(G)
     X = embedding.get_embedding()
     # X = np.random.randn(1024, 128)

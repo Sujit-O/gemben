@@ -277,19 +277,19 @@ if __name__ == '__main__':
     #                      di_graph=G, node_colors=None)
     # plt.show()
     # load synthetic graph
-    file_prefix = "gem/data/sbm/graph.gpickle"
+    file_prefix = "gemben/data/sbm/graph.gpickle"
     G = nx.read_gpickle(file_prefix)
     node_colors = pickle.load(
-        open('gem/data/sbm/node_labels.pickle', 'rb')
+        open('gemben/data/sbm/node_labels.pickle', 'rb')
     )
     embedding = SDNE(d=128, beta=5, alpha=1e-5, nu1=1e-6, nu2=1e-6,
                    K=3, n_units=[500, 300, ],
                    n_iter=30, xeta=1e-3,
                    n_batch=500,
-                   modelfile=['gem/intermediate/enc_model.json',
-                              'gem/intermediate/dec_model.json'],
-                   weightfile=['gem/intermediate/enc_weights.hdf5',
-                               'gem/intermediate/dec_weights.hdf5'])
+                   modelfile=['gemben/intermediate/enc_model.json',
+                              'gemben/intermediate/dec_model.json'],
+                   weightfile=['gemben/intermediate/enc_weights.hdf5',
+                               'gemben/intermediate/dec_weights.hdf5'])
     G_X = nx.to_numpy_matrix(G)
     embedding.learn_embedding(G)
     G_X_hat = embedding.get_reconstructed_adj()

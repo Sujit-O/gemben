@@ -11,7 +11,7 @@ py3test/
 slurm*.out
 
 # THIS FILE IS GENERATED FROM GEM SETUP.PY
-gem/version.py
+gemben/version.py
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -23,8 +23,8 @@ __pycache__/
 
 core.*
 
-gem/experiments/config/benchmark*
-gem/experiments/config/synthetic/*
+gemben/experiments/config/benchmark*
+gemben/experiments/config/synthetic/*
 
 # Distribution / packaging
 .Python
@@ -112,14 +112,14 @@ ENV/
 */.DS_Store
 
 # intermediate
-gem/intermediate/*
+gemben/intermediate/*
 
 # results
-gem/results/*
+gemben/results/*
 
 # data
-gem/data/*
-gem/data/*
+gemben/data/*
+gemben/data/*
 
 # neural network weights
 *.hdf5
