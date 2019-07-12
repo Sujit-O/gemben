@@ -6,14 +6,14 @@ Adamic Adar
 -----------
 
 .. automodule:: gemben.embedding.aa
-   :members:
+   :members: AdamicAdar
 
 
 Static Graph Embedding
 -----------------------
 
 .. automodule:: gemben.embedding.ae_static
-   :members:
+   :members: AE
 
 Common Neighbors
 ----------------------
