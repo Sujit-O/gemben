@@ -2,6 +2,7 @@ try: import cPickle as pickle
 except: import pickle
 from os import environ
 import matplotlib
+import os
 if os.name == 'posix' and 'DISPLAY' not in os.environ:
     disp_avlbl = False
     import matplotlib
