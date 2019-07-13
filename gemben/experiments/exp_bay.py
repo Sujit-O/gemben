@@ -1,3 +1,11 @@
+'''
+==============================
+Bayesian Hyerparameter tuning
+==============================
+Experiment to utilize the bayesian hyperparameter tuning for the algorithms. 
+'''
+
+
 try: import cPickle as pickle
 except: import pickle
 from time import time

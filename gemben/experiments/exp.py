@@ -1,3 +1,10 @@
+'''
+=========================
+Simple Experiment
+=========================
+A simple experiment to run the gemben library.
+'''
+
 try: import cPickle as pickle
 except: import pickle
 from time import time

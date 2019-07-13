@@ -1,3 +1,10 @@
+'''
+==========================
+Experiment with Benchmark
+==========================
+Example to run the benchmark across all the baseline embedding algorithms.
+'''
+
 from subprocess import call
 import itertools
 try: import cPickle as pickle
