@@ -28,8 +28,7 @@ setuptools.setup(
     url="https://github.com/Sujit-O/gemben.git",
     packages=setuptools.find_packages(exclude=['dataset', 'venv', 'build', 'dist', 'gemben.egg-info']),
     package_dir={DISTNAME: 'gemben'},
-    setup_requires=['sphinx>=2.1.2', "cffi>=1.9.1"],
-    cffi_modules     = [ os.path.join("ref10", "build.py") + ":ffibuilder" ],
+    setup_requires=['sphinx>=2.1.2', 'cmake>=3.14.4'],
     install_requires=INSTALL_REQUIRES,
     classifiers=[
         "Programming Language :: Python :: 3.6",
