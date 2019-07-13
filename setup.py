@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 import setuptools
 import os
-import subprocess
 # get __version__ from _version.py
 ver_file = os.path.join('gemben', '_version.py')
 
@@ -18,13 +17,8 @@ with open("README.md", "r") as fh:
 
 VERSION = __version__
 
-
-subprocess.check_call([
-    sys.executable,
-    "-m",
-    "pip",
-    "install",
-    "cmake"])
+myCmd = 'pip install cmake'
+os.system(myCmd)
 
 setuptools.setup(
     name='gemben',

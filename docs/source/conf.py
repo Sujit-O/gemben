@@ -18,12 +18,16 @@ import subprocess
 
 import sphinx_rtd_theme
 
-subprocess.check_call([
+def source_read_handler(app, docname, source):
+    subprocess.check_call([
     sys.executable,
     "-m",
     "pip",
     "install",
     "cmake"])
+
+def setup(app):
+    app.connect('source-read', source_read_handler)
 
 # -- Project information -----------------------------------------------------
 
