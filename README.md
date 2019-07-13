@@ -1,4 +1,4 @@
-[![Documentation Status](https://readthedocs.org/projects/gemben/badge/?version=latest)](https://gemben.readthedocs.io/en/latest/?badge=latest) [![PyPI version](https://badge.fury.io/py/gemben.svg)](https://badge.fury.io/py/gemben)
+[![Documentation Status](https://readthedocs.org/projects/gemben/badge/?version=latest)](https://gemben.readthedocs.io/en/latest/?badge=latest) [![PyPI version](https://badge.fury.io/py/gemben.svg)](https://badge.fury.io/py/gemben) [![PyPI license](https://img.shields.io/pypi/l/ansicolortags.svg)](https://pypi.python.org/pypi/ansicolortags/) 
 
 # GEM-benchmark 
 
