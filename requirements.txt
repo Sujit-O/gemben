@@ -16,5 +16,6 @@ sklearn>=0.0
 bayesian-optimization>=1.0.1
 networkit>=5.0
 tensorflow==1.14.0
+cmake>=3.14.4
 
 
