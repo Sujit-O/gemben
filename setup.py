@@ -2,9 +2,10 @@
 # -*- coding: utf-8 -*-
 import setuptools
 import os
-# get __version__ from _version.py
-myCmd = 'pip install cmake>=3.14.4'
-os.system(myCmd)
+import subprocess
+
+subprocess.call([sys.executable, "-m", "pip", "install", 'cmake'])
+
 ver_file = os.path.join('gemben', '_version.py')
 
 with open(ver_file) as f:
