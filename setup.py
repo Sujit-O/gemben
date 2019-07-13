@@ -23,7 +23,6 @@ setuptools.setup(
     author="Palash Goyal, Di Huang, Ankita Goswami, Sujit Rokka Chhetri, Arquimedes Canedo and Emilio Ferrara",
     author_email="palashgo@usc.edu",
     description="Benchmark for Graph Embedding Algorithms",
-    # ext_modules=[setuptools.Extension('file_handler', ['./pykg2vec/csource/file_handler.c'])],
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/Sujit-O/gemben.git",
