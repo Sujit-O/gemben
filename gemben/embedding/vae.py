@@ -1,21 +1,16 @@
-disp_avlbl = True
-import os
-if os.name == 'posix' and 'DISPLAY' not in os.environ:
-    disp_avlbl = False
-    import matplotlib
-    matplotlib.use('Agg')
-import matplotlib.pyplot as plt
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
 
+import matplotlib.pyplot as plt
 try: import cPickle as pickle
 except: import pickle
 
 import numpy as np
 import scipy.io as sio
 import networkx as nx
-
-import sys
-# sys.path.append('./')
-# sys.path.append(os.path.realpath(__file__))
 
 from .static_graph_embedding import StaticGraphEmbedding
 from gemben.utils import graph_util, plot_util
@@ -29,12 +24,66 @@ import keras.regularizers as Reg
 from keras.optimizers import SGD, Adam
 from keras import backend as KBack
 from keras import callbacks
-
 from theano.printing import debugprint as dbprint, pprint
 from time import time
 
 
 class VAE(StaticGraphEmbedding):
+    """`Variational Graph Auto-Encoders`_.
+
+    Variational Graph Auto-Encoders utilizes a GCN as encoder and inner product as decoder, 
+    which provides embedding with higher quality than autoencoders.
+    
+    Args:
+        hyper_dict (object): Hyper parameters.
+        kwargs (dict): keyword arguments, form updating the parameters
+    
+    Examples:
+        >>> from gemben.embedding.vae import VAE
+        >>> file_prefix = "gemben/data/sbm/graph.gpickle"
+        >>> G = nx.read_gpickle(file_prefix)
+        >>> node_colors = pickle.load(
+            open('gemben/data/sbm/node_labels.pickle', 'rb') )
+        >>> embedding = VAE(d=128, beta=5, nu1=1e-6, nu2=1e-6,
+                        K=3, n_units=[300, 100, ],
+                        beta_vae=10.0,
+                        n_iter=500, xeta=1e-3,
+                        n_batch=500,
+                        modelfile=['gemben/intermediate/enc_model.json',
+                                   'gemben/intermediate/dec_model.json'],
+                        weightfile=['gemben/intermediate/enc_weights.hdf5',
+                                    'gemben/intermediate/dec_weights.hdf5'])
+        >>> embedding.learn_embedding(G)
+        >>> X = embedding.get_embedding()
+        >>> mi = np.var(X, axis=0)
+        >>> highest_z = np.argmax(mi)
+        >>> highest_z_highest = np.max(X[:, highest_z])
+        >>> highest_z_lowest = np.min(X[:, highest_z])
+        >>> X[:512, highest_z] = highest_z_lowest
+        >>>  X[512:, highest_z] = highest_z_highest
+        >>> mi2 = np.log(mi)
+        >>> G_X_hat = embedding.get_reconstructed_adj(embed=X)
+        >>> node_colors_arr = [None] * node_colors.shape[0]
+        >>> for idx in range(node_colors.shape[0]):
+                node_colors_arr[idx] = np.where(node_colors[idx, :].toarray() == 1)[1][0]
+                MAP, prec_curv, err, err_baseline = gr.evaluateStaticGraphReconstruction(
+                G, embedding, X, None )
+        >>> print('MAP:')
+        >>> print(MAP)
+        >>> viz.plot_embedding2D( G_X_hat,
+                                di_graph=G,
+                                node_colors=node_colors_arr )
+        >>> plt.savefig('vae_sbm_g_x_hat.pdf', bbox_inches='tight')
+        >>> plt.figure()
+        >>> viz.plot_embedding2D(X,
+                                 di_graph=G,
+                                 node_colors=node_colors_arr )
+        >>> plt.savefig('vae_sbm_z.pdf', bbox_inches='tight')
+
+    .. _Variational Graph Auto-Encoders:
+        https://arxiv.org/pdf/1611.07308.pdf
+
+    """
 
     def __init__(self, *hyper_dict, **kwargs):
         ''' Initialize the Autoencoder class

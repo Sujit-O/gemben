@@ -1,10 +1,8 @@
-disp_avlbl = True
-import os
-if os.name == 'posix' and 'DISPLAY' not in os.environ:
-    disp_avlbl = False
-    import matplotlib
-    matplotlib.use('Agg')
-import matplotlib.pyplot as plt
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
 
 import matplotlib.pyplot as plt
 import networkx as nx
@@ -14,10 +12,6 @@ import scipy.sparse as sp
 import scipy.sparse.linalg as lg
 from time import time
 
-import sys
-# sys.path.append('./')
-# sys.path.append(os.path.dirname(os.path.realpath(__file__)))
-
 from subprocess import call
 
 from .static_graph_embedding import StaticGraphEmbedding
@@ -26,7 +20,38 @@ from gemben.evaluation import visualize_embedding as viz
 
 
 class node2vec(StaticGraphEmbedding):
+    """`node2vec`_.
 
+    Node2Vec aim to learn a low-dimensional feature 
+    representation for nodes through a stream of random walks. 
+    These random walks explore the nodes' variant neighborhoods. 
+    Thus, random walk based methods are much more scalable for large 
+    graphs and they generate informative embeddings.
+    
+    Args:
+        hyper_dict (object): Hyper parameters.
+        kwargs (dict): keyword arguments, form updating the parameters
+    
+    Examples:
+        >>> from gemben.embedding.node2vec import node2vec
+        >>> edge_f = 'data/karate.edgelist'
+        >>> G = graph_util.loadGraphFromEdgeListTxt(edge_f, directed=False)
+        >>> G = G.to_directed()
+        >>> res_pre = 'results/testKarate'
+        >>> graph_util.print_graph_stats(G)
+        >>> t1 = time()
+        >>> embedding = node2vec(2, 1, 80, 10, 10, 1, 1)
+        >>> embedding.learn_embedding(graph=G, edge_f=None,
+                                  is_weighted=True, no_python=True)
+        >>> print('node2vec:Training time: %f' % (time() - t1))
+        >>> viz.plot_embedding2D(embedding.get_embedding(),
+                             di_graph=G, node_colors=None)
+        >>> plt.show()
+
+    .. _node2vec:
+        https://cs.stanford.edu/~jure/pubs/node2vec-kdd16.pdf
+
+    """
     def __init__(self, *hyper_dict, **kwargs):
         ''' Initialize the node2vec class
 

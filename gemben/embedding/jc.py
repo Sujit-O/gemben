@@ -1,10 +1,8 @@
-disp_avlbl = True
-import os
-if os.name == 'posix' and 'DISPLAY' not in os.environ:
-    disp_avlbl = False
-    import matplotlib
-    matplotlib.use('Agg')
-import matplotlib.pyplot as plt
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
 
 import matplotlib.pyplot as plt
 import networkx as nx
@@ -15,17 +13,40 @@ import scipy.sparse.linalg as lg
 from time import time
 import six
 
-
-import sys
-# sys.path.append('./')
-# sys.path.append(os.path.realpath(__file__))
-
 from .static_graph_embedding import StaticGraphEmbedding
 from gemben.utils import graph_util, plot_util
 from gemben.evaluation import visualize_embedding as viz
 
 
 class JaccardCoefficient(StaticGraphEmbedding):
+
+    """`Jaccard Coefficient`_.
+
+    Jaccard Coefficient measures the probability that 
+    two nodes :math:`i` and :math:`j` have a connection to node :math:`k`, 
+    for a randomly selected node $k$ from the neighbors of :math:`i` and :math:`j` .
+    
+    Args:
+        hyper_dict (object): Hyper parameters.
+        kwargs (dict): keyword arguments, form updating the parameters
+    
+    Examples:
+        >>> from gemben.embedding.jc import JaccardCoefficient
+        >>> edge_f = 'data/karate.edgelist'
+        >>> G = graph_util.loadGraphFromEdgeListTxt(edge_f, directed=False)
+        >>> G = G.to_directed()
+        >>> res_pre = 'results/testKarate'
+        >>> graph_util.print_graph_stats(G)
+        >>> t1 = time()
+        >>> embedding = JaccardCoefficient(4, 0.01)
+        >>> embedding.learn_embedding(graph=G, edge_f=None,
+                                  is_weighted=True, no_python=True)
+        >>> print('Adamic Adar:Training time: %f' % (time() - t1))
+
+    .. _Jaccard Coefficient:
+        https://dl.acm.org/citation.cfm?id=576628
+
+    """
 
     def __init__(self, *hyper_dict, **kwargs):
         ''' Initialize the JaccardCoefficient class

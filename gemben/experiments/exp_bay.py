@@ -112,11 +112,11 @@ def bayesian_optimization(data_set, di_graph, node_labels, params):
     # Load range of hyper parameters 
     try:
         model_hyp_range = json.load(
-            open('gem/experiments/config/%s_hypRange.conf' % data_set, 'r')
+            open('gemben/experiments/config/%s_hypRange.conf' % data_set, 'r')
         )
     except IOError:
         model_hyp_range = json.load(
-            open('gem/experiments/config/default_hypRange.conf', 'r')
+            open('gemben/experiments/config/default_hypRange.conf', 'r')
         )
   
     params['model_hyp_range'] = model_hyp_range
@@ -135,14 +135,14 @@ def choose_best_hyp(data_set, di_graph, node_labels, params):
     # Load range of hyper parameters to test on
     try:
         model_hyp_range = json.load(
-            open('gem/experiments/config/%s_hypRange.conf' % data_set, 'r')
+            open('gemben/experiments/config/%s_hypRange.conf' % data_set, 'r')
         )
     except IOError:
         model_hyp_range = json.load(
-            open('gem/experiments/config/default_hypRange.conf', 'r')
+            open('gemben/experiments/config/default_hypRange.conf', 'r')
         )
     try:
-        os.makedirs("gem/temp_hyp_res")
+        os.makedirs("gemben/temp_hyp_res")
     except:
         pass
     # Test each hyperparameter for each method and store the best
@@ -170,12 +170,12 @@ def choose_best_hyp(data_set, di_graph, node_labels, params):
             if meth == "sdne":
                 hyp_d.update({
                     "modelfile": [
-                        "gem/intermediate/enc_mdl_%s_%d.json" % (data_set, dim),
-                        "gem/intermediate/dec_mdl_%s_%d.json" % (data_set, dim)
+                        "gemben/intermediate/enc_mdl_%s_%d.json" % (data_set, dim),
+                        "gemben/intermediate/dec_mdl_%s_%d.json" % (data_set, dim)
                     ],
                     "weightfile": [
-                        "gem/intermediate/enc_wts_%s_%d.hdf5" % (data_set, dim),
-                        "gem/intermediate/dec_wts_%s_%d.hdf5" % (data_set, dim)
+                        "gemben/intermediate/enc_wts_%s_%d.hdf5" % (data_set, dim),
+                        "gemben/intermediate/dec_wts_%s_%d.hdf5" % (data_set, dim)
                     ]
                 })
             elif meth == "gf" or meth == "node2vec":
@@ -188,7 +188,7 @@ def choose_best_hyp(data_set, di_graph, node_labels, params):
             lp_max, lp_hyp[meth] = get_max(lp_m, lp_max, hyp_d, lp_hyp[meth])
             nc_max, nc_hyp[meth] = get_max(nc_m, nc_max, hyp_d, nc_hyp[meth])
             hyp_df_row = dict(zip(meth_hyp_range.keys(), hyp))
-            f_hyp_temp = open("gem/temp_hyp_res/%s_%s.txt" % (data_set, meth), "a")
+            f_hyp_temp = open("gemben/temp_hyp_res/%s_%s.txt" % (data_set, meth), "a")
             hyp_str = '_'.join("%s=%s" % (key, str(val).strip("'")) for (key, val) in hyp_d.items())
             f_hyp_temp.write('%s: MAP: %f\n' % (hyp_str, lp_max))
             f_hyp_temp.close()
@@ -201,7 +201,7 @@ def choose_best_hyp(data_set, di_graph, node_labels, params):
         exp_param = params["experiments"]
         for exp in exp_param:
             hyp_df.to_hdf(
-                "gem/intermediate/%s_%s_%s_%s_hyp.h5" % (data_set, meth,
+                "gemben/intermediate/%s_%s_%s_%s_hyp.h5" % (data_set, meth,
                                                          exp,
                                                          params["samp_scheme"]),
                 "df"
@@ -211,7 +211,7 @@ def choose_best_hyp(data_set, di_graph, node_labels, params):
 
         # Store the best hyperparameter
         ####### put the file into synthetic
-        opt_hyp_f_pre = 'gem/experiments/config/synthetic/%s_%s_%s' % (
+        opt_hyp_f_pre = 'gemben/experiments/config/synthetic/%s_%s_%s' % (
             data_set,
             meth,
             params["samp_scheme"]
@@ -231,11 +231,11 @@ def call_plot_hyp(data_set, params):
     # Load range of hyper parameters tested on to plot
     try:
         model_hyp_range = json.load(
-            open('gem/experiments/config/%s_hypRange.conf' % data_set, 'r')
+            open('gemben/experiments/config/%s_hypRange.conf' % data_set, 'r')
         )
     except IOError:
         model_hyp_range = json.load(
-            open('gem/experiments/config/default_hypRange.conf', 'r')
+            open('gemben/experiments/config/default_hypRange.conf', 'r')
         )
     for meth in params["methods"]:
             meth_hyp_range = model_hyp_range[meth]
@@ -249,11 +249,11 @@ def call_plot_hyp_all(data_sets, params):
     # Load range of hyper parameters tested on to plot
     try:
         model_hyp_range = json.load(
-            open('gem/experiments/config/%s_hypRange.conf' % data_sets[0], 'r')
+            open('gemben/experiments/config/%s_hypRange.conf' % data_sets[0], 'r')
         )
     except IOError:
         model_hyp_range = json.load(
-            open('gem/experiments/config/default_hypRange.conf', 'r')
+            open('gemben/experiments/config/default_hypRange.conf', 'r')
         )
     for meth in params["methods"]:
             meth_hyp_range = model_hyp_range[meth]
@@ -276,7 +276,7 @@ def call_exps(params, data_set):
     #else:
    
     #di_graph = nx.read_gpickle('gem/data/%s/graph.gpickle' % data_set)[0]
-    di_graph = nx.read_gpickle('gem/data/%s/graph.gpickle' % data_set)
+    di_graph = nx.read_gpickle('gemben/data/%s/graph.gpickle' % data_set)
     
     di_graph, nodeListMap = graph_util.get_lcc(di_graph)
     graph_util.print_graph_stats(di_graph)
@@ -285,7 +285,7 @@ def call_exps(params, data_set):
     # Load node labels if given
     if bool(params["node_labels"]):
         node_labels = cPickle.load(
-            open('gem/data/%s/node_labels.pickle' % data_set, 'rb')
+            open('gemben/data/%s/node_labels.pickle' % data_set, 'rb')
         )
         node_labels_gc = np.zeros(
             (di_graph.number_of_nodes(), node_labels.shape[1]))
@@ -313,10 +313,10 @@ def call_exps(params, data_set):
     ):
         dim = int(d)
         MethClass = getattr(
-            importlib.import_module("gem.embedding.%s" % meth),
+            importlib.import_module("gemben.embedding.%s" % meth),
             methClassMap[meth]
         )
-        opt_hyp_f_pre = 'gem/experiments/config/synthetic/%s_%s_%s' % (
+        opt_hyp_f_pre = 'gemben/experiments/config/synthetic/%s_%s_%s' % (
             data_set,
             meth,
             params["samp_scheme"]
@@ -340,7 +340,7 @@ def call_exps(params, data_set):
         except IOError:
             print('Default hyperparameter of the method chosen')
             model_hyp = json.load(
-                open('gem/experiments/config/%s.conf' % meth, 'r')
+                open('gemben/experiments/config/%s.conf' % meth, 'r')
             )
         hyp = {}
         hyp.update(model_hyp[meth])
@@ -348,12 +348,12 @@ def call_exps(params, data_set):
         if meth == "sdne":
                 hyp.update({
                     "modelfile": [
-                        "gem/intermediate/en_mdl_%s_%d.json" % (data_set, dim),
-                        "gem/intermediate/dec_mdl_%s_%d.json" % (data_set, dim)
+                        "gemben/intermediate/en_mdl_%s_%d.json" % (data_set, dim),
+                        "gemben/intermediate/dec_mdl_%s_%d.json" % (data_set, dim)
                     ],
                     "weightfile": [
-                        "gem/intermediate/enc_wts_%s_%d.hdf5" % (data_set, dim),
-                        "gem/intermediate/dec_wts_%s_%d.hdf5" % (data_set, dim)
+                        "gemben/intermediate/enc_wts_%s_%d.hdf5" % (data_set, dim),
+                        "gemben/intermediate/dec_wts_%s_%d.hdf5" % (data_set, dim)
                     ]
                 })
         elif meth == "gf" or meth == "node2vec":
@@ -403,7 +403,7 @@ if __name__ == '__main__':
     parser.add_argument('-s_sch', '--samp_scheme',
                         help='sampling scheme (default: u_rand)')
 
-    params = json.load(open('gem/experiments/config/params.conf', 'r'))
+    params = json.load(open('gemben/experiments/config/params.conf', 'r'))
 
     args = vars(parser.parse_args())
 
@@ -441,11 +441,11 @@ if __name__ == '__main__':
         params["nc_test_ratio_arr"] = \
             [float(ratio) for ratio in params["nc_test_ratio_arr"]]
     try:
-      os.makedirs("gem/intermediate")
+      os.makedirs("gemben/intermediate")
     except:
       pass
     try:
-      os.makedirs("gem/results")
+      os.makedirs("gemben/results")
     except:
       pass
 
@@ -453,10 +453,10 @@ if __name__ == '__main__':
         if not int(params["load_exp"]):
             call_exps(params, data_set)
         if int(params["plot"]):
-            res_pre = "gem/results/%s" % data_set
+            res_pre = "gemben/results/%s" % data_set
             plot_util.plotExpRes(res_pre, params["methods"],
                                  params["experiments"], params["dimensions"],
-                                 'gem/plots/%s_%s' % (data_set, params["samp_scheme"]),
+                                 'gemben/plots/%s_%s' % (data_set, params["samp_scheme"]),
                                  params["rounds"], params["plot_d"],
                                  params["samp_scheme"])
         if int(params["hyp_plot"]):

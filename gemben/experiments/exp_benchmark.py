@@ -45,12 +45,12 @@ if __name__ == "__main__":
     parser.add_argument('-lexp', '--lexp',
                         help='load experiment (default: False)')
     params = json.load(
-        open('gem/experiments/config/params_benchmark.conf', 'r')
+        open('gemben/experiments/config/params_benchmark.conf', 'r')
     )
     args = vars(parser.parse_args())
     print (args)
     syn_hyps = json.load(
-        open('gem/experiments/config/syn_hypRange.conf', 'r')
+        open('gemben/experiments/config/syn_hypRange.conf', 'r')
     )
     for k, v in args.items():
         if v is not None:
@@ -93,16 +93,16 @@ if __name__ == "__main__":
                         hyp_df_row = dict(zip(hyp_keys, hyp))
                         for r_id in range(params["rounds"]):
                             G = graphClass(**hyp_dict)
-                            if not os.path.exists("gem/data/%s" % syn_data_folder):
-                                os.makedirs("gem/data/%s" % syn_data_folder)
+                            if not os.path.exists("gemben/data/%s" % syn_data_folder):
+                                os.makedirs("gemben/data/%s" % syn_data_folder)
                             nx.write_gpickle(
-                                G, 'gem/data/%s/graph.gpickle' % syn_data_folder
+                                G, 'gemben/data/%s/graph.gpickle' % syn_data_folder
                             )
                             os.system(
                                 "python gem/experiments/exp.py -data %s -meth %s -dim %d -rounds 1 -s_sch %s -exp lp" % (syn_data_folder, meth, dim, samp_scheme)
                             )
                             MAP, prec, n_samps = pickle.load(
-                                open('gem/results/%s_%s_%d_%s.lp' % (syn_data_folder, meth, dim, samp_scheme), 'rb')
+                                open('gemben/results/%s_%s_%d_%s.lp' % (syn_data_folder, meth, dim, samp_scheme), 'rb')
                             )        
                             hyp_df.loc[hyp_r_idx, hyp_keys] = \
                                 pd.Series(hyp_df_row)
@@ -111,7 +111,7 @@ if __name__ == "__main__":
                                 [0, MAP[int(n_samps[0])][0], prec_100, 0, r_id]
                             hyp_r_idx += 1
                     hyp_df.to_hdf(
-                        "gem/intermediate/%s_%s_lp_%s_dim_%d_data_hyp.h5" % (syn_data, meth, samp_scheme, dim),
+                        "gemben/intermediate/%s_%s_lp_%s_dim_%d_data_hyp.h5" % (syn_data, meth, samp_scheme, dim),
                         "df"
                     )
             if params["plot_hyp_data"]:

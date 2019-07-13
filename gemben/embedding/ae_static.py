@@ -1,9 +1,16 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
+
 try: import cPickle as pickle
 except: import pickle
 
 import numpy as np
 import scipy.io as sio
 import networkx as nx
+import matplotlib.pyplot as plt
 
 from .static_graph_embedding import StaticGraphEmbedding
 from gemben.utils import graph_util, plot_util
@@ -34,10 +41,11 @@ class AE(StaticGraphEmbedding):
         kwargs (dict): keyword arguments, form updating the parameters
     
     Examples:
+        >>> from gemben.embedding.ae_static import AE
         >>> file_prefix = "gemben/data/sbm/graph.gpickle"
         >>> G = nx.read_gpickle(file_prefix)
         >>> node_colors = pickle.load(open('ggemben/data/sbm/node_labels.pickle', 'rb'))
-        >>>  embedding = AE(d=128, 
+        >>> embedding = AE(d=128, 
                             beta=5, 
                             nu1=1e-6, 
                             nu2=1e-6, 

@@ -1,19 +1,14 @@
-disp_avlbl = True
-import os
-if os.name == 'posix' and 'DISPLAY' not in os.environ:
-    disp_avlbl = False
-    import matplotlib
-    matplotlib.use('Agg')
-import matplotlib.pyplot as plt
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
 
 import networkx as nx
 import numpy as np
 import scipy.io as sio
 import pdb
-
-import sys
-# sys.path.append('./')
-# sys.path.append(os.path.realpath(__file__))
+import matplotlib.pyplot as plt
 
 from subprocess import call
 
@@ -24,6 +19,35 @@ from time import time
 
 
 class GraphFactorization(StaticGraphEmbedding):
+
+    """`Graph Factorization`_.
+
+    Graph Factorization factorizes the adjacency matrix with regularization.
+    
+    Args:
+        hyper_dict (object): Hyper parameters.
+        kwargs (dict): keyword arguments, form updating the parameters
+    
+    Examples:
+        >>> from gemben.embedding.gf import GraphFactorization
+        >>> edge_f = 'data/karate.edgelist'
+        >>> G = graph_util.loadGraphFromEdgeListTxt(edge_f, directed=False)
+        >>> G = G.to_directed()
+        >>> res_pre = 'results/testKarate'
+        >>> graph_util.print_graph_stats(G)
+        >>> t1 = time()
+        >>> embedding = GraphFactorization(2, 100000, 1 * 10**-4, 1.0)
+        >>> embedding.learn_embedding(graph=G, edge_f=None,
+                                  is_weighted=True, no_python=True)
+        >>> print ('Graph Factorization:Training time: %f' % (time() - t1))
+        >>> viz.plot_embedding2D(embedding.get_embedding(),
+                             di_graph=G, node_colors=None)
+        >>> plt.show()
+
+    .. _Graph Factorization:
+        https://static.googleusercontent.com/media/research.google.com/en//pubs/archive/40839.pdf
+
+    """
 
     def __init__(self, *hyper_dict, **kwargs):
         ''' Initialize the GraphFactorization class

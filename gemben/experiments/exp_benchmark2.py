@@ -46,20 +46,20 @@ if __name__ == "__main__":
     parser.add_argument('-lexp', '--lexp',
                         help='load experiment (default: False)')
     params = json.load(
-        open('gem/experiments/config/params_benchmark.conf', 'r')
+        open('gemben/experiments/config/params_benchmark.conf', 'r')
     )
     args = vars(parser.parse_args())
     print (args)
     domain_graph_map = json.load(
-        open('gem/experiments/config/domain_graph_map.conf', 'r')
+        open('gemben/experiments/config/domain_graph_map.conf', 'r')
     )
     # graph_hyp_range: {N: [128, 256, 512, 1024], deg: [4, 6,8, 10, 12]}
     graph_hyp_range = json.load(
-        open('gem/experiments/config/graph_hyp_range.conf', 'r')
+        open('gemben/experiments/config/graph_hyp_range.conf', 'r')
     )
     # def_graph_hyps: {N: 1024, deg: 8, dia: None, dim: 128}
     def_graph_hyps = json.load(
-        open('gem/experiments/config/def_graph_hyps.conf', 'r')
+        open('gemben/experiments/config/def_graph_hyps.conf', 'r')
     )
     for k, v in args.items():
         if v is not None:
@@ -85,15 +85,15 @@ if __name__ == "__main__":
     
 
     try:
-      os.makedirs("gem/intermediate")
+      os.makedirs("gemben/intermediate")
     except:
       pass
     try:
-      os.makedirs("gem/results")
+      os.makedirs("gemben/results")
     except:
       pass
     try:
-      os.makedirs("gem/temp")
+      os.makedirs("gemben/temp")
     except:
       pass
 #     if not os.path.exists("gem/intermediate"):
@@ -141,7 +141,7 @@ if __name__ == "__main__":
                 
                 try:
                     nx.read_gpickle(
-                            'gem/data/%s/graph.gpickle' % syn_data_folder
+                            'gemben/data/%s/graph.gpickle' % syn_data_folder
                   )
                 except:
                     flag =  1
@@ -152,16 +152,16 @@ if __name__ == "__main__":
                         if len(set(G.nodes())) == G.number_of_nodes() and list(G.nodes())[-1] == G.number_of_nodes() -1:
                             flag = 0
                     if G:
-                        if not os.path.exists("gem/data/%s" % syn_data_folder):
-                            os.makedirs("gem/data/%s" % syn_data_folder)
+                        if not os.path.exists("gemben/data/%s" % syn_data_folder):
+                            os.makedirs("gemben/data/%s" % syn_data_folder)
                         nx.write_gpickle(
-                                G, 'gem/data/%s/graph.gpickle' % syn_data_folder
+                                G, 'gemben/data/%s/graph.gpickle' % syn_data_folder
                     )
                 perf_exp = not params["lexp"]      
                 if params["lexp"]:
                   try:
                     MAP, prec, n_samps = pickle.load(
-                      open('gem/results/%s_%s_%d_%s.lp' % (
+                      open('gemben/results/%s_%s_%d_%s.lp' % (
                           syn_data_folder, meth, 
                           curr_hyps["dim"], samp_scheme), 'rb'))
                   except:   
@@ -169,7 +169,7 @@ if __name__ == "__main__":
                        ##### only find the best hyp for first round
                 if perf_exp:
                     os.system(
-                      "python3 gem/experiments/exp.py -data %s -meth %s -dim %d -rounds 1 -find_hyp %d -s_sch %s -exp lp" % (
+                      "python3 gemben/experiments/exp.py -data %s -meth %s -dim %d -rounds 1 -find_hyp %d -s_sch %s -exp lp" % (
                           syn_data_folder,
                           meth,
                           curr_hyps["dim"],
@@ -178,7 +178,7 @@ if __name__ == "__main__":
                       )
                     )
                 MAP, prec, n_samps = pickle.load(
-                open('gem/results/%s_%s_%d_%s.lp' % (
+                open('gemben/results/%s_%s_%d_%s.lp' % (
                     syn_data_folder, meth, 
                     curr_hyps["dim"], samp_scheme), 'rb'))        
                 hyp_df.loc[hyp_r_idx, graph_hyp_keys] = \
@@ -188,7 +188,7 @@ if __name__ == "__main__":
                   prec_100 = list(prec.values())[0][0][100]
                 except:
                   pdb.set_trace()
-                f_temp = open("gem/temp/%s_%s_%s_lp_%s_data_hyp.txt" % (
+                f_temp = open("gemben/temp/%s_%s_%s_lp_%s_data_hyp.txt" % (
                   params["domain_name"], graph, meth, samp_scheme), 'a')
                 f_temp.write('%s: round: %d, MAP: %f, prec_100: %f' % (hyp_str, r_id, list(MAP.values())[0][0], prec_100))
                 f_temp.close()
@@ -198,7 +198,7 @@ if __name__ == "__main__":
                 hyp_r_idx += 1
 
         hyp_df.to_hdf(
-            "gem/intermediate/%s_%s_%s_lp_%s_data_hyp.h5" % (
+            "gemben/intermediate/%s_%s_%s_lp_%s_data_hyp.h5" % (
                 params["domain_name"], graph, meth, samp_scheme),
             "df"
         )

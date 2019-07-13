@@ -8,6 +8,7 @@ import networkx as nx
 import numpy as np
 from time import time
 import six
+import matplotlib.pyplot as plt
 
 from .static_graph_embedding import StaticGraphEmbedding
 from gemben.utils import graph_util, plot_util

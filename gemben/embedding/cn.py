@@ -1,22 +1,17 @@
-disp_avlbl = True
-import os
-if os.name == 'posix' and 'DISPLAY' not in os.environ:
-    disp_avlbl = False
-    import matplotlib
-    matplotlib.use('Agg')
-import matplotlib.pyplot as plt
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
 
-import matplotlib.pyplot as plt
 import networkx as nx
 import numpy as np
 import scipy.io as sio
 import scipy.sparse as sp
 import scipy.sparse.linalg as lg
 from time import time
+import matplotlib.pyplot as plt
 
-import sys
-# sys.path.append('./')
-# sys.path.append(os.path.realpath(__file__))
 
 from .static_graph_embedding import StaticGraphEmbedding
 from gemben.utils import graph_util, plot_util, evaluation_util
@@ -24,6 +19,33 @@ from gemben.evaluation import visualize_embedding as viz
 
 
 class CommonNeighbors(StaticGraphEmbedding):
+
+    """`Common Neighbors`_.
+
+    Common Neighbors defines the similarity between nodes 
+    as the number of common neighbors between them.
+    
+    Args:
+        hyper_dict (object): Hyper parameters.
+        kwargs (dict): keyword arguments, form updating the parameters
+    
+    Examples:
+        >>> from gemben.embedding.cn import CommonNeighbors
+        >>> edge_f = 'data/karate.edgelist'
+        >>> G = graph_util.loadGraphFromEdgeListTxt(edge_f, directed=False)
+        >>> G = G.to_directed()
+        >>> res_pre = 'results/testKarate'
+        >>> graph_util.print_graph_stats(G)
+        >>> t1 = time()
+        >>> embedding = CommonNeighbors(4, 0.01)
+        >>> embedding.learn_embedding(graph=G, edge_f=None,
+                                  is_weighted=True, no_python=True)
+        >>> print('Common Neighbors:\n\tTraining time: %f' % (time() - t1))
+
+    .. _Common Neighbors:
+        https://arxiv.org/pdf/cond-mat/0104209.pdf
+
+    """
 
     def __init__(self, *hyper_dict, **kwargs):
         ''' Initialize the AdamicAdar class

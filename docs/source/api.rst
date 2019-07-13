@@ -19,73 +19,79 @@ Common Neighbors
 ----------------------
 
 .. automodule:: gemben.embedding.cn
-   :members:
+   :members: CommonNeighbors
 
 Graph Convolution Network
 --------------------------
 
 .. automodule:: gemben.embedding.gcn
-   :members:
+   :members: GCN
 
 Graph Factorization
 --------------------------
 
 .. automodule:: gemben.embedding.gf
-   :members:
+   :members: GraphFactorization
 
 HOPE
 -----
 
 .. automodule:: gemben.embedding.hope
-   :members:
+   :members: HOPE
 
 Jaccard Coefficient
 ---------------------
 
 .. automodule:: gemben.embedding.jc
-   :members:
+   :members: JaccardCoefficient
 
 Laplacian Eigenmaps
 ---------------------
 
 .. automodule:: gemben.embedding.lap
-   :members:
+   :members: LaplacianEigenmaps
 
 Locally Linear Embedding
 -------------------------
 
 .. automodule:: gemben.embedding.lle
-   :members:
+   :members: LocallyLinearEmbedding
 
 node2vec
 ---------
 
 .. automodule:: gemben.embedding.node2vec
-   :members:
+   :members: node2vec
+
+Preferential Attachment
+------------------------
+
+.. automodule:: gemben.embedding.pa
+   :members: PreferentialAttachment
 
 Random Embedding
 -------------------------
 
 .. automodule:: gemben.embedding.rand
-   :members:
+   :members: RandomEmb
 
 SDNE
 -----
 
 .. automodule:: gemben.embedding.sdne
-   :members:
+   :members: SDNE
 
 Variational Auto-Encoder
 -------------------------
 
 .. automodule:: gemben.embedding.vae
-   :members:
+   :members: VAE
 
 Static Graph Embedding Metal Class
 -----------------------------------
 
 .. automodule:: gemben.embedding.static_graph_embedding
-   :members:
+   :members: StaticGraphEmbedding
 
 Static Graph Embedding utils
 -----------------------------

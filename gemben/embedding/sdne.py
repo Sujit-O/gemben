@@ -1,21 +1,15 @@
-disp_avlbl = True
-import os
-if os.name == 'posix' and 'DISPLAY' not in os.environ:
-    disp_avlbl = False
-    import matplotlib
-    matplotlib.use('Agg')
-import matplotlib.pyplot as plt
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
 
+import matplotlib.pyplot as plt
 try: import cPickle as pickle
 except: import pickle
-
 import numpy as np
 import scipy.io as sio
 import networkx as nx
-
-import sys
-# sys.path.append('./')
-# sys.path.append(os.path.realpath(__file__))
 
 from .static_graph_embedding import StaticGraphEmbedding
 from gemben.utils import graph_util, plot_util
@@ -29,12 +23,50 @@ import keras.regularizers as Reg
 from keras.optimizers import SGD, Adam
 from keras import backend as KBack
 from keras import callbacks
-
-# from theano.printing import debugprint as dbprint, pprint
 from time import time
 
 
 class SDNE(StaticGraphEmbedding):
+    """`SDNE`_.
+
+    SDNE uses a deep autoencoder to provide non-linear functions to preserve 
+    the first and second order proximities jointly.
+    
+    Args:
+        hyper_dict (object): Hyper parameters.
+        kwargs (dict): keyword arguments, form updating the parameters
+    
+    Examples:
+        >>> from gemben.embedding.sdne import SDNE
+        >>> file_prefix = "gemben/data/sbm/graph.gpickle"
+        >>> G = nx.read_gpickle(file_prefix)
+        >>> node_colors = pickle.load(
+            open('gemben/data/sbm/node_labels.pickle', 'rb') )
+        >>> embedding = SDNE(d=128, beta=5, alpha=1e-5, nu1=1e-6, nu2=1e-6,
+                       K=3, n_units=[500, 300, ],
+                       n_iter=30, xeta=1e-3,
+                       n_batch=500,
+                       modelfile=['gemben/intermediate/enc_model.json',
+                                  'gemben/intermediate/dec_model.json'],
+                       weightfile=['gemben/intermediate/enc_weights.hdf5',
+                                   'gemben/intermediate/dec_weights.hdf5'])
+        >>> G_X = nx.to_numpy_matrix(G)
+        >>> embedding.learn_embedding(G)
+        >>> G_X_hat = embedding.get_reconstructed_adj()
+        >>> rec_norm = np.linalg.norm(G_X - G_X_hat)
+        >>> print(rec_norm)
+        >>> node_colors_arr = [None] * node_colors.shape[0]
+        >>> for idx in range(node_colors.shape[0]):
+                node_colors_arr[idx] = np.where(node_colors[idx, :].toarray() == 1)[1][0]
+        >>> viz.plot_embedding2D(G_X,
+                                 di_graph=G,
+                                 node_colors=node_colors_arr)
+        >>> plt.savefig('sdne_sbm_g_x.pdf', bbox_inches='tight')
+
+    .. _SDNE:
+        https://www.kdd.org/kdd2016/papers/files/rfp0191-wangAemb.pdf
+
+    """
 
     def __init__(self, *hyper_dict, **kwargs):
         ''' Initialize the SDNE class
