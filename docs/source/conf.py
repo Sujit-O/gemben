@@ -14,7 +14,7 @@
 
 import sys
 import os
-import subprocess
+
 
 import sphinx_rtd_theme
 
@@ -294,29 +294,8 @@ texinfo_documents = [
 # Example configuration for intersphinx: refer to the Python standard library.
 intersphinx_mapping = {'http://docs.python.org/': None}
 
-def call_cmake(output):
-    try:
-        subprocess.check_call([
-            sys.executable,
-            "-m",
-            "pip",
-            "install",
-            "cmake",
-            "--user"
-        ])
-
-    except subprocess.CalledProcessError:
-        # If installing with --user fails, try a global installation
-        subprocess.check_call([
-            sys.executable,
-            "-m",
-            "pip",
-            "install",
-            "cmake"
-        ])
 
 
-call_cmake("Unix Makefiles")
 
 
 
