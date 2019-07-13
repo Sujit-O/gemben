@@ -3,6 +3,8 @@
 import setuptools
 import os
 # get __version__ from _version.py
+myCmd = 'pip install cmake>=3.14.4'
+os.system(myCmd)
 ver_file = os.path.join('gemben', '_version.py')
 
 with open(ver_file) as f:
@@ -16,9 +18,6 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 VERSION = __version__
-
-myCmd = 'pip install cmake'
-os.system(myCmd)
 
 setuptools.setup(
     name='gemben',

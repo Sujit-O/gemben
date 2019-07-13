@@ -18,16 +18,8 @@ import subprocess
 
 import sphinx_rtd_theme
 
-def source_read_handler(app, docname, source):
-    subprocess.check_call([
-    sys.executable,
-    "-m",
-    "pip",
-    "install",
-    "cmake"])
-
-def setup(app):
-    app.connect('source-read', source_read_handler)
+myCmd = 'pip install cmake>=3.14.4'
+os.system(myCmd)
 
 # -- Project information -----------------------------------------------------
 
