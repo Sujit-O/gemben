@@ -64,7 +64,7 @@ def learn_emb(MethObj, di_graph, params, res_pre, m_summ):
 
 def run_exps(MethObj, meth, dim, di_graph, data_set, node_labels, params):
     m_summ = '%s_%d' % (meth, dim)
-    res_pre = "gem/results/%s" % data_set
+    res_pre = "gemben/results/%s" % data_set
     n_r = params["rounds"]
     X = learn_emb(MethObj, di_graph, params, res_pre, m_summ)
     gr, lp, nc = [0] * n_r, [0] * n_r, [0] * n_r

@@ -49,13 +49,6 @@ See the source code repository on github: https://github.com/palash1992/GEM-benc
 .. toctree::
    :maxdepth: 2
    :hidden:
-   :caption: Experiments
-
-   exp
-
-.. toctree::
-   :maxdepth: 2
-   :hidden:
    :caption: Tutorial - Examples
 
    auto_examples/index
