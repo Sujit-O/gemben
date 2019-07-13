@@ -16,6 +16,7 @@ You will need following modules to be installed for using the gemben library:
 * scipy>=1.3.0
 * sklearn>=0.0
 * bayesian-optimization>=1.0.1
+* cmake>=3.14.4
 * networkit>=5.0
 * tensorflow==1.14.0
 
