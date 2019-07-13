@@ -305,8 +305,6 @@ def call_cmake(output):
             "--user"
         ])
 
-        # Make sure the newly installed CMake executables can be found in the path
-        os.path.append(os.path.expanduser("~/.local/bin"))
     except subprocess.CalledProcessError:
         # If installing with --user fails, try a global installation
         subprocess.check_call([
