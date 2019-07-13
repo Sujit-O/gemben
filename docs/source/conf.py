@@ -14,19 +14,12 @@
 
 import sys
 import os
+import pip
 import subprocess
 
 import sphinx_rtd_theme
 
-from unittest.mock import MagicMock
-
-class Mock(MagicMock):
-    @classmethod
-    def __getattr__(cls, name):
-        return MagicMock()
-
-MOCK_MODULES = ['cmake']
-sys.modules.update((mod_name, Mock()) for mod_name in MOCK_MODULES)
+subprocess.call([sys.executable, "-m", "pip", "install", 'cmake'])
 
 # -- Project information -----------------------------------------------------
 
