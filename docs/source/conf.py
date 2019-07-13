@@ -14,10 +14,16 @@
 
 import sys
 import os
-
+import subprocess
 
 import sphinx_rtd_theme
 
+subprocess.check_call([
+    sys.executable,
+    "-m",
+    "pip",
+    "install",
+    "cmake"])
 
 # -- Project information -----------------------------------------------------
 
