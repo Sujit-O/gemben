@@ -131,7 +131,7 @@ Graph Generation Functions
 Graph Utility Functions
 ----------------------------
 
-.. automodule:: gemben.utils.graph_utils
+.. automodule:: gemben.utils.graph_util
    :members:
 
 Kronecker Graph Generator

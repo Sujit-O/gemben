@@ -11,6 +11,86 @@ General examples
 
 General-purpose and introductory examples for the `GEM-Benchmark` library.
 
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="Experiment with Benchmark">
+
+.. only:: html
+
+    .. figure:: /auto_examples/images/thumb/sphx_glr_exp_benchmark_thumb.png
+
+        :ref:`sphx_glr_auto_examples_exp_benchmark.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /auto_examples/exp_benchmark
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="Experiment with Benchmark">
+
+.. only:: html
+
+    .. figure:: /auto_examples/images/thumb/sphx_glr_exp_benchmark2_thumb.png
+
+        :ref:`sphx_glr_auto_examples_exp_benchmark2.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /auto_examples/exp_benchmark2
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="Simple Experiment">
+
+.. only:: html
+
+    .. figure:: /auto_examples/images/thumb/sphx_glr_exp_thumb.png
+
+        :ref:`sphx_glr_auto_examples_exp.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /auto_examples/exp
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="Bayesian Hyerparameter tuning">
+
+.. only:: html
+
+    .. figure:: /auto_examples/images/thumb/sphx_glr_exp_bay_thumb.png
+
+        :ref:`sphx_glr_auto_examples_exp_bay.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /auto_examples/exp_bay
 .. raw:: html
 
     <div style='clear:both'></div>
