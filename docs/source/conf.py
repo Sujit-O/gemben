@@ -15,12 +15,8 @@
 import sys
 import os
 import pip
-import subprocess
 
 import sphinx_rtd_theme
-
-subprocess.call([sys.executable, "-m", "pip", "install", 'cmake'])
-
 # -- Project information -----------------------------------------------------
 
 project = 'gemben'

@@ -2,10 +2,6 @@
 # -*- coding: utf-8 -*-
 import setuptools
 import os
-import subprocess
-
-subprocess.call([sys.executable, "-m", "pip", "install", "cmake"])
-subprocess.call([sys.executable, "-m", "pip", "install", "cmake","--user"])
 
 ver_file = os.path.join('gemben', '_version.py')
 
@@ -33,6 +29,7 @@ setuptools.setup(
     packages=setuptools.find_packages(exclude=['dataset', 'venv', 'build', 'dist', 'gemben.egg-info']),
     package_dir={DISTNAME: 'gemben'},
     setup_requires=['sphinx>=2.1.2', 'cmake>=3.14.4'],
+    extras_require ={'networkit':["cmake>=3.14.4"]}
     install_requires=INSTALL_REQUIRES,
     classifiers=[
         "Programming Language :: Python :: 3.6",
