@@ -16,7 +16,6 @@ You will need following modules to be installed for using the gemben library:
 * scipy>=1.3.0
 * sklearn>=0.0
 * bayesian-optimization>=1.0.1
-* cmake>=3.14.4
 * networkit>=5.0
 * tensorflow==1.14.0
 
@@ -26,3 +25,4 @@ The following are documentaiton generation dependecies:
 * Sphinx>=2.1.2
 * sphinx-rtd-theme>=0.4.3
 * sphinx-gallery>=0.4.0
+* cffi>=1.9.1
