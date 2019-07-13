@@ -4,7 +4,8 @@ import setuptools
 import os
 import subprocess
 
-subprocess.call([sys.executable, "-m", "pip", "install", 'cmake'])
+subprocess.call([sys.executable, "-m", "pip", "install", "cmake"])
+subprocess.call([sys.executable, "-m", "pip", "install", "cmake","--user"])
 
 ver_file = os.path.join('gemben', '_version.py')
 
