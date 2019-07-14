@@ -105,13 +105,13 @@ General-purpose and introductory examples for the `GEM-Benchmark` library.
 
   .. container:: sphx-glr-download
 
-    :download:`Download all examples in Python source code: auto_examples_python.zip <//media/aicps/Data/gemben/docs/source/auto_examples/auto_examples_python.zip>`
+    :download:`Download all examples in Python source code: auto_examples_python.zip <//Users/sujito/Desktop/codes/dev/gemben/docs/source/auto_examples/auto_examples_python.zip>`
 
 
 
   .. container:: sphx-glr-download
 
-    :download:`Download all examples in Jupyter notebooks: auto_examples_jupyter.zip <//media/aicps/Data/gemben/docs/source/auto_examples/auto_examples_jupyter.zip>`
+    :download:`Download all examples in Jupyter notebooks: auto_examples_jupyter.zip <//Users/sujito/Desktop/codes/dev/gemben/docs/source/auto_examples/auto_examples_jupyter.zip>`
 
 
 .. only:: html
