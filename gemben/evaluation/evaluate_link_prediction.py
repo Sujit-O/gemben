@@ -18,6 +18,22 @@ def evaluateStaticLinkPrediction(train_digraph, test_digraph,
                                  sample_ratio_e=None,
                                  is_undirected=True,
                                 store_predictions=1):
+    """This function evaluates the static link prediction accuracy of the embedding algorithms.
+
+        Args:
+            train_digraph (Object): directed networkx graph object used for training the algorithm.
+            test_digraph (Object): directed networkx graph object to be used for testing the algorithm.
+            graph_embedding (object): Object of the embedding algorithm class defined in gemben/embedding.
+            X (Vector): Embedding of the the nodes of the graph.
+            node_l (Int): Number of nodes in the graph.
+            sample_ratio_e (Float): The ratio used to sample the original graph for evaluation purpose.
+            is_undirected (bool): Boolean flag to denote whether the graph is directed or not.
+            store_prediction (Int): Stores the predicted values.
+
+        Returns:
+            Numpy Array: Consiting of Mean average precision and the precision curve values.
+    """
+
     node_num = train_digraph.number_of_nodes()
     # evaluation
     if sample_ratio_e:
@@ -58,6 +74,16 @@ def expLPT(digraph, graph_embedding,
            res_pre, m_summ,
            K=100000,
            is_undirected=True):
+    """This function is used to experiment graph reconstruction for temporally varying graphs.
+
+        Args:
+            digraph (Object): directed networkx graph object.
+            graph_embedding (object): Object of the embedding algorithm class defined in gemben/embedding.
+            res_pre (Str): Prefix to be used to save the result.
+            m_summ (Str): String to denote the name of the summary file. 
+            K (Int): The maximum value to be use to get the precision curves.
+            is_undirected (bool): Boolean flag to denote whether the graph is directed or not.
+    """
     print('\tLink Prediction Temporal')
 
     t1 = time()
@@ -87,6 +113,24 @@ def expLP(digraph, graph_embedding,
           res_pre, m_summ, train_ratio=0.8,
           no_python=True, K=32768,
           is_undirected=True, sampling_scheme="u_rand"):
+    """This function is used to experiment link prediction.
+
+        Args:
+            digraph (Object): directed networkx graph object.
+            graph_embedding (object): Object of the embedding algorithm class defined in gemben/embedding.
+            n_sampled_node_l (Int): Number of nodes in the graph.
+            rounds (Int): The number of times the graph reconstruction is performed.
+            res_pre (Str): Prefix to be used to save the result.
+            train_ratio (Float): The split used for dividing the traing and testing data.
+            no_python (Bool): Flag to denote if python is used. 
+            m_summ (Str): String to denote the name of the summary file. 
+            K (Int): The maximum value to be use to get the precision curves.
+            sampling_scheme (Str): Sampling schme used to sample nodes to be reconstructed.
+            is_undirected (bool): Boolean flag to denote whether the graph is directed or not.
+
+        Returns:
+            Numpy Array: Consisting of Mean average precision.
+    """
     print('\tLink Prediction')
     MAP = {}
     prec_curv = {}

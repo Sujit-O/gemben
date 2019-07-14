@@ -10,7 +10,7 @@ def evaluateStaticGraphReconstruction(digraph, graph_embedding,
                                       X_stat, node_l=None, file_suffix=None,
                                       sample_ratio_e=None, is_undirected=True,
                                       is_weighted=False):
-     """This function evaluates the graph reconstruction accuracy of the embedding algorithms.
+    """This function evaluates the graph reconstruction accuracy of the embedding algorithms.
 
         Args:
             digraph (Object): directed networkx graph object.
@@ -73,7 +73,7 @@ def expGR(digraph, graph_embedding,
           is_undirected=True,
           sampling_scheme="u_rand"):
 
-     """This function is used to experiment graph reconstruction.
+    """This function is used to experiment graph reconstruction.
 
         Args:
             digraph (Object): directed networkx graph object.
