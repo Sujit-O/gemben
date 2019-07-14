@@ -10,7 +10,18 @@ import pdb
 
 
 class TopKRanker(oneVr):
+    """Class to get top K ranks."""
+    
     def predict(self, X, top_k_list):
+        """This function returns the prediction for top k node labels.
+
+        Args:
+            X (Vector): Embedding of the nodes.
+            top_k_list (List): list consisting of value to denote top k.
+
+        Returns:
+            Numpy Array: Predicted node labels.
+        """
         assert X.shape[0] == len(top_k_list)
         probs = np.asarray(super(TopKRanker, self).predict_proba(X))
         prediction = np.zeros((X.shape[0], self.classes_.shape[0]))
@@ -23,6 +34,16 @@ class TopKRanker(oneVr):
 
 
 def evaluateNodeClassification(X, Y, test_ratio):
+    """This function is used to evaluate node classification.
+
+        Args:
+            X (Vector) : Embedding values of the nodes.
+            Y (Int) : Labels of the nodes.
+            test_ratio (Float): Ratio to split the training and testing nodes.
+
+        Returns:
+            Numpy Array: Micro and macro accuracy scores.
+    """
     X_train, X_test, Y_train, Y_test = sk_ms.train_test_split(
         X,
         Y,
@@ -46,6 +67,19 @@ def evaluateNodeClassification(X, Y, test_ratio):
 
 def expNC(X, Y, test_ratio_arr,
           rounds, res_pre, m_summ):
+    """This function is used to experiment node classification.
+
+        Args:
+            X (vector): Embedding values of the nodes.
+            Y (Int): Labels of the nodes.
+            rounds (Int): The number of times the graph reconstruction is performed.
+            res_pre (Str): Prefix to be used to save the result.
+            test_ratio_arr (Float): The split used for dividing the traing and testing data.
+            m_summ (Str): String to denote the name of the summary file. 
+
+        Returns:
+            Numpy Array: Average accuracy.
+    """
     print('\tNode Classification:')
     summ_file = open('%s_%s.ncsumm' % (res_pre, m_summ), 'w')
     summ_file.write('Method\t%s\n' % ('\t'.join(map(str, test_ratio_arr))))
