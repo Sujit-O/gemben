@@ -18,5 +18,3 @@ bayesian-optimization>=1.0.1
 networkit>=5.0
 tensorflow==1.13.1
 
-
-
