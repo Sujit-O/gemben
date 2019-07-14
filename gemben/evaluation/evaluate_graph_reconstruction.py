@@ -10,6 +10,22 @@ def evaluateStaticGraphReconstruction(digraph, graph_embedding,
                                       X_stat, node_l=None, file_suffix=None,
                                       sample_ratio_e=None, is_undirected=True,
                                       is_weighted=False):
+     """This function evaluates the graph reconstruction accuracy of the embedding algorithms.
+
+        Args:
+            digraph (Object): directed networkx graph object.
+            graph_embedding (object): Object of the embedding algorithm class defined in gemben/embedding.
+            X_stat (Vector): Embedding of the the nodes of the graph.
+            node_l (Int): Number of nodes in the graph.
+            file_suffix (Str): The name of the algorithm and dataset used to save the embedding.
+            sample_ratio_e (Float): The ratio used to sample the original graph for evaluation purpose.
+            is_undirected (bool): Boolean flag to denote whether the graph is directed or not.
+            is_weighted (bool): Boolean flag to denote whether the edges of the graph is weighted.
+
+        Returns:
+            Numpy Array: Consiting of Mean average precision precision curve, errors and error baselines.
+    """
+
     node_num = digraph.number_of_nodes()
     # evaluation
     if sample_ratio_e:
@@ -56,6 +72,25 @@ def expGR(digraph, graph_embedding,
           K=10000,
           is_undirected=True,
           sampling_scheme="u_rand"):
+
+     """This function is used to experiment graph reconstruction.
+
+        Args:
+            digraph (Object): directed networkx graph object.
+            graph_embedding (object): Object of the embedding algorithm class defined in gemben/embedding.
+            X (Vector): Embedding of the the nodes of the graph.
+            n_sampled_node_l (Int): Number of nodes in the graph.
+            rounds (Int): The number of times the graph reconstruction is performed.
+            res_pre (Str): Prefix to be used to save the result.
+            m_summ (Str): String to denote the name of the summary file. 
+            K (Int): The maximum value to be use to get the precision curves.
+            sampling_scheme (Str): Sampling schme used to sample nodes to be reconstructed.
+            is_undirected (bool): Boolean flag to denote whether the graph is directed or not.
+
+        Returns:
+            Numpy Array: Consisting of Mean average precision.
+    """
+
     print('\tGraph Reconstruction')
     summ_file = open('%s_%s_%s.grsumm' % (res_pre, m_summ, sampling_scheme), 'w')
     summ_file.write('Method\t%s\n' % metrics.getMetricsHeader())
