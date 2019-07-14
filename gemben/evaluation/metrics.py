@@ -5,6 +5,16 @@ precision_pos = [2, 10, 100, 200, 300, 500, 1000]
 
 
 def computePrecisionCurve(predicted_edge_list, true_digraph, max_k=-1):
+    """This function computers the precision curves.
+
+        Args:
+            predicted_edge_list (Array): Consists of predicted edge list for each node.
+            true_digraph (object): True network graph object consists of the original nodes and edges.
+            max_k (Int): Maximum number of edges to be considered for computing the precsion.
+
+        Returns:
+            Array: Precision scores and delta factors.
+    """     
     if max_k == -1:
         max_k = len(predicted_edge_list)
     else:
@@ -26,6 +36,16 @@ def computePrecisionCurve(predicted_edge_list, true_digraph, max_k=-1):
 
 
 def computeMAP(predicted_edge_list, true_digraph, max_k=-1):
+    """This function computers the Mean average precision.
+
+        Args:
+            predicted_edge_list (Array): Consists of predicted edge list for each node.
+            true_digraph (object): True network graph object consists of the original nodes and edges.
+            max_k (Int): Maximum number of edges to be considered for computing the precsion.
+
+        Returns:
+            Array: MAP values.
+    """ 
     true_digraph = true_digraph.to_directed()
    
     node_num = true_digraph.number_of_nodes()
@@ -59,12 +79,26 @@ def computeMAP(predicted_edge_list, true_digraph, max_k=-1):
 
 
 def getMetricsHeader():
+    """This function gets the header for the calculated predcison@k.
+
+        Returns:
+            String: Header
+    """ 
     header = 'MAP\t' + '\t'.join(['P@%d' % p for p in precision_pos])
     header = header + '\tP@EdgeNum'
     return header
 
 
 def getPrecisionReport(prec_curv, edge_num):
+    """Function to generate the precision report..
+
+        Args:
+            prec_curv (Array): Calculated precision curve.
+            edge_num (Int): Total number of the edges.
+
+        Returns:
+            String: Precision report. 
+    """ 
     result_str = ''
     temp_pos = precision_pos[:] + [edge_num]
     for p in temp_pos:
