@@ -29,7 +29,7 @@ setuptools.setup(
     packages=setuptools.find_packages(exclude=['dataset', 'venv', 'build', 'dist', 'gemben.egg-info']),
     package_dir={DISTNAME: 'gemben'},
     setup_requires=['sphinx>=2.1.2', 'cmake>=3.14.4'],
-    extras_require ={'networkit':["cmake>=3.14.4"]}
+    extras_require ={'networkit':["cmake>=3.14.4"]},
     install_requires=INSTALL_REQUIRES,
     classifiers=[
         "Programming Language :: Python :: 3.6",
