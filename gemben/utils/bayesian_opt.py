@@ -65,7 +65,7 @@ class BayesianOpt(object):
 	def optimization_func(self, **hyp_space):
 		## method class	
 		MethClass = getattr(
-			importlib.import_module("gem.embedding.%s" % self._meth),
+			importlib.import_module("gemben.embedding.%s" % self._meth),
 			methClassMap[self._meth])
 		self._hyp_d.update({"d": self._dim})
 
@@ -79,12 +79,12 @@ class BayesianOpt(object):
 		if self._meth == "sdne":
 			hyp_d.update({
 				"modelfile": [
-					"gem/intermediate/enc_mdl_%s_%d.json" % (self._data_set, self._dim),
-					"gem/intermediate/dec_mdl_%s_%d.json" % (self._data_set, self._dim)
+					"gemben/intermediate/enc_mdl_%s_%d.json" % (self._data_set, self._dim),
+					"gemben/intermediate/dec_mdl_%s_%d.json" % (self._data_set, self._dim)
 				],
 				"weightfile": [
-					"gem/intermediate/enc_wts_%s_%d.hdf5" % (self._data_set, self._dim),
-					"gem/intermediate/dec_wts_%s_%d.hdf5" % (self._data_set, self._dim)
+					"gemben/intermediate/enc_wts_%s_%d.hdf5" % (self._data_set, self._dim),
+					"gemben/intermediate/dec_wts_%s_%d.hdf5" % (self._data_set, self._dim)
 				]
 			})
 		elif self._meth == "gf" or self._meth == "node2vec":
@@ -113,7 +113,7 @@ class BayesianOpt(object):
 			)
 
 
-			log_path = "gem/intermediate/bays_opt/"
+			log_path = "gemben/intermediate/bays_opt/"
 			try:
 				os.makedirs(log_path)
 			except:
