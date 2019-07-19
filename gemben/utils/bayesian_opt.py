@@ -11,11 +11,6 @@ import importlib
 import itertools
 from math import log10
 
-
-import sys
-# sys.path.append('./')
-# sys.path.append(os.path.realpath(__file__))
-
 from bayes_opt import BayesianOptimization
 from bayes_opt.observer import JSONLogger
 from bayes_opt.event import Events
@@ -38,10 +33,28 @@ expMap = {"gf": "GF MAP", "lp": "LP MAP",
 
 
 class BayesianOpt(object):
-	""" 
-	bayesian global optimization with Gaussian Process
+	""" bayesian global optimization with Gaussian Process
+
+    Bayesian optimization is a module to perform hyper-paramter tuning. 
+    It can be utilized to find the best hyper-parameter with fewer iterations. 
+    
+    
+    Examples:
+        >>> from bayes_opt import BayesianOptimization
+        >>> def black_box_function(x, y): 
+        		return x+y
+        >>> pbounds = {'x': (2, 4), 'y': (-3, 3)}
+	    >>> optimizer = BayesianOptimization(
+					    f=black_box_function,
+					    pbounds=pbounds,
+					    verbose=2, # verbose = 1 prints only when a maximum is observed, verbose = 0 is silent
+					    random_state=1,)
+		>>> optimizer.maximize(init_points=2,  n_iter=3,)
+		>>> print(optimizer.max)
 	"""
+
 	def __init__(self, *args, **kwargs):
+		''' Initialize the Bayesian Optimizer'''
 		for key in kwargs.keys():
 			self.__setattr__('_%s' % key,kwargs[key])
 		self._params = kwargs
@@ -54,24 +67,19 @@ class BayesianOpt(object):
 
 
 	def search_space(self, hyp_range):
-		### actual number
-		#space = {k: (min(v), max(v)) for k, v in hyp_range.items() if isinstance(v[0], numbers.Number)}
-		### power of 10
+		"""Function to define the search space"""
 		space = {k: (log10(min(v)), log10(max(v))) for k, v in hyp_range.items() if isinstance(v[0], numbers.Number)}
 		category_para = {k: v for k, v in hyp_range.items() if not isinstance(v[0], numbers.Number)}
 		return space, category_para
 
 
 	def optimization_func(self, **hyp_space):
-		## method class	
+		"""The main method to be optimized"""	
 		MethClass = getattr(
 			importlib.import_module("gemben.embedding.%s" % self._meth),
 			methClassMap[self._meth])
 		self._hyp_d.update({"d": self._dim})
 
-		## actual number
-		#self._hyp_d.update(hyp_space)
-		## turn power into actual number\
 		hyp_space = {k:10**v for k, v in hyp_space.items()}
 		print("current hyp_space value is", hyp_space)
 
@@ -100,9 +108,7 @@ class BayesianOpt(object):
 
 
 	def optimize(self, random_state = 5, verbose = 2, init_points = 10, n_iter = 5, acq = 'poi' ):
-        ## ei, poi, ucb
-		#utility = UtilityFunction(kind="ucb", kappa=2.5, xi=0.0)
-
+		"""Function to perform the actual optimization."""
 		for hyp in itertools.product(*self._category_para.values()):
 			self._hyd_d = dict(zip(self._category_para.keys(),hyp))
 			print("category_para: ",self._hyd_d )

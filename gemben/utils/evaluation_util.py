@@ -3,6 +3,7 @@ from random import randint
 
 
 def getRandomEdgePairs(node_num, sample_ratio=0.01, is_undirected=True):
+    """Function to get random edge pairs."""
     num_pairs = int(sample_ratio * node_num * (node_num - 1))
     if is_undirected:
         num_pairs = num_pairs / 2
@@ -18,6 +19,7 @@ def getRandomEdgePairs(node_num, sample_ratio=0.01, is_undirected=True):
 
 
 def getEdgeListFromAdjMtx(adj, threshold=0.0, is_undirected=True, edge_pairs=None):
+    """Function to get edgelist from adjaceny matrix."""
     result = []
     node_num = adj.shape[0]
     if edge_pairs:
@@ -37,6 +39,7 @@ def getEdgeListFromAdjMtx(adj, threshold=0.0, is_undirected=True, edge_pairs=Non
 
 
 def splitDiGraphToTrainTest(di_graph, train_ratio, is_undirected=True):
+    """Function to split the directed graph to train and test sets."""
     train_digraph = di_graph.copy()
     test_digraph = di_graph.copy()
     node_num = di_graph.number_of_nodes()
