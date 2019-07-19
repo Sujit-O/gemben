@@ -28,6 +28,8 @@ def plot_hist(title, data):
     plt.hist(x=data)
     plt.savefig(title + '.png')
 
+##########################################################################
+
 def barbell_graph(m1,m2):
     """Function to generate barbell graph.
 
