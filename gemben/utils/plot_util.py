@@ -52,6 +52,7 @@ expMap2 = {"gr": "GR MAP", "lp": "LP P@100",
 
 
 def get_node_color(node_community):
+    """Function to get the node colors for the communities. """
     cnames = [item[0] for item in matplotlib.colors.cnames.iteritems()]
     node_colors = [cnames[c] for c in node_community]
     return node_colors
@@ -59,6 +60,7 @@ def get_node_color(node_community):
 
 def plot(x_s, y_s, fig_n, x_lab, y_lab,
          file_save_path, title, legendLabels=None, show=False):
+    """Function to plot the graph with respective embeddings. """
     plt.rcParams.update({'font.size': 16, 'font.weight': 'bold'})
     markers = ['o', '*', 'v', 'D', '<', 's', '+', '^', '>']
     colors = ['b', 'g', 'r', 'c', 'm', 'y', 'k']
@@ -88,6 +90,7 @@ def plot(x_s, y_s, fig_n, x_lab, y_lab,
 def plot_ts(ts_df, plot_title, eventDates,
             eventLabels=None, save_file_name=None,
             xLabel=None, yLabel=None, show=False):
+    """Function to plot the time series data. """
     ax = ts_df.plot(title=plot_title, marker='*',
                     markerfacecolor='red', markersize=10,
                     linestyle='solid')
@@ -113,6 +116,7 @@ def plot_ts(ts_df, plot_title, eventDates,
 
 
 def turn_latex(key_str):
+    """Function to convert special words to latex comaptible ones."""
     if key_str in ['mu', 'rho', 'beta', 'alpha', 'gamma']:
         return '$\%s$' % key_str
     else:
@@ -123,6 +127,7 @@ def plot_hyp_data2(hyp_keys, exp_param,
                    meths, data,
                    s_sch="u_rand",
                    dim=2):
+    """Function to plot the result of hyper-parameter exploration."""
     font = {'family': 'serif', 'serif': ['computer modern roman']}
     rc('text', usetex=True)
     rc('font', weight='bold')
@@ -143,7 +148,7 @@ def plot_hyp_data2(hyp_keys, exp_param,
         for meth in meths:
             try:
                 df = pd.read_hdf(
-                    "gem/intermediate/%s_%s_%s_%s_dim_%d_data_hyp.h5" % (data, meth, exp, s_sch, dim),
+                    "gemben/intermediate/%s_%s_%s_%s_dim_%d_data_hyp.h5" % (data, meth, exp, s_sch, dim),
                     "df"
                 )
                 n_meths += 1
@@ -268,11 +273,11 @@ def plot_hyp_data2(hyp_keys, exp_param,
             fin2.legend(loc='lower center', bbox_to_anchor=(0.45, -0.01),
                         ncol=n_meths, fancybox=True, shadow=True)
             fin1.savefig(
-                'gem/plots/data_hyp/%s_%s_%s_%d_%s.pdf' % (data, exp, s_sch, dim, hyp_key),
+                'gemben/plots/data_hyp/%s_%s_%s_%d_%s.pdf' % (data, exp, s_sch, dim, hyp_key),
                 dpi=300, format='pdf', bbox_inches='tight'
             )
             fin2.savefig(
-                'gem/plots/data_hyp/%s_%s_%s_%d_%s_p100.pdf' % (data, exp, s_sch, dim, hyp_key),
+                'gemben/plots/data_hyp/%s_%s_%s_%d_%s_p100.pdf' % (data, exp, s_sch, dim, hyp_key),
                 dpi=300, format='pdf', bbox_inches='tight'
             )
             fin1.clf()
@@ -283,12 +288,13 @@ def plot_hyp_data(hyp_keys, exp_param,
                   meths, data,
                   s_sch="u_rand",
                   dim=2):
+    """Function to plot the result of hyperparameter exploration. """
     for exp in exp_param:
         df_all = pd.DataFrame()
         for meth in meths:
             try:
                 df = pd.read_hdf(
-                    "gem/intermediate/%s_%s_%s_%s_dim_%d_data_hyp.h5" % (data, meth, exp, s_sch, dim),
+                    "gemben/intermediate/%s_%s_%s_%s_dim_%d_data_hyp.h5" % (data, meth, exp, s_sch, dim),
                     "df"
                 )
             except:
@@ -341,7 +347,7 @@ def plot_hyp_data(hyp_keys, exp_param,
                 # ax.grid()
                 ax.legend()
                 plt.savefig(
-                    'gem/plots/data_hyp/%s_%s_%s_%d_%s.pdf' % (data, exp, s_sch, dim, hyp_str),
+                    'gemben/plots/data_hyp/%s_%s_%s_%d_%s.pdf' % (data, exp, s_sch, dim, hyp_str),
                     dpi=300, format='pdf', bbox_inches='tight'
                 )
                 plt.clf()
@@ -361,7 +367,7 @@ def plot_hyp_data(hyp_keys, exp_param,
                 # ax.grid()
                 ax.legend()
                 plt.savefig(
-                    'gem/plots/data_hyp/%s_%s_%s_%d_%s_p_100.pdf' % (data, exp, s_sch, dim, hyp_str),
+                    'gemben/plots/data_hyp/%s_%s_%s_%d_%s_p_100.pdf' % (data, exp, s_sch, dim, hyp_str),
                     dpi=300, format='pdf', bbox_inches='tight'
                 )
                 plt.clf()
@@ -369,9 +375,10 @@ def plot_hyp_data(hyp_keys, exp_param,
 
 def plot_hyp(hyp_keys, exp_param, meth, data,
              s_sch="u_rand"):
+    """Function to explore the hyperparameters. """
     for exp in exp_param:
         df = pd.read_hdf(
-            "gem/intermediate/%s_%s_%s_%s_hyp.h5" % (data, meth, exp, s_sch),
+            "gemben/intermediate/%s_%s_%s_%s_hyp.h5" % (data, meth, exp, s_sch),
             "df"
         )
         col_names = df.columns
@@ -414,7 +421,7 @@ def plot_hyp(hyp_keys, exp_param, meth, data,
                 print('Only 2 points provided to plot hyperparameters')
                 continue
             plt.savefig(
-                'gem/plots/hyp/%s_%s_%s_%s_%s.pdf' % (data, meth, exp, s_sch, hyp_key),
+                'gemben/plots/hyp/%s_%s_%s_%s_%s.pdf' % (data, meth, exp, s_sch, hyp_key),
                 dpi=300, format='pdf', bbox_inches='tight'
             )
             plt.clf()
@@ -422,12 +429,13 @@ def plot_hyp(hyp_keys, exp_param, meth, data,
 
 def plot_hyp_all(hyp_keys, exp_param, meth, data_sets,
                  s_sch="u_rand"):
+    """Function to plot all the hyper-parameter results. """
     for exp in exp_param:
         df_all = pd.DataFrame()
         for data in data_sets:
             try:
                 df = pd.read_hdf(
-                    "gem/intermediate/%s_%s_%s_%s_hyp.h5" % (data, meth, exp, s_sch),
+                    "gemben/intermediate/%s_%s_%s_%s_hyp.h5" % (data, meth, exp, s_sch),
                     "df"
                 )
             except:
@@ -500,7 +508,7 @@ def plot_hyp_all(hyp_keys, exp_param, meth, data_sets,
             except:
                 pdb.set_trace()
             plt.savefig(
-                'gem/plots/hyp/%s_%s_%s_%s.pdf' % (meth, exp, s_sch, hyp_key),
+                'gemben/plots/hyp/%s_%s_%s_%s.pdf' % (meth, exp, s_sch, hyp_key),
                 dpi=300, format='pdf', bbox_inches='tight'
             )
             plt.clf()
@@ -509,6 +517,7 @@ def plot_hyp_all(hyp_keys, exp_param, meth, data_sets,
 def plot_p_at_k(res_pre, res_suffix, exp_type, m_names_f,
                 m_names, d_arr, n_rounds, save_fig_name,
                 K=1024, plot_d=False, plot_ratio=0.8, s_sch="u_rand"):
+    """Function to plot precision at k."""
     log_K = int(np.log2(K)) + 1
     num_k = log_K - 3
     df_map = pd.DataFrame(np.zeros((n_rounds * len(m_names) * len(d_arr), 4)),
@@ -638,6 +647,7 @@ def plot_p_at_k(res_pre, res_suffix, exp_type, m_names_f,
 def plot_F1(res_pre, res_suffix, exp_type,
             m_names_f, m_names, d_arr, n_rounds,
             save_fig_name, K=1024, plot_d=False):
+    """Function to plot the F1-score. """
     df_f1_glob = pd.DataFrame(
         np.zeros((n_rounds * len(m_names) * len(d_arr), 5)),
         columns=['d', 'Method', 'Round id',
@@ -737,6 +747,7 @@ def plotExpRes(res_pre, methods, exp,
                n_rounds, plot_d,
                plot_ratio=0.8,
                samp_scheme="u_rand", K=1024):
+    """Function to plot experiment results for maps. """
     m_names = [m_name_l[meth] for meth in methods]
     map_gr = None
     map_lp = None

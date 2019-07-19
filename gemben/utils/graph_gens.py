@@ -740,11 +740,11 @@ def stochastic_kronecker_graph(N, deg, dia, dim, domain):
 
     The stochastic Kronecker graph model introduced by Leskovec etal.  
     is a random graph with vertex setZn2, where two verticesuandvare connected  
-    with  probability :math:`αu·vγ(1−u)·(1−v)βn−u·v−(1−u)·(1−v)` in-dependently  of  the  
-    presence  or  absence  of  any  other  edge,  for  fixedparameters :math:`0< α,β,γ <1`.  
+    with  probability `αu·vγ(1−u)·(1−v)βn−u·v−(1−u)·(1−v)` in-dependently  of  the  
+    presence  or  absence  of  any  other  edge,  for  fixedparameters `0< α,β,γ <1`.  
     They have shown empirically that the de-gree sequence resembles a power law degree distribution.  
     In this paperwe show that the stochastic Kronecker graph a.a.s. does not feature apower 
-    law degree distribution for any parameters :math:`0< α,β,γ <1`.  
+    law degree distribution for any parameters `0< α,β,γ <1`.  
     
 
     Parameters of the graph:

@@ -40,15 +40,14 @@ class BayesianOpt(object):
     
     
     Examples:
-        >>> from bayes_opt import BayesianOptimization
-        >>> def black_box_function(x, y): 
-        		return x+y
-        >>> pbounds = {'x': (2, 4), 'y': (-3, 3)}
-	    >>> optimizer = BayesianOptimization(
-					    f=black_box_function,
-					    pbounds=pbounds,
-					    verbose=2, # verbose = 1 prints only when a maximum is observed, verbose = 0 is silent
-					    random_state=1,)
+		>>> from bayes_opt import BayesianOptimization
+		>>> def black_box_function(x, y): 
+				return x+y
+		>>> pbounds = {'x': (2, 4), 'y': (-3, 3)}
+		>>> optimizer = BayesianOptimization(f=black_box_function,
+											pbounds=pbounds,
+											verbose=2, # verbose = 1 prints only when a maximum is observed, verbose = 0 is silent
+											random_state=1,)
 		>>> optimizer.maximize(init_points=2,  n_iter=3,)
 		>>> print(optimizer.max)
 	"""

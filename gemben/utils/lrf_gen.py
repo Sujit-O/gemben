@@ -5,7 +5,7 @@ import numpy as np
 
 
 def integral(a,b):
-
+    """Function to evaulate the integral. """
     if (abs(a + 1.) > 1e-10):
         intg_val = (1. / (a + 1.) * pow(b, a + 1.))
     else:
@@ -14,10 +14,12 @@ def integral(a,b):
     return intg_val
 
 def average_degree(dmax, dmin, gamma):
+    """Function to calculate average degree. """
     return (1./(integral(gamma, dmax)-integral(gamma, dmin)))*(integral(gamma+1, dmax)-integral(gamma+1, dmin));
 
 
 def solve_dmin(dmax, dmed, gamma):
+    """Function to solve for minimum degree. """
     dmin_l = 1;
     dmin_r = dmax;
     average_k1 = average_degree(dmin_r, dmin_l, gamma);
@@ -49,6 +51,7 @@ def solve_dmin(dmax, dmed, gamma):
 
 def benchmark(excess, defect, num_nodes, average_k, max_degree, tau, tau2, mixing_parameter,
                   overlapping_nodes, overlap_membership, nmin, nmax, fixed_range, clustering_coeff):
+    """Function to solve for minimum degree for the given benchmark. """
     dmin = solve_dmin(max_degree, average_k, -1*t1)
     print(dmin)
     exit()
