@@ -10,6 +10,7 @@ import pdb
 
 
 def transform_DiGraph_to_adj(di_graph):
+    """Function to convert the directed graph to adjacency matrix."""
     n = di_graph.number_of_nodes()
     adj = np.zeros((n, n))
     for st, ed, w in di_graph.edges(data='weight', default=1):
@@ -18,6 +19,7 @@ def transform_DiGraph_to_adj(di_graph):
 
 
 def transform_adj_to_DiGraph(adj):
+    """Function to convert the adjacency matrix into directed graph."""
     n = adj.shape[0]
     di_graph = nx.DiGraph()
     di_graph.add_nodes_from(range(n))
@@ -53,12 +55,14 @@ def get_nk_lcc_undirected(G):
     return G2, nodeListMap
 
 def print_graph_stats(G):
+    """Function to print the graph statistics."""
     print('# of nodes: %d, # of edges: %d' % (G.number_of_nodes(),
                                               G.number_of_edges()))
 
 
 def sample_graph_rw(di_graph, n_sampled_nodes=None,
                     random_res_p=0.01, verbose=False):
+    """Function to return the sampled  graph."""
     t1 = time()
     print('\t\tRandom walk sampling. # nodes to sample: %d' % n_sampled_nodes)
     node_num = di_graph.number_of_nodes()
@@ -140,6 +144,7 @@ def sample_graph_rw(di_graph, n_sampled_nodes=None,
 
 
 def sample_graph(di_graph, n_sampled_nodes=None):
+    """Function to sample the graph."""
     node_num = di_graph.number_of_nodes()
     if n_sampled_nodes and node_num > n_sampled_nodes:
         node_l = np.random.choice(node_num, n_sampled_nodes, replace=False)
@@ -160,6 +165,7 @@ def sample_graph(di_graph, n_sampled_nodes=None):
 
 def randwalk_DiGraph_to_adj(di_graph, node_frac=0.1,
                             n_walks_per_node=5, len_rw=2):
+    """Function to perform a randomwalk on directed graph and return the adjacency list."""
     t0 = time.time()
     n = di_graph.number_of_nodes()
     adj = np.zeros((n, n))
@@ -193,6 +199,7 @@ def randwalk_DiGraph_to_adj(di_graph, node_frac=0.1,
 
 
 def addChaos(di_graphs, k):
+    """Function to add randomness in the graph."""
     anomaly_time_steps = sorted(random.sample(range(len(di_graphs)), k))
     for t in anomaly_time_steps:
         n = di_graphs[t].number_of_nodes()
@@ -204,6 +211,7 @@ def addChaos(di_graphs, k):
 
 
 def addNodeAnomalies(di_graphs, p, k):
+    """Function to add anomalous edges in the graph."""
     anomaly_time_steps = sorted(random.sample(range(len(di_graphs)), k))
     for t in anomaly_time_steps:
         n_nodes = di_graphs[t].number_of_nodes()

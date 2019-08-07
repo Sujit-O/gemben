@@ -1,6 +1,7 @@
 import numpy as np
 
 def reorient(embed1, embed2):
+    """Function to re-orient the two embedding values by projection."""
     assert embed1.shape[1] == embed2.shape[1], ('Embedding dimension should be the same for both embeddings')
     n1, d = embed1.shape
     n2, d = embed2.shape

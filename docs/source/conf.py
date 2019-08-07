@@ -24,8 +24,8 @@ copyright = '2019, Palash Goyal, Di Huang, Ankita Goswami, Sujit Rokka Chhetri, 
 author = 'Palash Goyal, Di Huang, Ankita Goswami, Sujit Rokka Chhetri, Arquimedes Canedo and Emilio Ferrara'
 
 # The full version, including alpha/beta/rc tags
-release = "0.0.2"
-version = "0.0.2"
+release = "0.0.3"
+version = "0.0.3"
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.

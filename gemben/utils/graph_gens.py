@@ -11,28 +11,45 @@ import networkit as nk
 from scipy import special
 from numpy import pi
 import itertools
-import sys
-# sys.path.append('./')
-# sys.path.append(os.path.realpath(__file__))
 
 from gemben.utils import graph_util,kronecker_generator,kronecker_init_matrix
 import math
 import multiprocessing
 
-########################################################################
 def truncate(f, n):
+    """Function to truncate the given floating point values."""
     return math.floor(f * 10 ** n) / 10 ** n
 
-########################################################################
 def plot_hist(title, data):
+    """Function to truncate the given floating point values."""
     import matplotlib.pyplot as plt
     plt.figure()
     plt.title(title)
     plt.hist(x=data)
     plt.savefig(title + '.png')
-########################################################################
+
+##########################################################################
 
 def barbell_graph(m1,m2):
+    """Function to generate barbell graph.
+
+    A n-barbell graph is the simple graph obtained by connecting 
+    two copies of a complete graph K_n by a bridge. 
+
+    Return the Barbell Graph: two complete graphs connected by a path.
+
+    For m1 > 1 and m2 >= 0.
+
+    Two identical complete graphs K_{m1} form the left and right bells,
+    and are connected by a path P_{m2}.
+
+    The 2*m1+m2  nodes are numbered
+        0,...,m1-1 for the left barbell,
+        m1,...,m1+m2-1 for the path,
+        and m1+m2,...,2*m1+m2-1 for the right barbell.
+
+    """
+
     graph = nx.barbell_graph(m1,m2)
     ## for com_nc, one hot 
     #onehot_com = np.array([[1,0,0]]*m1+[[0,1,0]]*m2+[[0,0,1]]*m1)  is slower when num of nodes > 2000
@@ -58,7 +75,7 @@ def barbell_graph(m1,m2):
 ##########################################################################
 
 def binary_community_graph(N, k, maxk, mu):
-    ## OS system is windows 
+    """Retruns a binary community graph. """
     if sys.platform[0] == "w":
         args = ["gem/c_exe/benchm.exe"]
         fcall = "gem/c_exe/benchm.exe"
@@ -76,12 +93,12 @@ def binary_community_graph(N, k, maxk, mu):
         # call(args)
     except Exception as e:
         print('ERROR: %s' % str(e))
-        print('gem/c_exe/benchm not found. Please compile gf, place benchm in the path and grant executable permission')
+        print('gemben/c_exe/benchm not found. Please compile gf, place benchm in the path and grant executable permission')
     t2 = time()
     print('\tTime taken to generate random graph: %f sec' % (t2 - t1))
     try:
-        graph = graph_util.loadGraphFromEdgeListTxt('gem/c_exe/network.dat')
-        node_labels = np.loadtxt('gem/c_exe/community.dat')
+        graph = graph_util.loadGraphFromEdgeListTxt('gemben/c_exe/network.dat')
+        node_labels = np.loadtxt('gemben/c_exe/community.dat')
     except:
         graph = graph_util.loadGraphFromEdgeListTxt('network.dat')
         node_labels = np.loadtxt('community.dat')
@@ -91,13 +108,20 @@ def binary_community_graph(N, k, maxk, mu):
 
 
 ########################################################################
-def barabasi_albert_graph(N, deg, dia, dim, domain):
-    '''
-    Parameters of the graph:
-    n: Number of Nodes
-    m: Number of edges to attach from a new node to existing nodes
-    Formula for m:  (m^2)- (Nm)/2 + avg_deg * (N/2) = 0  =>  From this equation we need to find m :
-    :return: Graph Object
+def barabasi_albert_graph(N, deg, dia,dim, domain):
+    ''' Return random graph using Barabási-Albert preferential attachment model.
+
+    Args:
+        n (int): Number of Nodes
+        deg (int): Degree of the graphs
+        dia (float): diameter of the graph
+        dim (int): 
+        m: Number of edges to attach from a new node to existing nodes
+        Formula for m:  (m^2)- (Nm)/2 + avg_deg * (N/2) = 0  =>  From this equation we need to find m :
+        :return: Graph Object
+    
+    Returns:
+        Object: Best graph, beast average degree and best diameter.
     '''
 
     ## Calculating thof nodes: 10\nNumber of edges: 16\nAverage degree:   3.2000'
@@ -107,28 +131,13 @@ def barabasi_albert_graph(N, deg, dia, dim, domain):
         return None
 
     strt_time = time()
-
     m = int(round((N - np.sqrt(N**2 - 4*deg*N))/4))
-     
-       
     G = nx.barabasi_albert_graph(n=N, m=m)
-
     lcc, _ = graph_util.get_lcc_undirected(G)
-             
-
-
-
-
     best_G = lcc
-
     best_diam = nx.algorithms.diameter(best_G)
-
     best_avg_deg = np.mean(list(dict(nx.degree(best_G)).values()))
-
-
-
     end_time = time()
-     
     print('Graph_Name: Barabasi Albert Graph')
     print('Num_Nodes: ', nx.number_of_nodes(best_G), ' Avg_Deg : ', best_avg_deg, ' Diameter: ', best_diam)
     print('TIME: ' , end_time - strt_time, ' secs')
@@ -138,16 +147,26 @@ def barabasi_albert_graph(N, deg, dia, dim, domain):
 ########################################################################################################################
 
 def random_geometric_graph(N, deg, dia, dim, domain):
-    '''
-    Parameters of the graph:
-    n (int or iterable) – Number of nodes or iterable of nodes
-
-    radius (float) – Distance threshold value
+    ''' Return the random geometric graph in the unit cube.
+    
+    The random geometric graph model places n nodes uniformly at random 
+    in the unit cube  Two nodes `u,v` are connected with an edge if
+    `d(u,v)<=r` where `d` is the Euclidean distance and `r` is a radius 
+    threshold.
 
     Average Degree is given by formula: Avg_Deg = (pi*(r^2)*num_nodes)/(l^2)
     Formula for r: avg_deg * l
-    where l can be considered a constant where its square can be approximated to 1.04 [ength of square] Empirically Found
-    :return: Graph Object
+    where l can be considered a constant where its square can be approximated to 
+    1.04 [ength of square] Empirically Found
+
+    Args:
+        n (int or iterable) – Number of nodes or iterable of nodes
+        dia (float) – Distance threshold value
+        dim (int, optional): Dimension of the graph
+        domain (str, optional): Domain of the graph
+
+    Returns:
+        Object: Best graph, beast average degree and best diameter.
     '''
     strt_time = time()
 
@@ -191,7 +210,12 @@ def random_geometric_graph(N, deg, dia, dim, domain):
 ########################################################################################################################
 
 def waxman_graph(N, deg, dia, dim, domain):
-    '''
+    '''Return a Waxman random graph.
+
+    The Waxman random graph models place n nodes uniformly at random
+    in a rectangular domain. Two nodes u,v are connected with an edge
+    with probability
+
     Parameters of the graph:
     n (int or iterable) – Number of nodes or iterable of nodes
 
@@ -207,7 +231,14 @@ def waxman_graph(N, deg, dia, dim, domain):
     So we fix the parameter beta = 0.1, and we know the default value of d/L is in range: 0.25 to 0.3 (Empiricially calculated)
     so we only tweak alpha to get the required avg deg.
 
-    :return: Graph Object
+    Args:
+        n (int or iterable) – Number of nodes or iterable of nodes
+        dia (float) – Distance threshold value
+        dim (int, optional): Dimension of the graph
+        domain (str, optional): Domain of the graph
+
+    Returns:
+        Object: Best graph, beast average degree and best diameter.
     '''
     strt_time = time()
 
@@ -287,7 +318,15 @@ def waxman_graph(N, deg, dia, dim, domain):
 
 ########################################################################
 def watts_strogatz_graph(N, deg, dia, dim, domain):
-    '''
+    '''Return a Watts-Strogatz small-world graph.
+
+    First create a ring over n nodes.  Then each node in the ring is
+    connected with its k nearest neighbors (k-1 neighbors if k is odd).
+    Then shortcuts are created by replacing some edges as follows:
+    for each edge u-v in the underlying "n-ring with k nearest neighbors"
+    with probability p replace it with a new edge u-w with uniformly
+    random choice of existing node w.
+
     Parameters of the graph:
     n (int) – The number of nodes
     k (int) – Each node is joined with its k nearest neighbors in a ring topology.
@@ -295,7 +334,15 @@ def watts_strogatz_graph(N, deg, dia, dim, domain):
 
     Average Degree is solely decided by k
     Diameter depends on the value of p
-    :return: Graph Object
+    
+    Args:
+        n (int or iterable) – Number of nodes or iterable of nodes
+        dia (float) – Distance threshold value
+        dim (int, optional): Dimension of the graph
+        domain (str, optional): Domain of the graph
+
+    Returns:
+        Object: Best graph, beast average degree and best diameter.
     '''
     strt_time = time()
 
@@ -321,11 +368,25 @@ def watts_strogatz_graph(N, deg, dia, dim, domain):
 
 ########################################################################
 def duplication_divergence_graph(N, deg, dia, dim, domain):
-    '''
+    '''Returns an undirected graph using the duplication-divergence model.
+
+    A graph of ``n`` nodes is created by duplicating the initial nodes
+    and retaining edges incident to the original nodes with a retention
+    probability ``p``.
+
+
     Parameters of the graph:
     n (int) – The desired number of nodes in the graph.
     p (float) – The probability for retaining the edge of the replicated node.
-    :return: Graph Object
+    
+    Args:
+        n (int or iterable) – Number of nodes or iterable of nodes
+        dia (float) – Distance threshold value
+        dim (int, optional): Dimension of the graph
+        domain (str, optional): Domain of the graph
+
+    Returns:
+        Object: Best graph, beast average degree and best diameter.
     '''
     strt_time = time()
 
@@ -417,7 +478,25 @@ def duplication_divergence_graph(N, deg, dia, dim, domain):
 
 ########################################################################
 def powerlaw_cluster_graph(N, deg, dia, dim, domain):
-    '''
+    '''Holme and Kim algorithm for growing graphs with powerlaw
+    degree distribution and approximate average clustering.
+
+    The average clustering has a hard time getting above a certain
+    cutoff that depends on ``m``.  This cutoff is often quite low.  The
+    transitivity (fraction of triangles to possible triangles) seems to
+    decrease with network size.
+
+    It is essentially the Barabási–Albert (BA) growth model with an
+    extra step that each random edge is followed by a chance of
+    making an edge to one of its neighbors too (and thus a triangle).
+
+    This algorithm improves on BA in the sense that it enables a
+    higher average clustering to be attained if desired.
+
+    It seems possible to have a disconnected graph with this algorithm
+    since the initial ``m`` nodes may not be all linked to a new node
+    on the first iteration like the BA model.
+
     Parameters of the graph:
     n (int) – the number of nodes
     m (int) – the number of random edges to add for each new node
@@ -425,7 +504,15 @@ def powerlaw_cluster_graph(N, deg, dia, dim, domain):
     Formula for m:  (m^2)- (Nm)/2 + avg_deg * (N/2) = 0  =>  From this equation we need to find m :
     p : Does not vary the average degree or diameter so much. : Higher value of p may cause average degree to overshoot intended average_deg
     so we give the control of average degree to parameter m: by setting a lower value of p: 0.1
-    :return: Graph Object
+    
+    Args:
+        n (int or iterable) – Number of nodes or iterable of nodes
+        dia (float) – Distance threshold value
+        dim (int, optional): Dimension of the graph
+        domain (str, optional): Domain of the graph
+
+    Returns:
+        Object: Best graph, beast average degree and best diameter.
     '''
 
     ## Calculating thof nodes: 10\nNumber of edges: 16\nAverage degree:   3.2000'
@@ -454,7 +541,11 @@ def powerlaw_cluster_graph(N, deg, dia, dim, domain):
 
 #####################################################################
 def stochastic_block_model(N, deg, dia, dim, domain):
-    '''
+    '''Returns a stochastic block model graph.
+
+    This model partitions the nodes in blocks of arbitrary sizes, and places
+    edges between pairs of nodes independently, with a probability that depends
+    on the blocks.
 
     :param N: Number of Nodes
     :param p:   Element (r,s) gives the density of edges going from the nodes of group r
@@ -465,8 +556,14 @@ def stochastic_block_model(N, deg, dia, dim, domain):
                     But if N  >1024: scaler = N/1024 : then p = (0.001*deg)/scaler
                     And if N < 1024 : Scaler = 1024/N : then p = (0.001*deg)*scaler
                     and if N == 1024: p = (0.001*deg)
-    For each
-    :return:
+    Args:
+        n (int or iterable) – Number of nodes or iterable of nodes
+        dia (float) – Distance threshold value
+        dim (int, optional): Dimension of the graph
+        domain (str, optional): Domain of the graph
+
+    Returns:
+        Object: Best graph, beast average degree and best diameter.
     '''
     tolerance = 0.5
 
@@ -519,7 +616,24 @@ def stochastic_block_model(N, deg, dia, dim, domain):
 
 #####################################################################
 def r_mat_graph(N, deg, dia, dim, domain):
+    """Generates static R-MAT graphs.
 
+    R-MAT (recursive matrix) graphs are random graphs with 
+    n=2^scale nodes and m=n*edgeFactor edges. More details 
+    at http://www.graph500.org or in the original paper: Deepayan Chakrabarti, 
+    Yiping Zhan, 
+    Christos Faloutsos: R-MAT: A Recursive Model for Graph Mining.
+
+    Args:
+        n (int or iterable) – Number of nodes or iterable of nodes
+        dia (float) – Distance threshold value
+        dim (int, optional): Dimension of the graph
+        domain (str, optional): Domain of the graph
+
+    Returns:
+        Object: Best graph, beast average degree and best diameter.
+
+    """
     tolerance = 0.5
     curr_deg_error = float('inf')
     count = 0
@@ -563,13 +677,26 @@ def r_mat_graph(N, deg, dia, dim, domain):
 
 #####################################################################
 def hyperbolic_graph(N, deg, dia, dim, domain):
+    '''The Hyperbolic Generator distributes points in hyperbolic space and adds edges 
+    between points with a probability depending on their distance. 
+    The resulting graphs have a power-law degree distribution, small diameter 
+    and high clustering coefficient. For a temperature of 0, the model resembles 
+    a unit-disk model in hyperbolic space.
+
+    Parameters of the graph:
+    N = Num of nodes
+    k = Average degree
+    gamma = Target exponent in Power Law Distribution
+    
+    Args:
+        n (int or iterable) – Number of nodes or iterable of nodes
+        dia (float) – Distance threshold value
+        dim (int, optional): Dimension of the graph
+        domain (str, optional): Domain of the graph
+
+    Returns:
+        Object: Best graph, beast average degree and best diameter.
     '''
-        Parameters of the graph:
-        N = Num of nodes
-        k = Average degree
-        gamma = Target exponent in Power Law Distribution
-        :return: Graph Object
-        '''
     import networkit as nk
 
     tolerance = 0.5
@@ -609,10 +736,28 @@ def hyperbolic_graph(N, deg, dia, dim, domain):
 
 ########################################################################
 def stochastic_kronecker_graph(N, deg, dia, dim, domain):
-    '''
+    '''Generates stochastic kronecker graph.
+
+    The stochastic Kronecker graph model introduced by Leskovec etal.  
+    is a random graph with vertex setZn2, where two verticesuandvare connected  
+    with  probability `αu·vγ(1−u)·(1−v)βn−u·v−(1−u)·(1−v)` in-dependently  of  the  
+    presence  or  absence  of  any  other  edge,  for  fixedparameters `0< α,β,γ <1`.  
+    They have shown empirically that the de-gree sequence resembles a power law degree distribution.  
+    In this paperwe show that the stochastic Kronecker graph a.a.s. does not feature apower 
+    law degree distribution for any parameters `0< α,β,γ <1`.  
+    
+
     Parameters of the graph:
     degree_seq
-    :return: Graph Object
+
+    Args:
+        n (int or iterable) – Number of nodes or iterable of nodes
+        dia (float) – Distance threshold value
+        dim (int, optional): Dimension of the graph
+        domain (str, optional): Domain of the graph
+
+    Returns:
+        Object: Best graph, beast average degree and best diameter.
     '''
     strt_time = time()
 
@@ -684,14 +829,24 @@ def stochastic_kronecker_graph(N, deg, dia, dim, domain):
 ########################################################################################################################
 
 def lfr_benchmark_graph(N, deg, dia, dim, domain):
-    '''
+    '''Returns the LFR benchmark graph for testing community-finding
+    algorithms.
+
     Parameters of the graph:
     n (int) – Number of nodes in the created graph.
     tau1 (float) – Power law exponent for the degree distribution of the created graph. This value must be strictly greater than one.
     tau2 (float) – Power law exponent for the community size distribution in the created graph. This value must be strictly greater than one.
     mu (float) – Fraction of intra-community edges incident to each node. This value must be in the interval [0, 1].
     average_degree (float) – Desired average degree of nodes in the created graph. This value must be in the interval [0, n]. Exactly one of this and min_degree must be specified, otherwise a NetworkXError is raised.
-    :return: Graph Object
+    
+    Args:
+        n (int or iterable) – Number of nodes or iterable of nodes
+        dia (float) – Distance threshold value
+        dim (int, optional): Dimension of the graph
+        domain (str, optional): Domain of the graph
+
+    Returns:
+        Object: Best graph, beast average degree and best diameter.
     '''
     strt_time = time()
 

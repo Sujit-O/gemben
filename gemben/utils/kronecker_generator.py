@@ -5,13 +5,15 @@ import random
 
 
 def convert(something):  # use networkx conversion from numpy array
+    """Function to convert the numpy array to networkx graph."""
     # g = nx.from_numpy_matrix(someNPMat)
     # print(type(something))
     g = nx.from_numpy_array(something)
     return g
 
 
-def deleteSelfLoops(graph, nNodes):  # used to take away self loops in final graph for stat purposes
+def deleteSelfLoops(graph, nNodes):  
+    """Function to take away self loops in final graph for stat purposes."""
     nNodes = int(nNodes)
     for i in range(nNodes):
         for j in range(nNodes):
@@ -21,6 +23,7 @@ def deleteSelfLoops(graph, nNodes):  # used to take away self loops in final gra
 
 
 def generateStochasticKron(initMat, k, deleteSelfLoopsForStats=False, directed=False, customEdges=False, edges=0):
+    """Function to generate stochastic kronecker graph."""
     initN = initMat.getNumNodes()
     nNodes = int(math.pow(initN, k))  # get final size and make empty 'kroned' matrix
     mtxDim = initMat.getNumNodes()

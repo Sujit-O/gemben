@@ -3,6 +3,9 @@ import networkx as nx
 
 
 class InitMatrix():
+    """Class module to initialize the kronechker graph.
+    
+    """
 
     def __init__(self, numNodes, W=None):
         self.numNodes = numNodes
