@@ -7,7 +7,6 @@ import numpy as np
 from sklearn.preprocessing import OneHotEncoder
 import networkx as nx
 import scipy
-import networkit as nk
 from scipy import special
 from numpy import pi
 import itertools
@@ -77,11 +76,11 @@ def barbell_graph(m1,m2):
 def binary_community_graph(N, k, maxk, mu):
     """Retruns a binary community graph. """
     if sys.platform[0] == "w":
-        args = ["gem/c_exe/benchm.exe"]
-        fcall = "gem/c_exe/benchm.exe"
+        args = ["gemben/c_exe/benchm.exe"]
+        fcall = "gemben/c_exe/benchm.exe"
     else:
-        args = ["gem/c_exe/benchm"]
-        fcall = "gem/c_exe/benchm"
+        args = ["gemben/c_exe/benchm"]
+        fcall = "gemben/c_exe/benchm"
     args.append("-N %d" % N)
     args.append("-k %d" % k)
     args.append("-maxk %d" % maxk)
@@ -634,6 +633,8 @@ def r_mat_graph(N, deg, dia, dim, domain):
         Object: Best graph, beast average degree and best diameter.
 
     """
+    import networkit as nk
+
     tolerance = 0.5
     curr_deg_error = float('inf')
     count = 0
