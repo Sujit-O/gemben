@@ -100,96 +100,64 @@ def expVis(X, gname='test', node_labels=None, di_graph=None, lbl_dict=None, titl
     plt.figure()
 
 ####################Initialize Plot Params##########
-G  =[]
-pos =[]
-node_labels =[]
-lbl_dict =[]
-gname =[]
+G_list =	[]
+gname_list = []
 
-##########Generate Barabasi-Albert Graph############
+##########Generate Synthetic graphs############
 # generate barabasi_albert_graph
 gname_tmp = 'Barabasi Albert Graph'
-
 G_tmp, d, dim = graph_gens.barabasi_albert_graph(100,1,0,3,'social')
-# print(gname_tmp, G_tmp.nodes())
-pos_tmp = nx.spring_layout(G_tmp)
-nodes_deg =[G_tmp.degree[i] for i in G_tmp.nodes()]
-unq_lbl = np.unique(nodes_deg)
-lbl_map = {unq_lbl[i]:i for i in range(len(unq_lbl))}
-lbl_map_rev = {v:k for k,v in lbl_map.items()}
+G_list.append(G_tmp)
+gname_list.append(gname_tmp)
 
-node_labels_tmp = [lbl_map[k] for k in nodes_deg]
-lbl_dict_tmp = {n:i for n,i in enumerate(G_tmp.nodes())}
-
-G.append(G_tmp)
-pos.append(pos_tmp)
-node_labels.append(node_labels_tmp)
-lbl_dict.append(lbl_dict_tmp)
-gname.append(gname_tmp)
-
-##########Generate Barbell Graph############
 # generate barabasi_albert_graph
 gname_tmp = 'Random Geometric Graph'
-
 G_tmp, _, _ = graph_gens.random_geometric_graph(100,5,0,3,'social')
-# print(gname_tmp, G_tmp.nodes())
-pos_tmp = nx.spring_layout(G_tmp)
-nodes_deg =[G_tmp.degree[i] for i in G_tmp.nodes()]
-unq_lbl = np.unique(nodes_deg)
-lbl_map = {unq_lbl[i]:i for i in range(len(unq_lbl))}
-lbl_map_rev = {v:k for k,v in lbl_map.items()}
+G_list.append(G_tmp)
+gname_list.append(gname_tmp)
 
-node_labels_tmp = [lbl_map[k] for k in nodes_deg]
-lbl_dict_tmp = {n:i for n,i in enumerate(G_tmp.nodes())}
-
-G.append(G_tmp)
-pos.append(pos_tmp)
-node_labels.append(node_labels_tmp)
-lbl_dict.append(lbl_dict_tmp)
-gname.append(gname_tmp)
-
-##########Generate Barabasi-Albert Graph############
 # generate barabasi_albert_graph
 gname_tmp = 'Stochastic Block Model Graph'
-
 G_tmp, d, dim = graph_gens.stochastic_block_model(100,5,0,3,'social')
-# print(gname_tmp, G_tmp.nodes())
-pos_tmp = nx.spring_layout(G_tmp)
-nodes_deg =[G_tmp.degree[i] for i in G_tmp.nodes()]
-unq_lbl = np.unique(nodes_deg)
-lbl_map = {unq_lbl[i]:i for i in range(len(unq_lbl))}
-lbl_map_rev = {v:k for k,v in lbl_map.items()}
+G_list.append(G_tmp)
+gname_list.append(gname_tmp)
 
-node_labels_tmp = [lbl_map[k] for k in nodes_deg]
-lbl_dict_tmp = {n:i for n,i in enumerate(G_tmp.nodes())}
-
-G.append(G_tmp)
-pos.append(pos_tmp)
-node_labels.append(node_labels_tmp)
-lbl_dict.append(lbl_dict_tmp)
-gname.append(gname_tmp)
-
-##########Generate Barabasi-Albert Graph############
 # generate barabasi_albert_graph
 gname_tmp = 'Watts Strogatz Graph'
-
 G_tmp = nx.watts_strogatz_graph(n=100, k=3, p=0.2)
-# print(gname_tmp, G_tmp.nodes())
-pos_tmp = nx.spring_layout(G_tmp)
-nodes_deg =[G_tmp.degree[i] for i in G_tmp.nodes()]
-unq_lbl = np.unique(nodes_deg)
-lbl_map = {unq_lbl[i]:i for i in range(len(unq_lbl))}
-lbl_map_rev = {v:k for k,v in lbl_map.items()}
+G_list.append(G_tmp)
+gname_list.append(gname_tmp)
 
-node_labels_tmp = [lbl_map[k] for k in nodes_deg]
-lbl_dict_tmp = {n:i for n,i in enumerate(G_tmp.nodes())}
+############graph processing function##############
+def process_synthetic_graphs(G_list, gname_list):
+	#initialize plot parameters
+	G  =[]
+	pos =[]
+	node_labels =[]
+	lbl_dict =[]
+	gname =[]
 
-G.append(G_tmp)
-pos.append(pos_tmp)
-node_labels.append(node_labels_tmp)
-lbl_dict.append(lbl_dict_tmp)
-gname.append(gname_tmp)
+	for G_tmp,gname_tmp in zip(G_list,gname_list):
+		# print(gname_tmp, G_tmp.nodes())
+		pos_tmp = nx.spring_layout(G_tmp)
+		nodes_deg =[G_tmp.degree[i] for i in G_tmp.nodes()]
+		unq_lbl = np.unique(nodes_deg)
+		lbl_map = {unq_lbl[i]:i for i in range(len(unq_lbl))}
+		lbl_map_rev = {v:k for k,v in lbl_map.items()}
+
+		node_labels_tmp = [lbl_map[k] for k in nodes_deg]
+		lbl_dict_tmp = {n:i for n,i in enumerate(G_tmp.nodes())}
+
+		G.append(G_tmp)
+		pos.append(pos_tmp)
+		node_labels.append(node_labels_tmp)
+		lbl_dict.append(lbl_dict_tmp)
+		gname.append(gname_tmp)
+
+	return G, pos, node_labels, lbl_dict, gname
+
 ######################Plot the Graphs##############
+G, pos, node_labels, lbl_dict, gname = process_synthetic_graphs(G_list, gname_list)
 
 expVis(pos, gname =gname,
 	node_labels=node_labels,
@@ -212,7 +180,7 @@ def mergegraph(graphs,pos_old, labels_old, edge_prob=0.3, edge_num=0.4):
 	edges = []
 	pos = {}
 	node_cnt = 0
-	val =1
+	val =0.9
 	shift_value =[[-val,val],[val,val],[-val,-val],[val,-val]]
 	for i,g in enumerate(graphs):
 		tmp_nodes = list(g.nodes())
@@ -266,6 +234,7 @@ colors = get_node_color(labels)
 plot_embedding2D(pos, node_colors=colors, di_graph=G, labels=None, shape =2)
 plt.savefig('ensemble_merged.pdf', dpi=300,
                 format='pdf', bbox_inches='tight')
+plt.figure()
 
 if os.name == 'posix':
 	bashCommand = "open ensemble_merged.pdf" 
