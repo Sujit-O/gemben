@@ -212,7 +212,8 @@ def mergegraph(graphs,pos_old, labels_old, edge_prob=0.3, edge_num=0.4):
 	edges = []
 	pos = {}
 	node_cnt = 0
-	shift_value =[[-1,1],[1,1],[-1,-1],[1,-1]]
+	val =1
+	shift_value =[[-val,val],[val,val],[-val,-val],[val,-val]]
 	for i,g in enumerate(graphs):
 		tmp_nodes = list(g.nodes())
 		tmp_edges = list(g.edges())
@@ -268,5 +269,16 @@ plt.savefig('ensemble_merged.pdf', dpi=300,
 
 if os.name == 'posix':
 	bashCommand = "open ensemble_merged.pdf" 
+	process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
+	output, error = process.communicate()
+
+# plotin spring layout
+pos = nx.spring_layout(G)
+plot_embedding2D(pos, node_colors=colors, di_graph=G, labels=None, shape =2)
+plt.savefig('ensemble_merged_spring.pdf', dpi=300,
+                format='pdf', bbox_inches='tight')
+
+if os.name == 'posix':
+	bashCommand = "open ensemble_merged_spring.pdf" 
 	process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
 	output, error = process.communicate()
