@@ -5,12 +5,14 @@ if os.name == 'posix' and 'DISPLAY' not in os.environ:
 	print("Using raster graphics – high quality images using the Anti-Grain Geometry (AGG) engine")
 	import matplotlib
 	matplotlib.use('Agg')
+	matplotlib.rcParams['text.latex.unicode']=False
 import matplotlib.pyplot as plt
 
 import seaborn
 from matplotlib import rc
 import numpy as np
 import pdb
+import random
 
 # set the searborn and matplotlib formatting style
 font = {'family': 'serif', 'serif': ['computer modern roman']}
@@ -22,16 +24,24 @@ rc('xtick', labelsize=5)
 rc('ytick', labelsize=5)
 rc('axes', labelsize='x-large')
 rc('axes', labelweight='bold')
-rc('axes', titlesize='x-large')
+rc('axes', titlesize='x-small')
 rc('axes', linewidth=3)
+
 plt.rc('font', **font)
 seaborn.set_style("darkgrid")
 
+# get the colormap for nodes
+# TODO: find more appealing colormaps
 cmap = plt.cm.get_cmap('Set1')
 title = 'synthetic'
+
+# pyvis is for interactive graph plotting
 # import pyvis for visualization purpose
 # from pyvis.network import Network
 
+#add the path for the latex for macos
+if os.name == 'posix':
+	os.environ['PATH'] = os.environ['PATH'] + ':/Library/TeX/Root/bin/x86_64-darwin'
 # get the modules for generating the synthetic graphs
 from gemben.utils import graph_util, graph_gens
 
@@ -41,8 +51,11 @@ def get_node_color(labels):
     node_colors = [cmap(c) for c in labels]
     return node_colors
 
-def plot_embedding2D(node_pos, node_colors=None, di_graph=None, labels=None):
-    embedding_dimension = node_pos[0].shape[0]
+def plot_embedding2D(node_pos, node_colors=None, di_graph=None, labels=None, shape = None):
+    if shape is None:
+    	embedding_dimension = node_pos[0].shape[0]
+    else:
+    	embedding_dimension = shape
     if (embedding_dimension > 2):
         print("Embedding dimension greater than 2, use tSNE to reduce it to 2")
         model = TSNE(n_components=2)
@@ -74,7 +87,7 @@ def expVis(X, gname='test', node_labels=None, di_graph=None, lbl_dict=None, titl
     for i in range(len(gname)):
         ax= plt.subplot(220 + pos)
         pos += 1
-        # ax.title.set_text(gname[i])
+        ax.title.set_text(gname[i])
         if node_labels[i]:
            node_colors = get_node_color(node_labels[i])
         else:
@@ -95,10 +108,10 @@ gname =[]
 
 ##########Generate Barabasi-Albert Graph############
 # generate barabasi_albert_graph
-gname_tmp = 'barabasi'
+gname_tmp = 'Barabasi Albert Graph'
 
 G_tmp, d, dim = graph_gens.barabasi_albert_graph(100,1,0,3,'social')
-print(gname_tmp, G_tmp.nodes())
+# print(gname_tmp, G_tmp.nodes())
 pos_tmp = nx.spring_layout(G_tmp)
 nodes_deg =[G_tmp.degree[i] for i in G_tmp.nodes()]
 unq_lbl = np.unique(nodes_deg)
@@ -116,10 +129,10 @@ gname.append(gname_tmp)
 
 ##########Generate Barbell Graph############
 # generate barabasi_albert_graph
-gname_tmp = 'random'
+gname_tmp = 'Random Geometric Graph'
 
 G_tmp, _, _ = graph_gens.random_geometric_graph(100,5,0,3,'social')
-print(gname_tmp, G_tmp.nodes())
+# print(gname_tmp, G_tmp.nodes())
 pos_tmp = nx.spring_layout(G_tmp)
 nodes_deg =[G_tmp.degree[i] for i in G_tmp.nodes()]
 unq_lbl = np.unique(nodes_deg)
@@ -137,10 +150,10 @@ gname.append(gname_tmp)
 
 ##########Generate Barabasi-Albert Graph############
 # generate barabasi_albert_graph
-gname_tmp = 'sbm'
+gname_tmp = 'Stochastic Block Model Graph'
 
 G_tmp, d, dim = graph_gens.stochastic_block_model(100,5,0,3,'social')
-print(gname_tmp, G_tmp.nodes())
+# print(gname_tmp, G_tmp.nodes())
 pos_tmp = nx.spring_layout(G_tmp)
 nodes_deg =[G_tmp.degree[i] for i in G_tmp.nodes()]
 unq_lbl = np.unique(nodes_deg)
@@ -158,10 +171,10 @@ gname.append(gname_tmp)
 
 ##########Generate Barabasi-Albert Graph############
 # generate barabasi_albert_graph
-gname_tmp = 'watts_strogatz_graph'
+gname_tmp = 'Watts Strogatz Graph'
 
 G_tmp = nx.watts_strogatz_graph(n=100, k=3, p=0.2)
-print(gname_tmp, G_tmp.nodes())
+# print(gname_tmp, G_tmp.nodes())
 pos_tmp = nx.spring_layout(G_tmp)
 nodes_deg =[G_tmp.degree[i] for i in G_tmp.nodes()]
 unq_lbl = np.unique(nodes_deg)
@@ -185,11 +198,75 @@ expVis(pos, gname =gname,
 	title = 'synthetic')
 
 #bash command to open the graph, 
-#only for macos, uncomment plt.show for linux and win 
+#only for macos, uncomment plt.show in expVis function for linux and win 
 
-bashCommand = "open ensemble_%s.pdf" % (title)
-process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
-output, error = process.communicate()
+if os.name == 'posix':
+	bashCommand = "open ensemble_%s.pdf" % (title)
+	process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
+	output, error = process.communicate()
 
 ####################################################
+# combine the graph with random edges and plot them again
+def mergegraph(graphs,pos_old, labels_old, edge_prob=0.3, edge_num=0.4):
+	nodes = []
+	edges = []
+	pos = {}
+	node_cnt = 0
+	shift_value =[[-1,1],[1,1],[-1,-1],[1,-1]]
+	for i,g in enumerate(graphs):
+		tmp_nodes = list(g.nodes())
+		tmp_edges = list(g.edges())
 
+		node_map = { k:node_cnt+i for k,i in enumerate(tmp_nodes)}
+		node_cnt+=len(tmp_nodes)
+
+		new_nodes = [node_map[n] for n in tmp_nodes]
+		new_edges = [(node_map[u],node_map[v]) for u,v in tmp_edges]
+
+		#shift embedding for visual purpose
+		
+		for k,v in pos_old[i].items():
+			pos_old[i][k][0]+=shift_value[i][0]
+			pos_old[i][k][1]+=shift_value[i][1]
+
+		new_pos = {node_map[n]:v for n,v in pos_old[i].items()}
+
+
+		nodes+=new_nodes
+		edges+=new_edges
+		pos.update(new_pos)
+
+
+	G = nx.DiGraph()
+	G.add_edges_from(edges)
+
+	# add random edges
+	random.shuffle(nodes)
+	l = int(edge_num*len(nodes))
+	u = nodes[0:l]
+	random.shuffle(nodes)
+	v = nodes[0:l]
+
+	for s, t in zip(u,v):
+		if random.random()<edge_prob:
+			G.add_edge(s,t)
+			G.add_edge(t,s)
+	nodes_deg =[G.degree[i] for i in G.nodes()]
+	unq_lbl = np.unique(nodes_deg)
+	lbl_map = {unq_lbl[i]:i for i in range(len(unq_lbl))}
+	labels = [lbl_map[k] for k in nodes_deg]
+	return G, pos, labels
+
+# get the new graph
+G, pos, labels=mergegraph(G, pos,node_labels)
+# plot the new graph
+colors = get_node_color(labels)
+
+plot_embedding2D(pos, node_colors=colors, di_graph=G, labels=None, shape =2)
+plt.savefig('ensemble_merged.pdf', dpi=300,
+                format='pdf', bbox_inches='tight')
+
+if os.name == 'posix':
+	bashCommand = "open ensemble_merged.pdf" 
+	process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
+	output, error = process.communicate()
