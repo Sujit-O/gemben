@@ -13,6 +13,29 @@ from matplotlib import rc
 import numpy as np
 import pdb
 import random
+import json
+
+# get the modules for generating the synthetic graphs
+from gemben.utils import graph_util, graph_gens
+from gemben.evaluation import evaluate_graph_reconstruction as gr
+from gemben.evaluation import evaluate_node_classification as e_nc
+from gemben.embedding.gf       import GraphFactorization
+from gemben.embedding.hope     import HOPE
+from gemben.embedding.lap      import LaplacianEigenmaps
+from gemben.embedding.lle      import LocallyLinearEmbedding
+from gemben.embedding.node2vec import node2vec
+from gemben.embedding.sdne     import SDNE
+
+methClassMap = {"gf": "GraphFactorization",
+                "hope": "HOPE",
+                "lap": "LaplacianEigenmaps",
+                "node2vec": "node2vec",
+                "sdne": "SDNE",
+                "pa": "PreferentialAttachment",
+                "rand": "RandomEmb",
+                "cn": "CommonNeighbors",
+                "aa": "AdamicAdar",
+                "jc": "JaccardCoefficient"}
 
 # set the searborn and matplotlib formatting style
 font = {'family': 'serif', 'serif': ['computer modern roman']}
@@ -42,8 +65,7 @@ title = 'synthetic'
 #add the path for the latex for macos
 if os.name == 'posix':
 	os.environ['PATH'] = os.environ['PATH'] + ':/Library/TeX/Root/bin/x86_64-darwin'
-# get the modules for generating the synthetic graphs
-from gemben.utils import graph_util, graph_gens
+
 
 #############Plotting functions ###################
 def get_node_color(labels):
@@ -99,11 +121,10 @@ def expVis(X, gname='test', node_labels=None, di_graph=None, lbl_dict=None, titl
                 format='pdf', bbox_inches='tight')
     plt.figure()
 
-####################Initialize Plot Params##########
+##########Generate Synthetic graphs############
 G_list =	[]
 gname_list = []
 
-##########Generate Synthetic graphs############
 # generate barabasi_albert_graph
 gname_tmp = 'Barabasi Albert Graph'
 G_tmp, d, dim = graph_gens.barabasi_albert_graph(100,1,0,3,'social')
@@ -251,3 +272,35 @@ if os.name == 'posix':
 	bashCommand = "open ensemble_merged_spring.pdf" 
 	process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
 	output, error = process.communicate()
+
+##############start experiments with the baselines################
+params =  json.load(open('./conf/ens_params.conf', 'r'))
+
+nx.write_edgelist(G, params["graph"]+".edgelist")
+node_labels = labels
+print('Dataset: '+ params['graph'])
+print(nx.info(G))
+
+try:
+    os.makedirs("./experiments/config/ensemble/")
+except:
+    pass
+
+try:
+    os.makedirs("./results/ensemble/")
+except:
+    pass
+
+try:
+    os.makedirs("./intermediate/ensemble/")
+except:
+    pass
+
+try:
+    os.makedirs("./results/ensemble_test/")
+except:
+    pass
+
+#TODO1: Get the embedding and node classification result from each baseline Separately
+#TODO2: Get the embedding and node classificationr result after ensemble
+
